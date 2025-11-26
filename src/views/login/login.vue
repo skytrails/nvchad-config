@@ -1,26 +1,34 @@
 <template>
-  <div :class="['login-wrapper', ['', 'login-form-right', 'login-form-left'][direction]]">
+  <div
+    :class="[
+      'login-wrapper',
+      ['', 'login-form-right', 'login-form-left'][direction],
+    ]"
+  >
     <el-form
       ref="form"
       size="large"
       :model="form"
       :rules="rules"
       class="login-form ele-bg-white"
-      @keyup.enter.native="doSubmit">
-      <h4>{{ $t('login.title') }}</h4>
+      @keyup.enter.native="doSubmit"
+    >
+      <h4>{{ $t("login.title") }}</h4>
       <el-form-item prop="username">
         <el-input
           clearable
           v-model="form.username"
           prefix-icon="el-icon-user"
-          :placeholder="$t('login.username')"/>
+          :placeholder="$t('login.username')"
+        />
       </el-form-item>
       <el-form-item prop="password">
         <el-input
           show-password
           v-model="form.password"
           prefix-icon="el-icon-lock"
-          :placeholder="$t('login.password')"/>
+          :placeholder="$t('login.password')"
+        />
       </el-form-item>
       <el-form-item prop="captcha">
         <div class="login-input-group">
@@ -28,17 +36,21 @@
             clearable
             v-model="form.captcha"
             prefix-icon="el-icon-_vercode"
-            :placeholder="$t('login.captcha')"/>
+            :placeholder="$t('login.captcha')"
+          />
           <img
             alt=""
             v-if="captcha"
             :src="captcha"
             @click="changeCode"
-            class="login-captcha"/>
+            class="login-captcha"
+          />
         </div>
       </el-form-item>
       <div class="el-form-item">
-        <el-checkbox v-model="form.remember">{{ $t('login.remember') }}</el-checkbox>
+        <el-checkbox v-model="form.remember">{{
+          $t("login.remember")
+        }}</el-checkbox>
       </div>
       <div class="el-form-item">
         <el-button
@@ -46,20 +58,23 @@
           type="primary"
           class="login-btn"
           :loading="loading"
-          @click="doSubmit">
-          {{ loading ? $t('login.loading') : $t('login.login') }}
+          @click="doSubmit"
+        >
+          {{ loading ? $t("login.loading") : $t("login.login") }}
         </el-button>
       </div>
     </el-form>
-    <div class="login-copyright">Copyright © 2018~2024 www.javaweb.vip. All rights reserved.</div>
+    <div class="login-copyright">
+      Copyright © 2018~2024 www.javaweb.vip. All rights reserved.
+    </div>
   </div>
 </template>
 
 <script>
-import setting from '@/config/setting';
+import setting from "@/config/setting";
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
       // 登录框方向, 0居中, 1居右, 2居左
@@ -68,16 +83,16 @@ export default {
       loading: false,
       // 表单数据
       form: {
-        username: 'admin',
-        password: '123456',
-        captcha: '520',
-        key: '',
-        remember: true
+        username: "admin",
+        password: "123456",
+        captcha: "520",
+        key: "",
+        remember: true,
       },
       // 验证码base64数据
-      captcha: '',
+      captcha: "",
       // 验证码内容, 实际项目去掉
-      text: ''
+      text: "",
     };
   },
   computed: {
@@ -85,20 +100,35 @@ export default {
     rules() {
       return {
         username: [
-          {required: true, message: this.$t('login.username'), type: 'string', trigger: 'blur'}
+          {
+            required: true,
+            message: this.$t("login.username"),
+            type: "string",
+            trigger: "blur",
+          },
         ],
         password: [
-          {required: true, message: this.$t('login.password'), type: 'string', trigger: 'blur'}
+          {
+            required: true,
+            message: this.$t("login.password"),
+            type: "string",
+            trigger: "blur",
+          },
         ],
         captcha: [
-          {required: true, message: this.$t('login.captcha'), type: 'string', trigger: 'blur'}
-        ]
+          {
+            required: true,
+            message: this.$t("login.captcha"),
+            type: "string",
+            trigger: "blur",
+          },
+        ],
       };
     },
     // 当前语言
     language() {
       return this.$i18n.locale;
-    }
+    },
   },
   mounted() {
     if (setting.takeToken()) {
@@ -115,20 +145,22 @@ export default {
           return false;
         }
         this.loading = true;
-        this.$http.post('/sysUser/login/login', this.form).then((res) => {
+        this.$http.post("/admin/login", this.form).then((res) => {
           this.loading = false;
           if (res.data.code === 200) {
-            this.$message.success('登录成功');
-            this.$store.dispatch('user/setToken', {
-              token: res.data.data.tokenHead + ' ' + res.data.data.token,
-              remember: this.form.remember
-            }).then(() => {
-              this.goHome();
-            });
+            this.$message.success("登录成功");
+            this.$store
+              .dispatch("user/setToken", {
+                token: res.data.data.tokenHead + " " + res.data.data.token,
+                remember: this.form.remember,
+              })
+              .then(() => {
+                this.goHome();
+              });
           } else {
             this.$message.error(res.data.message);
             // 重新刷新验证码
-            this.changeCode()
+            this.changeCode();
           }
         });
       });
@@ -136,36 +168,38 @@ export default {
     /* 跳转到首页 */
     goHome() {
       const query = this.$route.query;
-      const path = query && query.from ? query.from : '/';
-      this.$router.push(path).catch(() => {
-      });
+      const path = query && query.from ? query.from : "/";
+      this.$router.push(path).catch(() => {});
     },
     /* 更换图形验证码 */
     changeCode() {
       // 这里演示的验证码是后端返回base64格式的形式, 如果后端地址直接是图片请参考忘记密码页面
-      this.$http.get('/sysUser/login/captcha').then(res => {
-        if (res.data.code === 200) {
-          this.captcha = res.data.data.captcha;
-          this.form.key = res.data.data.key;
-          // // 实际项目后端一般会返回验证码的key而不是直接返回验证码的内容, 登录用key去验证, 可以根据自己后端接口修改
-          // this.text = res.data.text;
-          // // 自动回填验证码, 实际项目去掉这个
-          // this.form.code = this.text;
-          this.$refs.form.clearValidate();
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch((e) => {
-        this.$message.error(e.message);
-      });
+      this.$http
+        .get("/admin/captcha")
+        .then((res) => {
+          if (res.data.code === 200) {
+            this.captcha = res.data.data.captcha;
+            this.form.key = res.data.data.key;
+            // // 实际项目后端一般会返回验证码的key而不是直接返回验证码的内容, 登录用key去验证, 可以根据自己后端接口修改
+            // this.text = res.data.text;
+            // // 自动回填验证码, 实际项目去掉这个
+            // this.form.code = this.text;
+            this.$refs.form.clearValidate();
+          } else {
+            this.$message.error(res.data.message);
+          }
+        })
+        .catch((e) => {
+          this.$message.error(e.message);
+        });
     },
     /* 切换语言 */
     changeLanguage(lang) {
       this.$i18n.locale = lang;
-      localStorage.setItem('i18n-lang', lang);
-    }
-  }
-}
+      localStorage.setItem("i18n-lang", lang);
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -182,7 +216,7 @@ export default {
 
 .login-wrapper:before {
   content: "";
-  background-color: rgba(0, 0, 0, .2);
+  background-color: rgba(0, 0, 0, 0.2);
   position: absolute;
   top: 0;
   left: 0;
@@ -235,13 +269,13 @@ export default {
   width: 102px;
   margin-left: 10px;
   border-radius: 4px;
-  border: 1px solid #DCDFE6;
+  border: 1px solid #dcdfe6;
   text-align: center;
   cursor: pointer;
 }
 
 .login-captcha:hover {
-  opacity: .75;
+  opacity: 0.75;
 }
 
 .login-btn {
@@ -251,7 +285,7 @@ export default {
 
 /* 第三方登录图标 */
 .login-oauth-icon {
-  color: #FFF;
+  color: #fff;
   padding: 5px;
   margin: 0 10px;
   font-size: 18px;
