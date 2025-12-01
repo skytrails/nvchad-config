@@ -151,7 +151,7 @@ export default {
             this.$message.success("登录成功");
             this.$store
               .dispatch("user/setToken", {
-                token: res.data.data.tokenHead + " " + res.data.data.token,
+                token: res.data.data.tokenHead + res.data.data.token,
                 remember: this.form.remember,
               })
               .then(() => {

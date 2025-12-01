@@ -11,7 +11,7 @@ export default {
   // 不需要登录的路由
   whiteList: ['/login', '/forget'],
   // 菜单数据接口
-  menuUrl: '/sysMenu/index/getMenuList',
+  menuUrl: '/menu/getList',
   // 自定义解析菜单接口数据
   parseMenu: null,
   // 自定义解析菜单接口单个数据格式
