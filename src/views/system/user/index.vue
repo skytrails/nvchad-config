@@ -168,7 +168,7 @@ export default {
   data() {
     return {
       // 表格数据接口
-      url: '/sysUser/index',
+      url: '/admin/list',
       // 表格列配置
       columns: [
         {
@@ -247,7 +247,8 @@ export default {
           showOverflowTooltip: true,
           minWidth: 160,
           formatter: (row, column, cellValue) => {
-            return this.$util.toDateString(cellValue);
+            const date = new Date(cellValue)
+            return this.$util.toDateString(date);
           }
         },
         {
@@ -257,7 +258,8 @@ export default {
           showOverflowTooltip: true,
           minWidth: 160,
           formatter: (row, column, cellValue) => {
-            return this.$util.toDateString(cellValue);
+            const date = new Date(cellValue)
+            return this.$util.toDateString(date);
           }
         },
         {

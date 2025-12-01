@@ -82,7 +82,7 @@
         <el-card shadow="hover" body-style="padding: 0;">
           <router-link to="/operate/events" class="app-link-block">
             <i class="app-link-icon el-icon-bank-card" style="color: #ffd666;"></i>
-            <div class="app-link-title">活动消息</div>
+            <div class="app-link-title">游戏库管理</div>
           </router-link>
         </el-card>
       </el-col>
