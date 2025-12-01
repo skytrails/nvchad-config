@@ -92,7 +92,7 @@ export default {
           {type: 'warning'}
         ).then(() => {
           // 调用接口退出登录
-          this.$http.get('/sysUser/login/logout').then(res => {
+          this.$http.get('/admin/logout').then(res => {
             if (res.data.code === 200) {
               // 清除缓存的token
               this.$store.dispatch('user/removeToken').then(() => {

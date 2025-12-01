@@ -139,7 +139,7 @@ export default {
   data() {
     return {
       // 表格数据接口
-      url: '/sysMenu/index',
+      url: '/menu/index',
       // 表格列配置
       columns: [
         {
@@ -268,7 +268,7 @@ export default {
         this.showEdit = true;
       } else {
         // 编辑
-        this.$http.get('/sysMenu/info/' + row.id).then(res => {
+        this.$http.get('/menu/info/' + row.id).then(res => {
           if (res.data.code === 200) {
             this.current = res.data.data;
             this.showEdit = true;
@@ -287,7 +287,7 @@ export default {
         return;
       }
       const loading = this.$loading({lock: true});
-      this.$http.delete('/sysMenu/delete/' + row.id).then(res => {
+      this.$http.delete('/menu/delete/' + row.id).then(res => {
         loading.close();
         if (res.data.code === 200) {
           this.$message.success(res.data.message);
