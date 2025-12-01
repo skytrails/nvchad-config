@@ -110,8 +110,8 @@
           </el-form-item>
           <el-form-item label="状态:">
             <el-radio-group v-model="form.status">
-              <el-radio :label="1">在用</el-radio>
-              <el-radio :label="2">停用</el-radio>
+              <el-radio :label="true">在用</el-radio>
+              <el-radio :label="false">停用</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -134,7 +134,7 @@
             />
           </el-form-item>
           <el-form-item label="是否可见:">
-            <el-switch v-model="form.hide" active-value="0" inactive-value="1">
+            <el-switch v-model="form.hide" active-value="1" inactive-value="0">
             </el-switch>
             <!--            <el-radio-group-->
             <!--              v-model="form.hide"-->
