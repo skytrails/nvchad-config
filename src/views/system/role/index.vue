@@ -131,7 +131,7 @@ export default {
   data() {
     return {
       // 表格数据接口
-      url: "/sysRole/index",
+      url: "/role/list",
       // 表格列配置
       columns: [
         {
@@ -164,14 +164,6 @@ export default {
           width: 150,
         },
         {
-          prop: "fundId",
-          label: "关联基金",
-          align: "center",
-          showOverflowTooltip: true,
-          width: 150,
-          slot: "fundId",
-        },
-        {
           prop: "status",
           label: "状态",
           sortable: "custom",
@@ -201,7 +193,7 @@ export default {
           showOverflowTooltip: true,
           minWidth: 160,
           formatter: (row, column, cellValue) => {
-            return this.$util.toDateString(cellValue);
+            return this.$util.toDateString(new Date(cellValue));
           },
         },
         {
@@ -212,7 +204,7 @@ export default {
           showOverflowTooltip: true,
           minWidth: 160,
           formatter: (row, column, cellValue) => {
-            return this.$util.toDateString(cellValue);
+            return this.$util.toDateString(new Date(cellValue));
           },
         },
         {

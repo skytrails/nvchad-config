@@ -31,23 +31,6 @@
           <el-radio :label="2">停用</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="关联基金:" prop="fundId">
-        <el-select
-          v-model="form.fundId"
-          style="width: 100%"
-          clearable
-          placeholder="请选择基金"
-          @clear="form.fundId = null"
-        >
-          <el-option
-            v-for="item in fundList"
-            :key="'fund' + item.id"
-            :label="item.name"
-            :value="item.id"
-          >
-          </el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item label="排序号:" prop="sort">
         <el-input-number
           :min="0"

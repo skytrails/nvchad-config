@@ -2,7 +2,7 @@
 <template>
   <el-drawer
     class="edit-table"
-    :title="isUpdate ? '修改活动' : '添加活动'"
+    :title="isUpdate ? '修改游戏' : '添加游戏'"
     :visible.sync="showDrawer"
     :direction="direction"
     :size="'75%'"
@@ -15,70 +15,56 @@
       label-width="90px"
       style="padding: 50px 100px"
     >
-      <el-form-item label="活动封面：">
-        <uploadImage :limit="1" v-model="form.imageUrl"></uploadImage>
-      </el-form-item>
       <el-row :gutter="15">
         <el-col :sm="16">
-          <el-form-item label="活动标题:" prop="title">
+          <el-form-item label="游戏ID:" prop="gameId">
             <el-input
               clearable
               :maxlength="200"
-              v-model="form.title"
-              placeholder="请输入活动标题"
+              v-model="form.gameId"
+              placeholder="请输入游戏ID"
             />
           </el-form-item>
         </el-col>
         <el-col :sm="16">
-          <el-form-item label="关联基金:" prop="fundId">
-            <el-select
-              v-model="form.fundId"
-              style="width: 100%"
-              placeholder="请选择基金"
-            >
-              <el-option
-                v-for="item in fundList"
-                :key="'fund' + item.id"
-                :label="item.name"
-                :value="item.id"
-              >
-              </el-option>
-            </el-select>
+          <el-form-item label="游戏名称:" prop="gameName">
+            <el-input
+              clearable
+              :maxlength="200"
+              v-model="form.gameName"
+              placeholder="请输入游戏名称"
+            />
           </el-form-item>
         </el-col>
         <el-col :sm="16">
-          <el-form-item label="活动简介:" prop="profile">
+          <el-form-item label="DLC内容:" prop="profile">
             <el-input
               type="textarea"
-              :rows="3"
-              v-model="form.profile"
-              placeholder="请输入活动简介"
-              maxlength="200"
+              :rows="20"
+              v-model="form.dlcs"
+              placeholder="请输入DLC内容"
+              maxlength="10000"
               show-word-limit
             />
           </el-form-item>
-          <el-form-item label="活动时间:">
-            <el-date-picker
-              v-model="formDateRange"
-              type="daterange"
-              range-separator=" - "
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            >
-            </el-date-picker>
+          <el-form-item label="Stub:" prop="stub">
+            <el-input
+              :rows="20"
+              v-model="form.stub"
+              placeholder="请输入Stub内容"
+              maxlength="10000"
+              show-word-limit
+            />
           </el-form-item>
-          <el-form-item label="活动状态:" prop="status">
+          <el-form-item label="游戏状态:" prop="status">
             <el-radio-group v-model="form.status">
-              <el-radio :label="1">生效中</el-radio>
-              <el-radio :label="2">已停止</el-radio>
+              <el-radio :label="1">生效</el-radio>
+              <el-radio :label="0">停用</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
       </el-row>
       <!-- 富文本编辑器 -->
-      <el-form-item label="活动内容:" prop="content">
-        <tinymce-editor v-model="form.content" :init="initEditor" />
-      </el-form-item>
       <el-form-item
         style="text-align: center; margin-left: -100px; margin-top: 10px"
       >
@@ -90,9 +76,7 @@
 </template>
 
 <script>
-import uploadImage from "@/components/uploadImage";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import TinymceEditor from "@/components/TinymceEditor";
 import { mapGetters } from "vuex";
 export default {
   name: "EventsEdit",
@@ -104,7 +88,6 @@ export default {
     // 栏目数据
     cateList: Array,
   },
-  components: { uploadImage, TinymceEditor },
   data() {
     return {
       showDrawer: this.visible,
@@ -113,14 +96,13 @@ export default {
       form: Object.assign({ startAt: "", endAt: "" }, this.data),
       // 表单验证规则
       rules: {
-        title: [{ required: true, message: "请输入活动标题", trigger: "blur" }],
+        gameId: [{ required: true, message: "请输入游戏ID", trigger: "blur" }],
+        gameName: [
+          { required: true, message: "请输入游戏名称", trigger: "blur" },
+        ],
         status: [
-          { required: true, message: "请选择活动状态", trigger: "blur" },
+          { required: true, message: "请选择游戏状态", trigger: "blur" },
         ],
-        fundId: [
-          { required: true, message: "请选择活动基金", trigger: "blur" },
-        ],
-        sort: [{ required: true, message: "请输入排序号", trigger: "blur" }],
       },
       // 提交状态
       loading: false,
@@ -199,7 +181,7 @@ export default {
     getInfo() {
       if (this.data.id > 0) {
         this.$http
-          .get("/cfEvents/info/" + this.data.id)
+          .get("/game/info/" + this.data.id)
           .then((res) => {
             if (res.data.code === 200) {
               this.form = res.data.data;
@@ -219,7 +201,7 @@ export default {
         if (valid) {
           this.loading = true;
           this.$http
-            .post(this.isUpdate ? "/cfEvents/edit" : "/cfEvents/add", this.form)
+            .post(this.isUpdate ? "/game/update" : "/cfEvents/add", this.form)
             .then((res) => {
               this.loading = false;
               if (res.data.code === 200) {

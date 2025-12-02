@@ -85,7 +85,7 @@ export default {
       website: '官網',
       document: '檔案',
       authorization: '授權',
-      copyright: 'Copyright © 2024~ 众爱筹研发中心'
+      copyright: 'Copyright © 2024~ 研发中心'
     },
     logout: {
       title: '詢問',
@@ -93,7 +93,7 @@ export default {
     }
   },
   login: {
-    title: '众爱筹后台登录',
+    title: '后台管理',
     username: '請輸入登入帳號',
     password: '請輸入登入密碼',
     captcha: '請輸入驗證碼',

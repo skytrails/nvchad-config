@@ -275,7 +275,7 @@ export default {
     },
     /* 查询角色列表 */
     queryRoles() {
-      this.$http.get('/sysRole/getRoleList').then(res => {
+      this.$http.get('/role/getList').then(res => {
         if (res.data.code === 200) {
           this.roleList = res.data.data;
         } else {

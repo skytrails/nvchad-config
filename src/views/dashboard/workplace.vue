@@ -66,7 +66,7 @@
         <el-card shadow="hover" body-style="padding: 0;">
           <router-link to="/fund/project" class="app-link-block">
             <i class="app-link-icon el-icon-shopping-cart-2" style="color: #ff9c6e;"></i>
-            <div class="app-link-title">众筹项目</div>
+            <div class="app-link-title">后台管理</div>
           </router-link>
         </el-card>
       </el-col>

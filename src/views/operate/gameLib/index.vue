@@ -10,26 +10,22 @@
         @submit.native.prevent
       >
         <el-row :gutter="15">
-          <el-col :lg="6" :md="12">
-            <el-form-item label="活动标题:">
+          <el-col :lg="3" :md="12">
+            <el-form-item label="游戏ID:">
               <el-input
                 clearable
-                v-model="where.title"
-                placeholder="请输入活动标题"
+                v-model="where.gameId"
+                placeholder="请输入游戏ID"
               />
             </el-form-item>
           </el-col>
-          <el-col :lg="6" :md="12">
-            <el-form-item label="状态:">
-              <el-select
+          <el-col :lg="4" :md="12">
+            <el-form-item label="游戏名:">
+              <el-input
                 clearable
-                v-model="where.status"
-                placeholder="全部"
-                class="ele-fluid"
-              >
-                <el-option label="生效中" value="1" />
-                <el-option label="已停止" value="2" />
-              </el-select>
+                v-model="where.gameName"
+                placeholder="请输入游戏名"
+              />
             </el-form-item>
           </el-col>
           <el-col :lg="6" :md="12">
@@ -53,7 +49,6 @@
         :datasource="url"
         :columns="columns"
         :selection.sync="selection"
-        height="calc(100vh - 315px)"
       >
         <!-- 表头工具栏 -->
         <template slot="toolbar">
@@ -67,8 +62,8 @@
           </el-button>
         </template>
 
-        <template v-slot:fundId="{ row }">
-          <el-tag type="success">{{ row['fundId'] | fundNameById(fundList)}}</el-tag>
+        <template v-slot:DLCIDs="{ row }">
+          <el-tag type="success">{{ row["dlcId"] }}</el-tag>
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
@@ -81,7 +76,7 @@
           </el-link>
           <el-popconfirm
             class="ele-action"
-            title="确定要删除此活动吗？"
+            title="确定要删除此游戏吗？"
             @confirm="remove(row)"
           >
             <el-link
@@ -100,14 +95,9 @@
         <!-- 状态列 -->
         <template slot="status" slot-scope="{ row }">
           <el-tag v-if="row.status === 1" size="mini">生效中 </el-tag>
-          <el-tag v-if="row.status === 2" type="info" size="mini"
-            >已停止
+          <el-tag v-if="row.status !== 1" type="info" size="mini"
+            >已停用
           </el-tag>
-          <!--          <el-switch-->
-          <!--            v-model="row.status"-->
-          <!--            @change="editStatus(row)"-->
-          <!--            :active-value="1"-->
-          <!--            :inactive-value="2"/>-->
         </template>
       </ele-pro-table>
     </el-card>
@@ -134,74 +124,30 @@ export default {
   data() {
     return {
       // 表格数据接口
-      url: "/cfEvents/index",
+      url: "/game/list",
       // 表格列配置
       columns: [
-        // {
-        //   columnKey: 'selection',
-        //   type: 'selection',
-        //   width: 45,
-        //   align: 'center',
-        //   fixed: "left"
-        // },
         {
-          prop: "id",
-          label: "ID",
-          width: 60,
-          align: "center",
+          prop: "gameId",
+          label: "游戏ID",
           showOverflowTooltip: true,
-          fixed: "left",
-        },
-        {
-          columnKey: "imageUrl",
-          label: "活动封面",
-          align: "center",
-          showOverflowTooltip: true,
-          minWidth: 100,
-          slot: "imageUrl",
-        },
-        {
-          prop: "title",
-          label: "活动标题",
-          showOverflowTooltip: true,
-          minWidth: 250,
+          minWidth: 30,
+          maxWidth: 30,
           align: "center",
         },
         {
-          prop: "profile",
-          label: "活动简介",
+          prop: "gameName",
+          label: "游戏名称",
           showOverflowTooltip: true,
-          minWidth: 250,
+          width: 200,
           align: "center",
         },
         {
-          prop: "fundId",
-          label: "关联基金",
+          prop: "dlcId",
+          label: "配置状态",
           minWidth: 150,
           align: "center",
-          slot: "fundId",
-        },
-        {
-          prop: "startAt",
-          label: "开始时间",
-          sortable: "custom",
-          showOverflowTooltip: true,
-          minWidth: 160,
-          align: "center",
-          formatter: (row, column, cellValue) => {
-            return this.$util.toDateString(cellValue, "yyyy-MM-dd");
-          },
-        },
-        {
-          prop: "endAt",
-          label: "截止时间",
-          sortable: "custom",
-          showOverflowTooltip: true,
-          minWidth: 160,
-          align: "center",
-          formatter: (row, column, cellValue) => {
-            return this.$util.toDateString(cellValue, "yyyy-MM-dd");
-          },
+          slot: "DLCIDs",
         },
         {
           prop: "status",
@@ -211,33 +157,28 @@ export default {
           resizable: false,
           slot: "status",
         },
-        // {
-        //   prop: 'sort',
-        //   label: '排序号',
-        //   align: 'center',
-        //   showOverflowTooltip: true,
-        //   width: 100
-        // },
         {
-          prop: "createdAt",
+          prop: "createTime",
           label: "创建时间",
           sortable: "custom",
           showOverflowTooltip: true,
-          minWidth: 160,
+          minWidth: 50,
           align: "center",
           formatter: (row, column, cellValue) => {
-            return this.$util.toDateString(cellValue);
+            const date = new Date(cellValue);
+            return this.$util.toDateString(date);
           },
         },
         {
-          prop: "updatedAt",
+          prop: "updateTime",
           label: "更新时间",
           sortable: "custom",
           showOverflowTooltip: true,
-          minWidth: 160,
+          minWidth: 50,
           align: "center",
           formatter: (row, column, cellValue) => {
-            return this.$util.toDateString(cellValue);
+            const date = new Date(cellValue);
+            return this.$util.toDateString(date);
           },
         },
         {
