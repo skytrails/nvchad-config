@@ -13,7 +13,7 @@
       >
         <ProjectsTable ref="tablePerson" project-type="1" @rowEdit="openEdit" />
       </el-tab-pane>
-      <el-tab-pane label="基金会" name="2">
+      <el-tab-pane label="CDK列表" name="2">
         <ProjectsTable
           ref="tableOrganization"
           project-type="2"
@@ -162,7 +162,7 @@ export default {
       // 省市区数据
       regions: regions,
       // 表格数据接口
-      url: "/cfProjects/index",
+      url: "/cdk/index",
       // 表格列配置
       columns: [
         // {
@@ -182,14 +182,11 @@ export default {
         },
         {
           prop: "createdAt",
-          label: "申请时间",
+          label: "CDK",
           sortable: "custom",
           showOverflowTooltip: true,
           minWidth: 160,
-          align: "center",
-          formatter: (row, column, cellValue) => {
-            return this.$util.toDateString(cellValue);
-          },
+          align: "center"
         },
         {
           prop: "patientRelation",
@@ -319,7 +316,7 @@ export default {
         },
         {
           prop: "createdAt",
-          label: "申请时间",
+          label: "1申请时间",
           sortable: "custom",
           showOverflowTooltip: true,
           minWidth: 160,

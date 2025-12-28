@@ -220,15 +220,12 @@ const columns_person = [
     fixed: "left",
   },
   {
-    prop: "createdAt",
-    label: "申请时间",
+    prop: "cdk",
+    label: "CDK",
     sortable: "custom",
     showOverflowTooltip: true,
     minWidth: 160,
     align: "center",
-    formatter: (row, column, cellValue) => {
-      return $util.toDateString(cellValue);
-    },
   },
   {
     prop: "patientRelation",
@@ -357,51 +354,33 @@ const columns_org = [
     fixed: "left",
   },
   {
-    prop: "createdAt",
-    label: "申请时间",
+    prop: "cdk",
+    label: "CDK",
     sortable: "custom",
     showOverflowTooltip: true,
     minWidth: 160,
     align: "center",
-    formatter: (row, column, cellValue) => {
-      return $util.toDateString(cellValue);
-    },
   },
   {
-    prop: "organizationName",
-    label: "组织机构名称",
+    prop: "gameId",
+    label: "游戏ID",
     showOverflowTooltip: true,
     minWidth: 150,
     align: "center",
   },
   {
-    prop: "contactPhone",
-    label: "联系方式",
+    prop: "gameName",
+    label: "游戏名称",
     showOverflowTooltip: true,
     minWidth: 200,
     align: "center",
   },
   {
-    prop: "targetAmount",
-    label: "筹款金额",
+    prop: "steamUserId",
+    label: "Steam关联ID",
     showOverflowTooltip: true,
     minWidth: 200,
     align: "center",
-  },
-  {
-    prop: "raisedAmount",
-    label: "已筹金额",
-    showOverflowTooltip: true,
-    minWidth: 200,
-    align: "center",
-  },
-  {
-    prop: "startDate",
-    label: "开始时间",
-    showOverflowTooltip: true,
-    minWidth: 200,
-    align: "center",
-    slot: "rangeDate",
   },
   {
     prop: "status",
@@ -412,14 +391,27 @@ const columns_org = [
     slot: "status",
   },
   {
-    prop: "updatedAt",
-    label: "审核时间",
+    prop: "createTime",
+    label: "创建时间",
     sortable: "custom",
     showOverflowTooltip: true,
     minWidth: 160,
     align: "center",
     formatter: (row, column, cellValue) => {
-      return $util.toDateString(cellValue);
+      const date = new Date(cellValue);
+      return $util.toDateString(date);
+    },
+  },
+  {
+    prop: "updateTime",
+    label: "更新时间",
+    sortable: "custom",
+    showOverflowTooltip: true,
+    minWidth: 160,
+    align: "center",
+    formatter: (row, column, cellValue) => {
+      const date = new Date(cellValue);
+      return $util.toDateString(date);
     },
   },
   {
@@ -449,7 +441,7 @@ export default {
       // 省市区数据
       regions: regions,
       // 表格数据接口
-      url: "/cfProjects/index",
+      url: "/cdk/list",
       // 表格列配置
       columns: this.projectType === "1" ? columns_person : columns_org,
       // 组织机构列表
@@ -458,7 +450,12 @@ export default {
       where: {
         // fundId: this.fundList.length === 1 ? this.fundList[0].id : null,
         projectType: this.projectType,
-        fundIds: this.projectType === '1' ? null : this.$store.state.fund.fundList.map(item => item.id).join(',') || null,
+        fundIds:
+          this.projectType === "1"
+            ? null
+            : this.$store.state.fund.fundList
+                .map((item) => item.id)
+                .join(",") || null,
       },
       // 表格选中数据
       selection: [],
@@ -472,7 +469,11 @@ export default {
     reload() {
       // console.log(this.fundList.map((item) => item.id));
       this.showEdit = false;
-      this.where.fundIds = this.projectType === '1' ? null : this.$store.state.fund.fundList.map(item => item.id).join(',') || null
+      this.where.fundIds =
+        this.projectType === "1"
+          ? null
+          : this.$store.state.fund.fundList.map((item) => item.id).join(",") ||
+            null;
       this.$refs.table.reload();
     },
     /* 重置搜索 */
