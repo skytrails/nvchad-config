@@ -68,7 +68,6 @@ export default {
   computed: {
     // 当前登录用户信息
     loginUser() {
-      console.log(this.$store.state.user)
       return this.$store.state.user.user;
     },
     // 当前语言
