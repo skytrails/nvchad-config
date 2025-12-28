@@ -30,7 +30,7 @@
     <div class="ele-admin-header-tool-item">
       <el-dropdown @command="onUserDropClick">
         <div class="ele-admin-header-avatar">
-          <el-avatar :src="loginUser.avatar"/>
+          <el-avatar :src="require('@/assets/logo.png')" />
           <span class="hidden-xs-only">{{ loginUser.nickname }}</span>
           <i class="el-icon-arrow-down hidden-xs-only"></i>
         </div>
@@ -68,6 +68,7 @@ export default {
   computed: {
     // 当前登录用户信息
     loginUser() {
+      console.log(this.$store.state.user)
       return this.$store.state.user.user;
     },
     // 当前语言
