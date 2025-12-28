@@ -2,7 +2,7 @@
 <template>
   <el-drawer
     class="edit-table"
-    :title="isUpdate ? '修改新闻' : '添加新闻'"
+    :title="'生成CDK'"
     :visible.sync="showDrawer"
     :direction="direction"
     :size="'calc(100vw - 256px)'"
@@ -17,22 +17,20 @@
     >
       <el-row :gutter="15">
         <el-col :sm="16">
-          <el-form-item label="筹款标题:" prop="title">
+          <el-form-item label="游戏ID:" prop="gameId">
             <el-input
+              v-model="form.gameId"
+              style="width: 100%"
               clearable
-              :maxlength="20"
-              v-model="form.title"
-              placeholder="请输入筹款标题"
-            />
+              placeholder="请输入游戏ID"
+            ></el-input>
           </el-form-item>
-        </el-col>
-        <el-col :sm="16">
-          <el-form-item label="基金会:" prop="fundId">
+          <!--el-form-item label="游戏:" prop="fundId">
             <el-select
               v-model="form.fundId"
               style="width: 100%"
               clearable
-              placeholder="请选择基金"
+              placeholder="请输入游戏ID"
               @clear="form.fundId = null"
             >
               <el-option
@@ -43,101 +41,25 @@
               >
               </el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="筹款详情:" prop="description">
-            <el-input
-              type="textarea"
-              :rows="3"
-              v-model="form.description"
-              placeholder="请输入筹款详情"
-              maxlength="200"
-              show-word-limit
-            />
-          </el-form-item>
-          <!--el-form-item label="为谁筹款:" prop="title">
-            <el-input
-              clearable
-              :maxlength="20"
-              v-model="form.targetAmount"
-              placeholder="请输入筹款金额"
-            />
           </el-form-item-->
-          <el-form-item label="筹款金额:" prop="targetAmount">
+          <el-form-item label="生成数量:" prop="count">
             <el-input
               clearable
               type="number"
               :maxlength="20"
-              v-model="form.targetAmount"
-              placeholder="请输入筹款金额"
+              v-model="form.count"
+              placeholder="请输入CDK数量"
             />
           </el-form-item>
-          <el-form-item label="患者姓名:" prop="patientName">
+          <el-form-item label="备注:">
             <el-input
-              clearable
-              :maxlength="20"
-              v-model="form.patientName"
-              placeholder="请输入患者姓名"
-            />
-          </el-form-item>
-          <el-form-item label="患者身份证号:" prop="patientIdNo">
-            <el-input
-              clearable
-              :maxlength="20"
-              v-model="form.patientIdNo"
-              placeholder="请输入身份证号"
-            />
-          </el-form-item>
-          <el-form-item label="所患疾病:" prop="disease">
-            <el-input
-              clearable
-              :maxlength="20"
-              v-model="form.disease"
-              placeholder="请输入所患疾病"
-            />
-          </el-form-item>
-          <el-form-item label="手机号码:" prop="contactPhone">
-            <el-input
-              clearable
-              :maxlength="20"
-              v-model="form.contactPhone"
-              placeholder="请输入手机号码"
-            />
-          </el-form-item>
-          <el-form-item label="所在地区:" prop="district">
-            <el-input
-              clearable
-              :maxlength="20"
-              v-model="form.district"
-              placeholder="请输入所在地区"
-            />
-          </el-form-item>
-          <el-form-item label="经济状况:" prop="economicCondition">
-            <el-input
-              clearable
               type="textarea"
-              :maxlength="20"
-              v-model="form.economicCondition"
-              placeholder="请输入经济状况"
+              :rows="3"
+              v-model="form.description"
+              placeholder="请输入备注"
+              maxlength="200"
+              show-word-limit
             />
-          </el-form-item>
-          <el-form-item label="活动时间:">
-            <el-date-picker
-              v-model="formDateRange"
-              type="daterange"
-              range-separator=" - "
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            >
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="患者照片：">
-            <uploadImage :limit="1" v-model="form.patientImages"></uploadImage>
-          </el-form-item>
-          <el-form-item label="医疗证明：">
-            <uploadImage
-              :limit="1"
-              v-model="form.medicalCondition"
-            ></uploadImage>
           </el-form-item>
         </el-col>
       </el-row>
@@ -145,7 +67,7 @@
       <el-form-item
         style="text-align: center; margin-left: -100px; margin-top: 10px"
       >
-        <el-button @click="save" type="primary" size="medium">保存 </el-button>
+        <el-button @click="handleGenerate" type="primary" size="medium">生成 </el-button>
         <el-button @click="$emit('close')" size="medium">返回</el-button>
       </el-form-item>
     </el-form>
@@ -153,13 +75,11 @@
 </template>
 
 <script>
-import uploadImage from "@/components/uploadImage";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-// import TinymceEditor from "@/components/TinymceEditor";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "EventsEdit",
+  name: "CdkEdit",
   props: {
     // 弹窗是否打开
     visible: Boolean,
@@ -168,29 +88,16 @@ export default {
     // 栏目数据
     cateList: Array,
   },
-  components: { uploadImage },
   data() {
     return {
       showDrawer: this.visible,
       direction: "rtl",
       // 表单数据
-      form: Object.assign({ startDate: "", endDate: "" }, this.data),
+      form: {},
       // 表单验证规则
       rules: {
-        title: [{ required: true, message: "请输入筹款标题", trigger: "blur" }],
-        fundId: [{ required: true, message: "请选择基金会", trigger: "blur" }],
-        description: [{ required: true, message: "请输入筹款详情", trigger: "blur" }],
-        targetAmount: [{ required: true, message: "请输入筹款金额", trigger: "blur" }],
-        patientName: [{ required: true, message: "请输入患者姓名", trigger: "blur" }],
-        patientIdNo: [{ required: true, message: "请输入患者身份证", trigger: "blur" }],
-        disease: [{ required: true, message: "请输入患者疾病", trigger: "blur" }],
-        contactPhone: [{ required: true, message: "请输入联系方式", trigger: "blur" }],
-        district: [{ required: true, message: "请输入所在地区", trigger: "blur" }],
-        economicCondition: [{ required: true, message: "请输入经济状况", trigger: "blur" }],
-        status: [
-          { required: true, message: "请选择活动状态", trigger: "blur" },
-        ],
-        sort: [{ required: true, message: "请输入排序号", trigger: "blur" }],
+        gameId: [{ required: true, message: "请输入游戏ID", trigger: "blur" }],
+        count: [{ required: true, message: "请输入CDK数量", trigger: "blur" }],
       },
       // 提交状态
       loading: false,
@@ -218,7 +125,6 @@ export default {
       return {
         height: 450,
         branding: false,
-        skin_url: "/tinymce/skins/ui/oxide",
         content_css: "/tinymce/skins/content/default/content.css",
         language_url: "/tinymce/langs/zh_CN.js",
         language: "zh_CN",
@@ -250,18 +156,8 @@ export default {
         file_picker_callback: () => {},
       };
     },
-    formDateRange: {
-      get() {
-        return [this.form.startDate, this.form.endDate];
-      },
-      set(val) {
-        this.form.startDate = this.$util.toDateString(val[0], 'yyyy-MM-dd HH:mm:ss')
-        this.form.endDate = this.$util.toDateString(val[1], 'yyyy-MM-dd HH:mm:ss');
-      },
-    },
   },
   mounted() {
-    this.getInfo();
   },
   methods: {
     fundNameById(id, fundList) {
@@ -269,36 +165,13 @@ export default {
       const fund = fundList.find((item) => item.id == id);
       return fund ? fund.name : "暂无";
     },
-    /* 获取文章详情 */
-    getInfo() {
-      if (this.data.id > 0) {
-        this.$http
-          .get("/cfProjects/info/" + this.data.id)
-          .then((res) => {
-            if (res.data.code === 200) {
-              this.form = res.data.data;
-              console.log('------:', this.form);
-              this.isUpdate = true;
-            } else {
-              this.$message.error(res.data.message);
-            }
-          })
-          .catch((e) => {
-            this.$message.error(e.message);
-          });
-      }
-    },
     /* 保存编辑 */
-    save() {
+    handleGenerate() {
       this.$refs["form"].validate((valid) => {
-        console.log('------fundList:', this.fundList);
         if (valid) {
           this.loading = true;
           this.$http
-            .post(
-              this.isUpdate ? "/cfProjects/add" : "/cfProjects/add",
-              {...this.form, organizationName: this.fundNameById(this.form.fundId, this.fundList)}
-            )
+            .post("/cdk/generate", { ...this.form })
             .then((res) => {
               this.loading = false;
               if (res.data.code === 200) {

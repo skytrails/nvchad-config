@@ -10,72 +10,21 @@
         @submit.native.prevent
       >
         <el-row :gutter="15">
-          <template v-if="where.projectType === '1'">
-            <el-col :lg="6" :md="12">
-              <el-form-item label="患者姓名:">
-                <el-input
-                  clearable
-                  v-model="where.patientName"
-                  placeholder="请输入患者姓名"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :lg="6" :md="12">
-              <el-form-item label="所在地区:">
-                <el-cascader
-                  clearable
-                  v-model="where.city"
-                  class="ele-fluid"
-                  placeholder="请选择省市区"
-                  :options="regions.cityData"
-                  popper-class="ele-pop-wrap-higher"
-                />
+          <template>
+            <el-col :lg="4" :md="12">
+              <el-form-item label="游戏名/ID:">
+                <el-input v-model="where.gameName"></el-input>
               </el-form-item>
             </el-col>
           </template>
-          <template v-else>
-            <el-col :lg="6" :md="12">
-              <el-form-item label="基金会:">
-                <el-select
-                  v-model="where.fundId"
-                  style="width: 100%"
-                  clearable
-                  placeholder="请选择基金"
-                  @clear="where.fundId = null"
-                >
-                  <el-option
-                    v-for="item in fundList"
-                    :key="'fund' + item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  >
-                  </el-option>
-                </el-select>
+          <template>
+            <el-col :lg="4" :md="12">
+              <el-form-item label="CDK:">
+                <el-input v-model="where.cdk"></el-input>
               </el-form-item>
             </el-col>
           </template>
-          <el-col :lg="6" :md="12">
-            <el-form-item label="筹款金额:">
-              <el-row>
-                <el-col :span="11">
-                  <el-input
-                    clearable
-                    v-model="where.targetAmount"
-                    placeholder="起"
-                  />
-                </el-col>
-                <el-col :span="2" style="text-align: center">至</el-col>
-                <el-col :span="11">
-                  <el-input
-                    clearable
-                    v-model="where.targetAmount"
-                    placeholder="止"
-                  />
-                </el-col>
-              </el-row>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="6" :md="12">
+          <el-col :lg="4" :md="12">
             <el-form-item label="状态:">
               <el-select
                 clearable
@@ -83,14 +32,20 @@
                 placeholder="全部"
                 class="ele-fluid"
               >
-                <el-option label="未审核" value="1" />
-                <el-option label="已通过" value="2" />
-                <el-option label="已拒绝" value="3" />
+                <el-option label="待使用" value="0">
+                  <span style="color: #67c23a">待使用</span>
+                </el-option>
+                <el-option label="已使用" value="1">
+                  <span style="color: #e6a23c">已使用</span>
+                </el-option>
+                <el-option label="已停用" value="2">
+                  <span style="color: #f56c6c">已停用</span>
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :lg="6" :md="12">
-            <el-form-item label="申请日期:">
+            <el-form-item label="生成日期:">
               <el-date-picker
                 v-model="where.dateRange"
                 type="daterange"
@@ -113,7 +68,7 @@
               </el-button>
               <el-button @click="reset">重置</el-button>
               <el-button v-if="where.projectType !== '1'" @click="create"
-                >新建</el-button
+                >生成CDK</el-button
               >
             </div>
           </el-col>
@@ -140,18 +95,6 @@
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
-          <el-link
-            :underline="false"
-            icon="el-icon-view"
-            @click="rowEdit(row, 'detail')"
-            >查看详情
-          </el-link>
-          <el-link
-            :underline="false"
-            icon="el-icon-edit"
-            @click="rowEdit(row, 'edit')"
-            >修改
-          </el-link>
           <el-link
             :underline="false"
             type="danger"
@@ -203,148 +146,7 @@ import regions from "ele-admin/packages/regions";
 import * as $util from "ele-admin/packages/util.js";
 import { MessageBox, Message } from "element-ui";
 
-const columns_person = [
-  // {
-  //   columnKey: 'selection',
-  //   type: 'selection',
-  //   width: 45,
-  //   align: 'center',
-  //   fixed: "left"
-  // },
-  {
-    prop: "id",
-    label: "ID",
-    width: 60,
-    align: "center",
-    showOverflowTooltip: true,
-    fixed: "left",
-  },
-  {
-    prop: "cdk",
-    label: "CDK",
-    sortable: "custom",
-    showOverflowTooltip: true,
-    minWidth: 160,
-    align: "center",
-  },
-  {
-    prop: "patientRelation",
-    label: "为谁筹款",
-    showOverflowTooltip: true,
-    minWidth: 150,
-    align: "center",
-  },
-  {
-    prop: "patientName",
-    label: "患者姓名",
-    showOverflowTooltip: true,
-    minWidth: 150,
-    align: "center",
-  },
-  {
-    prop: "patientIdNo",
-    label: "患者证件号",
-    showOverflowTooltip: true,
-    minWidth: 150,
-    align: "center",
-  },
-  {
-    prop: "disease",
-    label: "所患疾病",
-    showOverflowTooltip: true,
-    minWidth: 200,
-    align: "center",
-  },
-  {
-    prop: "contactPhone",
-    label: "手机号码",
-    showOverflowTooltip: true,
-    minWidth: 200,
-    align: "center",
-  },
-  {
-    prop: "city",
-    label: "所在地区",
-    showOverflowTooltip: true,
-    minWidth: 200,
-    align: "center",
-    slot: "city",
-  },
-  {
-    prop: "targetAmount",
-    label: "筹款金额",
-    showOverflowTooltip: true,
-    minWidth: 200,
-    align: "center",
-  },
-  {
-    prop: "raisedAmount",
-    label: "已筹金额",
-    showOverflowTooltip: true,
-    minWidth: 200,
-    align: "center",
-  },
-  {
-    prop: "economic",
-    label: "经济情况",
-    showOverflowTooltip: true,
-    minWidth: 200,
-    align: "center",
-    slot: "economic",
-  },
-  // {
-  //   prop: 'startAt',
-  //   label: '开始时间',
-  //   sortable: 'custom',
-  //   showOverflowTooltip: true,
-  //   minWidth: 160,
-  //   align: 'center',
-  //   formatter: (row, column, cellValue) => {
-  //     return this.$util.toDateString(cellValue, 'yyyy-MM-dd');
-  //   }
-  // },
-  // {
-  //   prop: 'endAt',
-  //   label: '截止时间',
-  //   sortable: 'custom',
-  //   showOverflowTooltip: true,
-  //   minWidth: 160,
-  //   align: 'center',
-  //   formatter: (row, column, cellValue) => {
-  //     return this.$util.toDateString(cellValue, 'yyyy-MM-dd');
-  //   }
-  // },
-  {
-    prop: "status",
-    label: "状态",
-    align: "center",
-    width: 150,
-    resizable: false,
-    slot: "status",
-  },
-  {
-    prop: "updatedAt",
-    label: "审核时间",
-    sortable: "custom",
-    showOverflowTooltip: true,
-    minWidth: 160,
-    align: "center",
-    formatter: (row, column, cellValue) => {
-      return $util.toDateString(cellValue);
-    },
-  },
-  {
-    columnKey: "action",
-    label: "操作",
-    width: 150,
-    align: "center",
-    resizable: false,
-    slot: "action",
-    fixed: "right",
-  },
-];
-
-const columns_org = [
+const columns = [
   {
     prop: "id",
     label: "ID",
@@ -443,9 +245,7 @@ export default {
       // 表格数据接口
       url: "/cdk/list",
       // 表格列配置
-      columns: this.projectType === "1" ? columns_person : columns_org,
-      // 组织机构列表
-      // columns_org: ,
+      columns: columns,
       // 表格搜索条件
       where: {
         // fundId: this.fundList.length === 1 ? this.fundList[0].id : null,
