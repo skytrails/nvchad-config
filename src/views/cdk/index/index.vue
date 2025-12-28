@@ -3,13 +3,6 @@
     <ProjectsTable ref="tableOrganization" @rowEdit="openEdit" />
 
     <!-- 详情弹窗 -->
-    <projects-detail
-      v-if="showEdit && showType === 'detail'"
-      @close="showEdit = false"
-      :data="current"
-      :visible="showEdit"
-      @done="reload"
-    />
     <!-- 编辑弹窗 -->
     <projects-edit
       v-if="showEdit && showType === 'edit'"
@@ -23,13 +16,12 @@
 
 <script>
 import { mapGetters } from "vuex";
-import ProjectsDetail from "./project-detail";
 import ProjectsEdit from "./project-edit";
 import ProjectsTable from "./components/project-card";
 
 export default {
   name: "CfProjects",
-  components: { ProjectsTable, ProjectsDetail, ProjectsEdit },
+  components: { ProjectsTable,  ProjectsEdit },
   computed: {
     ...mapGetters(["permission"]),
   },

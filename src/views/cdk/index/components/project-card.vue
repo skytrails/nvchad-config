@@ -13,7 +13,7 @@
           <template>
             <el-col :lg="4" :md="12">
               <el-form-item label="游戏名/ID:">
-                <el-input v-model="where.gameName"></el-input>
+                <el-input v-model="where.keyword"></el-input>
               </el-form-item>
             </el-col>
           </template>
@@ -21,6 +21,13 @@
             <el-col :lg="4" :md="12">
               <el-form-item label="CDK:">
                 <el-input v-model="where.cdk"></el-input>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template>
+            <el-col :lg="4" :md="12">
+              <el-form-item label="SteamId:">
+                <el-input v-model="where.steamId"></el-input>
               </el-form-item>
             </el-col>
           </template>
@@ -67,9 +74,6 @@
                 >查询
               </el-button>
               <el-button @click="reset">重置</el-button>
-              <el-button v-if="where.projectType !== '1'" @click="create"
-                >生成CDK</el-button
-              >
             </div>
           </el-col>
         </el-row>
@@ -83,6 +87,16 @@
         :selection.sync="selection"
         height="calc(100vh - 405px)"
       >
+        <template slot="toolbar">
+          <el-button
+            size="small"
+            type="primary"
+            icon="el-icon-plus"
+            class="ele-btn-icon"
+            @click="handleGenerate"
+            >生成CDK
+          </el-button>
+        </template>
         <!-- 表头工具栏 -->
         <template slot="toolbar">
           <!--          <el-button-->
@@ -128,12 +142,13 @@
           {{ row.startDate }} 至 {{ row.endDate }}
         </template>
         <!-- 状态列 -->
-        <template slot="status" slot-scope="{ row }">
-          <el-tag
-            :type="row.status === 1 ? 'info' : row.status === 2 ? '' : 'danger'"
-            size="mini"
-            >{{ row.statusName }}
-          </el-tag>
+        <template slot="status" slot-scope="{}">
+          <el-tag>使用中 </el-tag>
+        </template>
+        <template slot="cdk" slot-scope="{ row }">
+          <el-link type="success" @click="handleCopy(row.cdk)">{{
+            row.cdk
+          }}</el-link>
         </template>
       </ele-pro-table>
     </el-card>
@@ -162,6 +177,7 @@ const columns = [
     showOverflowTooltip: true,
     minWidth: 160,
     align: "center",
+    slot: "cdk",
   },
   {
     prop: "gameId",
@@ -185,7 +201,7 @@ const columns = [
     align: "center",
   },
   {
-    prop: "status",
+    prop: "updateBy",
     label: "状态",
     align: "center",
     width: 150,
@@ -229,12 +245,7 @@ const columns = [
 
 export default {
   name: "CfProjectsCard",
-  props: {
-    projectType: {
-      type: String,
-      default: "1",
-    },
-  },
+  props: {},
   computed: {
     ...mapGetters(["permission", "fundList"]),
   },
@@ -247,16 +258,7 @@ export default {
       // 表格列配置
       columns: columns,
       // 表格搜索条件
-      where: {
-        // fundId: this.fundList.length === 1 ? this.fundList[0].id : null,
-        projectType: this.projectType,
-        fundIds:
-          this.projectType === "1"
-            ? null
-            : this.$store.state.fund.fundList
-                .map((item) => item.id)
-                .join(",") || null,
-      },
+      where: {},
       // 表格选中数据
       selection: [],
       // 当前编辑数据
@@ -269,19 +271,14 @@ export default {
     reload() {
       // console.log(this.fundList.map((item) => item.id));
       this.showEdit = false;
-      this.where.fundIds =
-        this.projectType === "1"
-          ? null
-          : this.$store.state.fund.fundList.map((item) => item.id).join(",") ||
-            null;
       this.$refs.table.reload();
     },
     /* 重置搜索 */
     reset() {
-      this.where = { projectType: this.where.projectType };
+      this.where = {};
       this.reload();
     },
-    create() {
+    handleGenerate() {
       this.rowEdit(null, "edit");
     },
     // onProjectTypeChange() {
@@ -290,6 +287,17 @@ export default {
     /* 显示编辑 */
     rowEdit(row, type) {
       this.$emit("rowEdit", { row, type });
+    },
+    handleCopy(item) {
+      if (!item) return this.$message.warning("没有内容可复制");
+      navigator.clipboard
+        .writeText(item)
+        .then(() => {
+          this.$message.success("复制成功");
+        })
+        .catch(() => {
+          this.$message.error("复制失败");
+        });
     },
     handleDelete(item) {
       console.log(item);

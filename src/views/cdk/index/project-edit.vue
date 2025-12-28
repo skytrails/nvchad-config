@@ -25,23 +25,6 @@
               placeholder="请输入游戏ID"
             ></el-input>
           </el-form-item>
-          <!--el-form-item label="游戏:" prop="fundId">
-            <el-select
-              v-model="form.fundId"
-              style="width: 100%"
-              clearable
-              placeholder="请输入游戏ID"
-              @clear="form.fundId = null"
-            >
-              <el-option
-                v-for="item in fundList"
-                :key="'fund' + item.id"
-                :label="item.name"
-                :value="item.id"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item-->
           <el-form-item label="生成数量:" prop="count">
             <el-input
               clearable

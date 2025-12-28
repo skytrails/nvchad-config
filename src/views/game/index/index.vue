@@ -58,12 +58,20 @@
             icon="el-icon-plus"
             class="ele-btn-icon"
             @click="openEdit(null)"
-            >新增
+            >添加
           </el-button>
         </template>
 
-        <template v-slot:DLCIDs="{ row }">
-          <el-tag type="success">{{ row["dlcId"] }}</el-tag>
+        <template
+          v-slot:DLCIDs="{
+            /*row*/
+          }"
+        >
+          <!--el-tag type="success">{{ row["dlcId"] }}</el-tag-->
+          <el-tag type="success">未配置</el-tag>
+          <el-tag type="success">未配置</el-tag>
+          <el-tag type="success">未配置</el-tag>
+          <el-tag type="success">未配置</el-tag>
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
@@ -131,21 +139,20 @@ export default {
           prop: "gameId",
           label: "游戏ID",
           showOverflowTooltip: true,
-          minWidth: 30,
-          maxWidth: 30,
+          width: 150,
           align: "center",
         },
         {
           prop: "gameName",
           label: "游戏名称",
           showOverflowTooltip: true,
-          width: 200,
+          width: 230,
           align: "center",
         },
         {
           prop: "dlcId",
           label: "配置状态",
-          minWidth: 150,
+          minWidth: 100,
           align: "center",
           slot: "DLCIDs",
         },
