@@ -4,12 +4,14 @@
     <el-card shadow="never" body-style="padding: 20px;">
       <div class="ele-cell workplace-user-card">
         <div class="ele-cell-content ele-cell">
-          <el-avatar :size="68" :src="loginUser.avatar"/>
+          <el-avatar :size="68" :src="require('@/assets/logo.png')" />
           <div class="ele-cell-content">
-            <h4 class="ele-elip">早安，{{ loginUser.nickname }}，开始您一天的工作吧！</h4>
-            <div class="ele-text-secondary ele-elip" style="margin-top: 8px;">
+            <h4 class="ele-elip">
+              您好，{{ loginUser.nickname }}，开始您一天的工作吧！
+            </h4>
+            <div class="ele-text-secondary ele-elip" style="margin-top: 8px">
               <i class="el-icon-heavy-rain"></i>
-              <span><s/><s/>今日阴转小雨，22℃ - 32℃，出门记得带伞哦。</span>
+              <span><s /><s />今日阴转小雨，22℃ - 32℃，出门记得带伞哦。</span>
             </div>
           </div>
         </div>
@@ -19,28 +21,28 @@
               <el-tag size="small" class="ele-tag-round">
                 <i class="el-icon-menu"></i>
               </el-tag>
-              <span class="workplace-count-name">项目数</span>
+              <span class="workplace-count-name">游戏总数</span>
             </div>
-            <div class="workplace-count-num">3</div>
+            <div class="workplace-count-num">3721</div>
           </div>
           <div class="workplace-count-item">
             <div class="workplace-count-header">
               <el-tag type="warning" size="small" class="ele-tag-round">
                 <i class="el-icon-finished"></i>
               </el-tag>
-              <span class="workplace-count-name">待办项</span>
+              <span class="workplace-count-name">总激活数</span>
             </div>
             <div class="workplace-count-num">6 / 24</div>
           </div>
-<!--          <div class="workplace-count-item">-->
-<!--            <div class="workplace-count-header">-->
-<!--              <el-tag type="success" size="small" class="ele-tag-round">-->
-<!--                <i class="el-icon-bell"></i>-->
-<!--              </el-tag>-->
-<!--              <span class="workplace-count-name">消息</span>-->
-<!--            </div>-->
-<!--            <div class="workplace-count-num">1,689</div>-->
-<!--          </div>-->
+          <div class="workplace-count-item">
+            <div class="workplace-count-header">
+              <el-tag type="success" size="small" class="ele-tag-round">
+                <i class="el-icon-bell"></i>-->
+              </el-tag>
+              <span class="workplace-count-name">其他</span>
+            </div>
+            <div class="workplace-count-num">1,689</div>
+          </div>
         </div>
       </div>
     </el-card>
@@ -49,64 +51,133 @@
       <el-col :lg="3" :md="6" :sm="6" :xs="12">
         <el-card shadow="hover" body-style="padding: 0;">
           <router-link to="/system/user" class="app-link-block">
-            <i class="app-link-icon el-icon-user"></i>
-            <div class="app-link-title">系统用户</div>
+            <div>
+              <el-progress
+                :width="200"
+                :percentage="40"
+                type="dashboard"
+                :format="
+                  () => {
+                    return '4348';
+                  }
+                "
+              />
+            </div>
+            <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
         </el-card>
       </el-col>
       <el-col :lg="3" :md="6" :sm="6" :xs="12">
         <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/system/role" class="app-link-block">
-            <i class="app-link-icon el-icon-data-line" style="color: #95de64;"></i>
-            <div class="app-link-title">角色管理</div>
+          <router-link to="/system/user" class="app-link-block">
+            <div>
+              <el-progress
+                :width="200"
+                :percentage="68"
+                type="dashboard"
+                :format="
+                  () => {
+                    return '9143';
+                  }
+                "
+              />
+            </div>
+            <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
         </el-card>
       </el-col>
       <el-col :lg="3" :md="6" :sm="6" :xs="12">
         <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/fund/project" class="app-link-block">
-            <i class="app-link-icon el-icon-shopping-cart-2" style="color: #ff9c6e;"></i>
-            <div class="app-link-title">后台管理</div>
+          <router-link to="/system/user" class="app-link-block">
+            <div>
+              <el-progress
+                :width="200"
+                :percentage="70"
+                type="dashboard"
+                :format="
+                  () => {
+                    return '1343';
+                  }
+                "
+              />
+            </div>
+            <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
         </el-card>
       </el-col>
       <el-col :lg="3" :md="6" :sm="6" :xs="12">
         <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/fund/withdraw" class="app-link-block">
-            <i class="app-link-icon el-icon-tickets" style="color: #b37feb;"></i>
-            <div class="app-link-title">提款信息</div>
+          <router-link to="/system/user" class="app-link-block">
+            <div>
+              <el-progress
+                :width="200"
+                :percentage="40"
+                type="dashboard"
+                :format="
+                  () => {
+                    return '3721';
+                  }
+                "
+              />
+            </div>
+            <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
         </el-card>
       </el-col>
       <el-col :lg="3" :md="6" :sm="6" :xs="12">
         <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/operate/events" class="app-link-block">
-            <i class="app-link-icon el-icon-bank-card" style="color: #ffd666;"></i>
-            <div class="app-link-title">游戏库管理</div>
+          <router-link to="/system/user" class="app-link-block">
+            <div>
+              <el-progress
+                :width="200"
+                :percentage="40"
+                type="dashboard"
+                :format="
+                  () => {
+                    return '3947';
+                  }
+                "
+              />
+            </div>
+            <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
         </el-card>
       </el-col>
       <el-col :lg="3" :md="6" :sm="6" :xs="12">
         <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/content/article" class="app-link-block">
-            <i class="app-link-icon el-icon-message" style="color: #5cdbd3;"></i>
-            <div class="app-link-title">新闻资讯</div>
+          <router-link to="/system/user" class="app-link-block">
+            <div>
+              <el-progress
+                :width="200"
+                :percentage="40"
+                type="dashboard"
+                :format="
+                  () => {
+                    return '3947';
+                  }
+                "
+              />
+            </div>
+            <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
         </el-card>
       </el-col>
       <el-col :lg="3" :md="6" :sm="6" :xs="12">
         <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/setting/protocols" class="app-link-block">
-            <i class="app-link-icon el-icon-discount" style="color: #ff85c0;"></i>
-            <div class="app-link-title">协议条款</div>
-          </router-link>
-        </el-card>
-      </el-col>
-      <el-col :lg="3" :md="6" :sm="6" :xs="12">
-        <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/setting/faqs" class="app-link-block">
-            <i class="app-link-icon el-icon-s-operation" style="color: #ffc069;"></i>
-            <div class="app-link-title">帮助中心</div>
+          <router-link to="/system/user" class="app-link-block">
+            <div>
+              <el-progress
+                :width="200"
+                :percentage="40"
+                type="dashboard"
+                :format="
+                  () => {
+                    return '3947';
+                  }
+                "
+              />
+            </div>
+            <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
         </el-card>
       </el-col>
@@ -116,57 +187,83 @@
       <el-col :lg="16" :md="24">
         <el-card
           shadow="never"
-          header="项目进度"
+          header="代理列表"
           body-style="padding: 12px;"
-          class="workplace-table-card">
+          class="workplace-table-card"
+        >
           <el-table :data="projectList" height="358">
             <el-table-column
               type="index"
               width="35"
               min-width="35"
-              align="right"/>
-            <el-table-column
-              label="项目名称"
-              min-width="110">
-              <template slot-scope="{row}">
-                <el-link
-                  type="primary"
-                  :underline="false">
+              align="right"
+            />
+            <el-table-column label="代理名称" width="150">
+              <template slot-scope="{ row }">
+                <el-link type="primary" :underline="false">
                   {{ row.projectName }}
                 </el-link>
               </template>
             </el-table-column>
             <el-table-column
-              label="开始时间"
-              prop="startDate"
+              label="激活数"
+              prop="amount"
               width="95"
               min-width="80"
-              align="center"/>
+              align="center"
+            />
+            <el-table-column
+              label="CDK总数"
+              prop="amount"
+              width="95"
+              min-width="80"
+              align="center"
+            />
+            <el-table-column
+              label="余额"
+              prop="amount"
+              width="95"
+              min-width="80"
+              align="center"
+            />
             <el-table-column
               prop="endDate"
-              label="结束时间"
+              label="加入时间"
               width="95"
               min-width="80"
-              align="center"/>
+              align="center"
+            />
             <el-table-column
               label="状态"
               width="70"
               min-width="60"
-              align="center">
-              <template slot-scope="{row}">
+              align="center"
+            >
+              <template slot-scope="{ row }">
                 <span
-                  :class="['ele-text-success','ele-text-danger','ele-text-warning','ele-text-info ele-text-delete'][row.state]">
-                    {{ ['进行中', '已延期', '未开始', '已结束'][row.state] }}
+                  :class="
+                    [
+                      'ele-text-success',
+                      'ele-text-danger',
+                      'ele-text-warning',
+                      'ele-text-info ele-text-delete',
+                    ][row.state]
+                  "
+                >
+                  {{ ["进行中", "已延期", "未开始", "已结束"][row.state] }}
                 </span>
               </template>
             </el-table-column>
             <el-table-column
               label="进度"
-              width="160"
               min-width="100"
-              align="center">
-              <template slot-scope="{row}">
-                <el-progress :percentage="row.progress" class="ele-text-small"/>
+              align="center"
+            >
+              <template slot-scope="{ row }">
+                <el-progress
+                  :percentage="row.progress"
+                  class="ele-text-small"
+                />
               </template>
             </el-table-column>
           </el-table>
@@ -174,17 +271,20 @@
       </el-col>
 
       <el-col :lg="8" :md="12" class="hidden-md-and-down">
-        <el-card shadow="never" header="本月目标">
+        <el-card shadow="never" header="余额">
           <div class="workplace-goal-group">
             <el-progress
               :width="170"
               :percentage="80"
               type="dashboard"
-              :format="()=>{return ''}"/>
+              :format="
+                () => {
+                  return '';
+                }
+              "
+            />
             <div class="workplace-goal-content">
-              <el-tag
-                size="large"
-                class="ele-tag-round">
+              <el-tag size="large" class="ele-tag-round">
                 <i class="el-icon-s-data"></i>
               </el-tag>
               <div class="workplace-goal-num">285</div>
@@ -199,70 +299,71 @@
 
 <script>
 export default {
-  name: 'DashboardWorkplace',
+  name: "DashboardWorkplace",
   data() {
     return {
       // 项目进度数据
       projectList: [
         {
-          projectName: '项目名称项目名称项目名称项目名称项目名称',
+          projectName: "lixiao",
           state: 0,
-          startDate: '2024-03-01',
-          endDate: '2024-06-01',
-          progress: 30
+          startDate: "2024-03-01",
+          endDate: "2024-06-01",
+          progress: 30,
         },
         {
-          projectName: '项目名称项目名称项目名称项目名称项目名称',
+          projectName: "wangzhang",
           state: 0,
-          startDate: '2024-03-01',
-          endDate: '2024-08-01',
-          progress: 10
+          startDate: "2024-03-01",
+          endDate: "2024-08-01",
+          progress: 10,
         },
         {
-          projectName: '项目名称项目名称项目名称项目名称项目名称',
+          projectName: "xiaoll",
           state: 1,
-          startDate: '2024-01-01',
-          endDate: '2024-05-01',
-          progress: 60
+          startDate: "2024-01-01",
+          endDate: "2024-05-01",
+          progress: 60,
         },
         {
-          projectName: '项目名称项目名称项目名称项目名称项目名称',
+          projectName: "wuli",
           state: 1,
-          startDate: '2024-06-01',
-          endDate: '2024-10-01',
-          progress: 0
+          startDate: "2024-06-01",
+          endDate: "2024-10-01",
+          progress: 0,
         },
         {
-          projectName: '项目名称项目名称项目名称项目名称项目名称',
-          state: 2, startDate: '2024-01-01',
-          endDate: '2024-09-01',
-          progress: 100
+          projectName: "shitou",
+          state: 2,
+          startDate: "2024-01-01",
+          endDate: "2024-09-01",
+          progress: 100,
         },
         {
-          projectName: '项目名称项目名称项目名称项目名称项目名称',
+          projectName: "mini",
           state: 3,
-          startDate: '2024-02-01',
-          endDate: '2024-10-01',
-          progress: 100
+          startDate: "2024-02-01",
+          endDate: "2024-10-01",
+          progress: 100,
         },
         {
-          projectName: '项目名称项目名称项目名称项目名称项目名称',
+          projectName: "skyy",
           state: 3,
-          startDate: '2024-01-01',
-          endDate: '2024-03-01',
-          progress: 100
-        }
+          startDate: "2024-01-01",
+          endDate: "2024-03-01",
+          progress: 100,
+        },
       ],
     };
   },
   computed: {
     // 当前登录用户信息
     loginUser() {
-      console.log(this.$store.state.fund)
+      console.log(this.$store.state.fund);
       return this.$store.state.user.user;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -382,7 +483,7 @@ export default {
 }
 
 .workplace-table-card ::v-deep .el-table__row.sortable-chosen {
-  background-color: hsla(0, 0%, 60%, .1);
+  background-color: hsla(0, 0%, 60%, 0.1);
 }
 
 .workplace-table-card ::v-deep .el-table__row.sortable-chosen td {
@@ -415,7 +516,7 @@ export default {
 }
 
 .user-list-item + .user-list-item {
-  border-top: 1px solid hsla(0, 0%, 60%, .15);
+  border-top: 1px solid hsla(0, 0%, 60%, 0.15);
 }
 
 .user-list-item .ele-cell-desc {
@@ -424,6 +525,5 @@ export default {
 
 /* 小屏幕优化 */
 @media screen and (max-width: 768px) {
-
 }
 </style>
