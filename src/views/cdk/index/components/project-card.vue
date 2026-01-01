@@ -111,6 +111,13 @@
         <template slot="action" slot-scope="{ row }">
           <el-link
             :underline="false"
+            type="primary"
+            icon="el-icon-delete"
+            @click="handleUnlink(row)"
+            >解绑
+          </el-link>
+          <el-link
+            :underline="false"
             type="danger"
             icon="el-icon-delete"
             @click="handleDelete(row)"
@@ -299,17 +306,30 @@ export default {
           this.$message.error("复制失败");
         });
     },
+    handleUnlink(item) {
+      console.log(item);
+      MessageBox.confirm(`确认要解除绑定吗？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          // 用户点击“确定”后的删除逻辑
+          this.unlink(item);
+          Message.success("解绑成功");
+        })
+        .catch(() => {
+          // 用户点击“取消”
+          Message.info("已取消解绑");
+        });
+    },
     handleDelete(item) {
       console.log(item);
-      MessageBox.confirm(
-        `确认要删除吗？`, // 提示内容
-        "提示", // 标题
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      MessageBox.confirm(`确认要删除吗？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(() => {
           // 用户点击“确定”后的删除逻辑
           this.remove(item);
@@ -318,6 +338,25 @@ export default {
         .catch(() => {
           // 用户点击“取消”
           Message.info("已取消删除");
+        });
+    },
+    /*解除绑定*/
+    unlink(row) {
+      const loading = this.$loading({ lock: true });
+      this.$http
+        .post("/cdk/unlink", [row.id])
+        .then((res) => {
+          loading.close();
+          if (res.data.code === 200) {
+            this.$message.success(res.data.message);
+            this.reload();
+          } else {
+            this.$message.error(res.data.message);
+          }
+        })
+        .catch((e) => {
+          loading.close();
+          this.$message.error(e.message);
         });
     },
     /* 删除 */
