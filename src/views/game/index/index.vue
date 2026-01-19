@@ -62,6 +62,12 @@
           </el-button>
         </template>
 
+        <template slot="denuvo" slot-scope="{ row }" >
+          <el-tag :type="row.denuvo === '1' ? 'success' : 'info'">D加密: {{row.denuvo === '1' ? 'True' : 'False'}}</el-tag>
+          <!--el-tag type="success">未配置: {{row.denuvo}}</el-tag>
+          <el-tag type="success">未配置</el-tag>
+          <el-tag type="success">未配置</el-tag-->
+        </template>
         <template
           v-slot:DLCIDs="{
             /*row*/
@@ -150,11 +156,11 @@ export default {
           align: "center",
         },
         {
-          prop: "dlcId",
+          prop: "denuvo",
           label: "配置状态",
           minWidth: 100,
           align: "center",
-          slot: "DLCIDs",
+          slot: "denuvo",
         },
         {
           prop: "status",

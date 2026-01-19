@@ -120,7 +120,7 @@
             type="primary"
             :underline="false"
             icon="el-icon-edit"
-            @click="openEdit(row)" v-if="row.id !== 1">修改2
+            @click="openEdit(row)" v-if="row.id !== 1">修改
           </el-link>
           <el-popconfirm
             class="ele-action"
