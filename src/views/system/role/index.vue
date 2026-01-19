@@ -90,6 +90,7 @@
             @confirm="remove(row)"
           >
             <el-link
+              v-if="row['code'] != 'ROLE_SUPER'"
               type="danger"
               slot="reference"
               :underline="false"
@@ -288,7 +289,7 @@ export default {
           const loading = this.$loading({ lock: true });
           this.$http
             .post(
-              "/sysRole/delete",
+              "/role/delete",
               this.selection.map((d) => d.id)
             )
             .then((res) => {

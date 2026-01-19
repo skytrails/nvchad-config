@@ -109,7 +109,7 @@ export default {
         if (valid) {
           this.loading = true;
           this.$http
-            .post(this.isUpdate ? "/sysRole/edit" : "/sysRole/add", this.form)
+            .post(this.isUpdate ? "/role/update" : "/role/create", this.form)
             .then((res) => {
               this.loading = false;
               if (res.data.code === 200) {

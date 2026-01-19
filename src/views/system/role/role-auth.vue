@@ -6,19 +6,22 @@
     width="500px"
     :destroy-on-close="true"
     :lock-scroll="false"
-    @update:visible="updateVisible">
+    @update:visible="updateVisible"
+  >
     <el-scrollbar
       v-loading="authLoading"
-      style="height: 50vh;"
-      wrapStyle="overflow-x: hidden;">
+      style="height: 50vh"
+      wrapStyle="overflow-x: hidden;"
+    >
       <el-tree
         ref="tree"
         :data="authData"
-        :props="{label: 'title'}"
+        :props="{ label: 'title' }"
         node-key="id"
         :default-expand-all="true"
         :default-checked-keys="checked"
-        show-checkbox>
+        show-checkbox
+      >
         <span slot-scope="{ data }">
           <i :class="data.icon"></i>
           <span> {{ data.title }}</span>
@@ -27,10 +30,8 @@
     </el-scrollbar>
     <div slot="footer">
       <el-button @click="updateVisible(false)">取消</el-button>
-      <el-button
-        type="primary"
-        @click="save"
-        :loading="loading">保存
+      <el-button type="primary" @click="save" :loading="loading"
+        >保存
       </el-button>
     </div>
   </el-dialog>
@@ -38,12 +39,12 @@
 
 <script>
 export default {
-  name: 'RoleAuth',
+  name: "RoleAuth",
   props: {
     // 弹窗是否打开
     visible: Boolean,
     // 当前角色数据
-    data: Object
+    data: Object,
   },
   data() {
     return {
@@ -52,27 +53,27 @@ export default {
       // 权限数据请求状态
       authLoading: false,
       // 提交状态
-      loading: false
+      loading: false,
     };
   },
   computed: {
     // 权限树选中数据
     checked() {
       let checked = [];
-      this.$util.eachTreeData(this.authData, d => {
+      this.$util.eachTreeData(this.authData, (d) => {
         if (d.checked && (!d.children || !d.children.length)) {
           checked.push(d.id);
         }
       });
       return checked;
-    }
+    },
   },
   watch: {
     visible() {
       if (this.visible) {
         this.query();
       }
-    }
+    },
   },
   methods: {
     /* 查询权限数据 */
@@ -80,42 +81,49 @@ export default {
       this.authData = [];
       if (!this.data) return;
       this.authLoading = true;
-      this.$http.get('/sysRole/getPermissionList/' + this.data.id).then(res => {
-        this.authLoading = false;
-        if (res.data.code === 200) {
-          this.authData = this.$util.toTreeData(res.data.data, 'id', 'pid');
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch(e => {
-        this.authLoading = false;
-        this.$message.error(e.message);
-      });
+      this.$http
+        .get("/role/listMenu/" + this.data.id)
+        .then((res) => {
+          this.authLoading = false;
+          if (res.data.code === 200) {
+            this.authData = this.$util.toTreeData(res.data.data, "id", "pid");
+          } else {
+            this.$message.error(res.data.message);
+          }
+        })
+        .catch((e) => {
+          this.authLoading = false;
+          this.$message.error(e.message);
+        });
     },
     /* 保存权限分配 */
     save() {
       this.loading = true;
-      let ids = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
-      this.$http.post('/sysRole/savePermission', {roleId: this.data.id, menuIds: ids}).then(res => {
-        this.loading = false;
-        if (res.data.code === 200) {
-          this.$message.success(res.data.message);
-          this.updateVisible(false);
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch(e => {
-        this.loading = false;
-        this.$message.error(e.message);
-      });
+      let ids = this.$refs.tree
+        .getCheckedKeys()
+        .concat(this.$refs.tree.getHalfCheckedKeys());
+      this.$http
+        .post("/role/allocMenu/" + this.data.id, { menuIds: ids })
+        .then((res) => {
+          this.loading = false;
+          if (res.data.code === 200) {
+            this.$message.success(res.data.message);
+            this.updateVisible(false);
+          } else {
+            this.$message.error(res.data.message);
+          }
+        })
+        .catch((e) => {
+          this.loading = false;
+          this.$message.error(e.message);
+        });
     },
     /* 更新visible */
     updateVisible(value) {
-      this.$emit('update:visible', value);
-    }
-  }
-}
+      this.$emit("update:visible", value);
+    },
+  },
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
