@@ -16,7 +16,7 @@
             <el-input
               clearable
               :maxlength="20"
-              :disabled="isUpdate === false"
+              :disabled="isUpdate"
               v-model="form.username"
               placeholder="请输入用户账号"
             />
