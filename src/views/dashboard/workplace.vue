@@ -11,7 +11,7 @@
             </h4>
             <div class="ele-text-secondary ele-elip" style="margin-top: 8px">
               <i class="el-icon-heavy-rain"></i>
-              <span><s /><s />今日阴转小雨，22℃ - 32℃，出门记得带伞哦。</span>
+              <span><s /><s />持续把正确的事情做到位，结果只是时间问题。</span>
             </div>
           </div>
         </div>
@@ -52,16 +52,10 @@
         <el-card shadow="hover" body-style="padding: 0;">
           <router-link to="/system/user" class="app-link-block">
             <div>
-              <el-progress
-                :width="200"
-                :percentage="40"
-                type="dashboard"
-                :format="
-                  () => {
-                    return '4348';
-                  }
-                "
-              />
+              <el-progress :width="200" :percentage="40" type="dashboard" :format="() => {
+                return '4348';
+              }
+                " />
             </div>
             <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
@@ -71,16 +65,10 @@
         <el-card shadow="hover" body-style="padding: 0;">
           <router-link to="/system/user" class="app-link-block">
             <div>
-              <el-progress
-                :width="200"
-                :percentage="68"
-                type="dashboard"
-                :format="
-                  () => {
-                    return '9143';
-                  }
-                "
-              />
+              <el-progress :width="200" :percentage="68" type="dashboard" :format="() => {
+                return '9143';
+              }
+                " />
             </div>
             <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
@@ -90,16 +78,10 @@
         <el-card shadow="hover" body-style="padding: 0;">
           <router-link to="/system/user" class="app-link-block">
             <div>
-              <el-progress
-                :width="200"
-                :percentage="70"
-                type="dashboard"
-                :format="
-                  () => {
-                    return '1343';
-                  }
-                "
-              />
+              <el-progress :width="200" :percentage="70" type="dashboard" :format="() => {
+                return '1343';
+              }
+                " />
             </div>
             <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
@@ -109,16 +91,10 @@
         <el-card shadow="hover" body-style="padding: 0;">
           <router-link to="/system/user" class="app-link-block">
             <div>
-              <el-progress
-                :width="200"
-                :percentage="40"
-                type="dashboard"
-                :format="
-                  () => {
-                    return '3721';
-                  }
-                "
-              />
+              <el-progress :width="200" :percentage="40" type="dashboard" :format="() => {
+                return '3721';
+              }
+                " />
             </div>
             <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
@@ -128,16 +104,10 @@
         <el-card shadow="hover" body-style="padding: 0;">
           <router-link to="/system/user" class="app-link-block">
             <div>
-              <el-progress
-                :width="200"
-                :percentage="40"
-                type="dashboard"
-                :format="
-                  () => {
-                    return '3947';
-                  }
-                "
-              />
+              <el-progress :width="200" :percentage="40" type="dashboard" :format="() => {
+                return '3947';
+              }
+                " />
             </div>
             <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
@@ -147,16 +117,10 @@
         <el-card shadow="hover" body-style="padding: 0;">
           <router-link to="/system/user" class="app-link-block">
             <div>
-              <el-progress
-                :width="200"
-                :percentage="40"
-                type="dashboard"
-                :format="
-                  () => {
-                    return '3947';
-                  }
-                "
-              />
+              <el-progress :width="200" :percentage="40" type="dashboard" :format="() => {
+                return '3947';
+              }
+                " />
             </div>
             <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
@@ -166,16 +130,10 @@
         <el-card shadow="hover" body-style="padding: 0;">
           <router-link to="/system/user" class="app-link-block">
             <div>
-              <el-progress
-                :width="200"
-                :percentage="40"
-                type="dashboard"
-                :format="
-                  () => {
-                    return '3947';
-                  }
-                "
-              />
+              <el-progress :width="200" :percentage="40" type="dashboard" :format="() => {
+                return '3947';
+              }
+                " />
             </div>
             <div class="workplace-goal-text">昨日激活数</div>
           </router-link>
@@ -185,19 +143,9 @@
     <!-- 最新动态、我的任务、本月目标 -->
     <el-row :gutter="15">
       <el-col :lg="16" :md="24">
-        <el-card
-          shadow="never"
-          header="代理列表"
-          body-style="padding: 12px;"
-          class="workplace-table-card"
-        >
+        <el-card shadow="never" header="代理列表" body-style="padding: 12px;" class="workplace-table-card">
           <el-table :data="projectList" height="358">
-            <el-table-column
-              type="index"
-              width="35"
-              min-width="35"
-              align="right"
-            />
+            <el-table-column type="index" width="35" min-width="35" align="right" />
             <el-table-column label="代理名称" width="150">
               <template slot-scope="{ row }">
                 <el-link type="primary" :underline="false">
@@ -205,65 +153,26 @@
                 </el-link>
               </template>
             </el-table-column>
-            <el-table-column
-              label="激活数"
-              prop="amount"
-              width="95"
-              min-width="80"
-              align="center"
-            />
-            <el-table-column
-              label="CDK总数"
-              prop="amount"
-              width="95"
-              min-width="80"
-              align="center"
-            />
-            <el-table-column
-              label="余额"
-              prop="amount"
-              width="95"
-              min-width="80"
-              align="center"
-            />
-            <el-table-column
-              prop="endDate"
-              label="加入时间"
-              width="95"
-              min-width="80"
-              align="center"
-            />
-            <el-table-column
-              label="状态"
-              width="70"
-              min-width="60"
-              align="center"
-            >
+            <el-table-column label="激活数" prop="amount" width="95" min-width="80" align="center" />
+            <el-table-column label="CDK总数" prop="amount" width="95" min-width="80" align="center" />
+            <el-table-column label="余额" prop="amount" width="95" min-width="80" align="center" />
+            <el-table-column prop="endDate" label="加入时间" width="95" min-width="80" align="center" />
+            <el-table-column label="状态" width="70" min-width="60" align="center">
               <template slot-scope="{ row }">
-                <span
-                  :class="
-                    [
-                      'ele-text-success',
-                      'ele-text-danger',
-                      'ele-text-warning',
-                      'ele-text-info ele-text-delete',
-                    ][row.state]
-                  "
-                >
+                <span :class="[
+                  'ele-text-success',
+                  'ele-text-danger',
+                  'ele-text-warning',
+                  'ele-text-info ele-text-delete',
+                ][row.state]
+                  ">
                   {{ ["进行中", "已延期", "未开始", "已结束"][row.state] }}
                 </span>
               </template>
             </el-table-column>
-            <el-table-column
-              label="进度"
-              min-width="100"
-              align="center"
-            >
+            <el-table-column label="进度" min-width="100" align="center">
               <template slot-scope="{ row }">
-                <el-progress
-                  :percentage="row.progress"
-                  class="ele-text-small"
-                />
+                <el-progress :percentage="row.progress" class="ele-text-small" />
               </template>
             </el-table-column>
           </el-table>
@@ -273,16 +182,10 @@
       <el-col :lg="8" :md="12" class="hidden-md-and-down">
         <el-card shadow="never" header="余额">
           <div class="workplace-goal-group">
-            <el-progress
-              :width="170"
-              :percentage="80"
-              type="dashboard"
-              :format="
-                () => {
-                  return '';
-                }
-              "
-            />
+            <el-progress :width="170" :percentage="80" type="dashboard" :format="() => {
+              return '';
+            }
+              " />
             <div class="workplace-goal-content">
               <el-tag size="large" class="ele-tag-round">
                 <i class="el-icon-s-data"></i>
@@ -399,6 +302,7 @@ export default {
 }
 
 @media screen and (max-width: 768px) {
+
   .workplace-user-card,
   .workplace-count-group {
     display: block;
@@ -418,7 +322,7 @@ export default {
     font-size: 16px;
   }
 
-  .workplace-user-card h4 + .ele-text-secondary {
+  .workplace-user-card h4+.ele-text-secondary {
     font-size: 12px;
   }
 
@@ -468,7 +372,7 @@ export default {
 }
 
 /* 表格 */
-.workplace-table-card ::v-deep .el-table tbody > .el-table__row:last-child td {
+.workplace-table-card ::v-deep .el-table tbody>.el-table__row:last-child td {
   border-bottom: none;
 }
 
@@ -515,7 +419,7 @@ export default {
   padding: 13px 18px;
 }
 
-.user-list-item + .user-list-item {
+.user-list-item+.user-list-item {
   border-top: 1px solid hsla(0, 0%, 60%, 0.15);
 }
 
@@ -524,6 +428,5 @@ export default {
 }
 
 /* 小屏幕优化 */
-@media screen and (max-width: 768px) {
-}
+@media screen and (max-width: 768px) {}
 </style>
