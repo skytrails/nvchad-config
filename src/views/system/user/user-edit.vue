@@ -70,14 +70,15 @@
               placeholder="请输入登录密码"
             />
           </el-form-item>
-          <el-form-item label="出生日期:" prop="birthday">
+          <el-form-item label="创建日期:" prop="birthday">
             <el-date-picker
               type="date"
+              disabled
               class="ele-fluid"
               v-model="form.birthday"
               value-format="yyyy-MM-dd"
               format="yyyy-MM-dd"
-              placeholder="请选择出生日期"
+              placeholder="创建日期"
             />
           </el-form-item>
           <el-form-item label="性别:" prop="gender">
@@ -176,9 +177,6 @@ export default {
           { required: false, message: "请输入用户姓名", trigger: "blur" },
         ],
         gender: [{ required: false, message: "请选择性别", trigger: "blur" }],
-        birthday: [
-          { required: false, message: "请选择出生日期", trigger: "blur" },
-        ],
         status: [{ required: false, message: "请选择状态", trigger: "blur" }],
         roleIds: [{ required: true, message: "请选择角色", trigger: "blur" }],
         email: [
@@ -246,7 +244,7 @@ export default {
             city: this.city,
           });
           this.$http
-            .post(this.isUpdate ? "/sysUser/edit" : "/sysUser/add", this.form)
+            .post(this.isUpdate ? "/admin/update" : "/admin/create", this.form)
             .then((res) => {
               this.loading = false;
               if (res.data.code === 200) {

@@ -20,7 +20,7 @@ import ProjectsEdit from "./project-edit";
 import ProjectsTable from "./components/project-card";
 
 export default {
-  name: "CfProjects",
+  name: "cdk",
   components: { ProjectsTable,  ProjectsEdit },
   computed: {
     ...mapGetters(["permission"]),

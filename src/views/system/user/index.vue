@@ -159,16 +159,19 @@
     </el-card>
     <!-- 编辑弹窗 -->
     <user-edit :data="current" :visible.sync="showEdit" @done="reload" />
+    <!-- 显示密码 -->
+    <password-copy :data="text" :visible.sync="showPassword" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import UserEdit from "./user-edit";
+import PasswordCopy from "./password-copy";
 
 export default {
   name: "SystemUser",
-  components: { UserEdit },
+  components: { UserEdit, PasswordCopy },
   computed: {
     ...mapGetters(["permission"]),
   },
@@ -176,6 +179,7 @@ export default {
     return {
       // 表格数据接口
       url: "/admin/list",
+      text: "",
       // 表格列配置
       columns: [
         {
@@ -283,6 +287,8 @@ export default {
       current: null,
       // 是否显示编辑弹窗
       showEdit: false,
+      // 是否显示密码
+      showPassword: false,
       // 是否显示导入弹窗
       showImport: false,
     };
@@ -382,11 +388,12 @@ export default {
     resetPwd(row) {
       const loading = this.$loading({ lock: true });
       this.$http
-        .post("/sysUser/resetPwd", { id: row.id })
+        .post("/admin/resetPassword/" + row.id)
         .then((res) => {
           loading.close();
           if (res.data.code === 200) {
-            this.$message({ type: "success", message: res.data.message });
+            this.showPassword = true;
+            this.text = res.data.data;
           } else {
             this.$message.error(res.data.message);
           }
