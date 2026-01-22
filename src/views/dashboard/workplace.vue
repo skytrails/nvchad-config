@@ -23,7 +23,9 @@
               </el-tag>
               <span class="workplace-count-name">游戏总数</span>
             </div>
-            <div class="workplace-count-num">3721</div>
+            <div class="workplace-count-num">{{ formatNumber(this.statistics.validGameCount) }} / {{
+              formatNumber(this.statistics.totalGameCount) }}
+            </div>
           </div>
           <div class="workplace-count-item">
             <div class="workplace-count-header">
@@ -32,7 +34,11 @@
               </el-tag>
               <span class="workplace-count-name">总激活数</span>
             </div>
-            <div class="workplace-count-num">6 / 24</div>
+            <div class="workplace-count-num">
+              {{ formatNumber(this.statistics.totalActiveCount) }}
+              /
+              {{ formatNumber(this.statistics.totalCdkCount) }}
+            </div>
           </div>
           <div class="workplace-count-item">
             <div class="workplace-count-header">
@@ -51,7 +57,7 @@
       <div class="dashboard-list">
         <el-card v-for="(item, index) in list" :key="index" shadow="hover" class="dashboard-card">
           <div class="app-link-block">
-            <el-progress :width="160" :percentage="100" type="circle" show-text="true" :format="() => item.value" />
+            <el-progress :width="160" :percentage="100" type="circle" :format="() => item.value" />
             <div class="workplace-goal-text">
               {{ item.label }}
             </div>
@@ -139,6 +145,7 @@ export default {
         { percent: 70, value: "1343", label: "昨日激活数(C)" },
         { percent: 70, value: "1343", label: "昨日CDK生成" },
       ],
+      statistics: {},
       // 折线图数据
       lineChartData: {
         xAxis: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
@@ -208,12 +215,19 @@ export default {
   mounted() {
     this.initLineChart();
     window.addEventListener("resize", this.resizeChart);
+    this.getStatistics();
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.resizeChart);
     this.lineChart && this.lineChart.dispose();
   },
   methods: {
+    formatNumber(num) {
+      console.log('----num:', num)
+      if (num === undefined) return "0"
+      if (!num) return "0"
+      return num.toLocaleString('en-US')
+    },
     initLineChart() {
       this.lineChart = echarts.init(this.$refs.lineChart);
 
@@ -248,6 +262,17 @@ export default {
 
     resizeChart() {
       this.lineChart && this.lineChart.resize();
+    },
+    getStatistics() {
+      this.$http.get('/home/statistics').then(res => {
+        if (res.data.code === 200) {
+          this.statistics = res.data.data;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      }).catch(e => {
+        this.$message.error(e.message);
+      });
     },
   }
 };
