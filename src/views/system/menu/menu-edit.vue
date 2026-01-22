@@ -136,12 +136,6 @@
           <el-form-item label="是否可见:">
             <el-switch v-model="form.hide" :active-value="0" :inactive-value="1">
             </el-switch>
-            <!--            <el-radio-group-->
-            <!--              v-model="form.hide"-->
-            <!--              :disabled="form.type === 1">-->
-            <!--              <el-radio :label="0">显示</el-radio>-->
-            <!--              <el-radio :label="1">隐藏</el-radio>-->
-            <!--            </el-radio-group>-->
             <el-tooltip
               placement="top"
               content="选择不可见只注册路由不显示在侧边栏，比如添加页面应该选择不可见"
