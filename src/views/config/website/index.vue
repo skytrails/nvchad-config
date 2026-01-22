@@ -2,81 +2,71 @@
   <div class="ele-body">
     <el-card shadow="never" body-style="padding-top: 5px;">
       <el-tabs v-model="active" @tab-click="handleClick">
-        <el-tab-pane v-for="(item,index) in configList" :key="index" :label="item.configName" :name="'tab_'+index"
-                     style="margin: 20px auto;">
-          <el-form :model="form" ref="form" label-width="150px" v-for="(subItem,val) in item.dataList" :key="val">
+        <el-tab-pane v-for="(item, index) in configList" :key="index" :label="item.configName" :name="'tab_' + index"
+          style="margin: 20px auto;">
+          <el-form :model="form" ref="form" label-width="150px" v-for="(subItem, val) in item.dataList" :key="val">
             <!-- 单行文本框 -->
-            <el-form-item v-if="subItem.type=='text'" :label="subItem.title+':'" :prop="subItem.code">
-              <el-input v-model="form[subItem.code]" :placeholder="'请输入'+subItem.title" clearable/>
+            <el-form-item v-if="subItem.type == 'text'" :label="subItem.title + ':'" :prop="subItem.code">
+              <el-input v-model="form[subItem.code]" :placeholder="'请输入' + subItem.title" clearable />
             </el-form-item>
             <!-- 多行文本框 -->
-            <el-form-item v-if="subItem.type=='textarea'" :label="subItem.title+':'" :prop="subItem.code">
-              <el-input v-model="form[subItem.code]" :placeholder="'请输入'+subItem.title" :rows="3" type="textarea"/>
+            <el-form-item v-if="subItem.type == 'textarea'" :label="subItem.title + ':'" :prop="subItem.code">
+              <el-input v-model="form[subItem.code]" :placeholder="'请输入' + subItem.title" :rows="3" type="textarea" />
             </el-form-item>
             <!-- 单图上传 -->
-            <el-form-item v-if="subItem.type=='image'" :label="subItem.title+':'">
+            <el-form-item v-if="subItem.type == 'image'" :label="subItem.title + ':'">
               <uploadImage :limit="1" :updDir="updDir" v-model="form[subItem.code]"></uploadImage>
             </el-form-item>
             <!-- 多图上传 -->
-            <el-form-item v-if="subItem.type=='images'" :label="subItem.title+':'">
+            <el-form-item v-if="subItem.type == 'images'" :label="subItem.title + ':'">
               <uploadImage :limit="10" :updDir="updDir" v-model="form[subItem.code]"></uploadImage>
             </el-form-item>
             <!-- 日期选择 -->
-            <el-form-item v-if="subItem.type=='date'" :label="subItem.title+':'" :prop="subItem.code">
-              <el-date-picker
-                v-model="form[subItem.code]"
-                type="date"
-                :placeholder="'请选择'+subItem.title"
-                size="small"
-                value-format="yyyy-MM-dd"
-                format="yyyy-MM-dd">
+            <el-form-item v-if="subItem.type == 'date'" :label="subItem.title + ':'" :prop="subItem.code">
+              <el-date-picker v-model="form[subItem.code]" type="date" :placeholder="'请选择' + subItem.title" size="small"
+                value-format="yyyy-MM-dd" format="yyyy-MM-dd">
               </el-date-picker>
             </el-form-item>
             <!-- 日期时间选择 -->
-            <el-form-item v-if="subItem.type=='datetime'" :label="subItem.title+':'" :prop="subItem.code">
-              <el-date-picker
-                v-model="form[subItem.code]"
-                type="datetime"
-                :placeholder="'请选择'+subItem.title"
-                size="small"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                format="yyyy-MM-dd HH:mm:ss">
+            <el-form-item v-if="subItem.type == 'datetime'" :label="subItem.title + ':'" :prop="subItem.code">
+              <el-date-picker v-model="form[subItem.code]" type="datetime" :placeholder="'请选择' + subItem.title"
+                size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
               </el-date-picker>
             </el-form-item>
             <!-- 单选按钮 -->
-            <el-form-item v-if="subItem.type=='radio'" :label="subItem.title+':'">
+            <el-form-item v-if="subItem.type == 'radio'" :label="subItem.title + ':'">
               <el-radio-group v-model="form[subItem.code]">
-                <el-radio v-for="(val,key) in subItem.param" :label="key" :key="val">{{ val }}</el-radio>
+                <el-radio v-for="(val, key) in subItem.param" :label="key" :key="val">{{ val }}</el-radio>
               </el-radio-group>
             </el-form-item>
             <!-- 数字输入框 -->
-            <el-form-item v-if="subItem.type=='number'" :label="subItem.title+':'" :prop="subItem.code">
+            <el-form-item v-if="subItem.type == 'number'" :label="subItem.title + ':'" :prop="subItem.code">
               <el-input-number v-model="form[subItem.code]" controls-position="right" :min="0"
-                               :placeholder="'请输入'+subItem.title" class="ele-fluid ele-text-left"/>
+                :placeholder="'请输入' + subItem.title" class="ele-fluid ele-text-left" />
             </el-form-item>
             <!-- 密码输入框 -->
-            <el-form-item v-if="subItem.type=='password'" :label="subItem.title+':'" :prop="subItem.code">
-              <el-input v-model="form[subItem.code]" :placeholder="'请输入'+subItem.title" show-password/>
+            <el-form-item v-if="subItem.type == 'password'" :label="subItem.title + ':'" :prop="subItem.code">
+              <el-input v-model="form[subItem.code]" :placeholder="'请输入' + subItem.title" show-password />
             </el-form-item>
             <!-- 复选框 -->
-            <el-form-item v-if="subItem.type=='checkbox'" :label="subItem.title+':'" :prop="subItem.code">
+            <el-form-item v-if="subItem.type == 'checkbox'" :label="subItem.title + ':'" :prop="subItem.code">
               <el-checkbox-group v-model="form[subItem.code]">
-                <el-checkbox v-for="(val,key) in subItem.param" :label="key" :key="val">{{ val }}</el-checkbox>
+                <el-checkbox v-for="(val, key) in subItem.param" :label="key" :key="val">{{ val }}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
             <!-- 下拉单选框 -->
-            <el-form-item v-if="subItem.type=='select'" :label="subItem.title+':'" :prop="subItem.code">
-              <el-select v-model="form[subItem.code]" :placeholder="'请选择'+subItem.title" class="ele-block" clearable>
-                <el-option v-for="(val,key) in subItem.param" :label="val" :value="key" :key="key"/>
+            <el-form-item v-if="subItem.type == 'select'" :label="subItem.title + ':'" :prop="subItem.code">
+              <el-select v-model="form[subItem.code]" :placeholder="'请选择' + subItem.title" class="ele-block" clearable>
+                <el-option v-for="(val, key) in subItem.param" :label="val" :value="key" :key="key" />
               </el-select>
             </el-form-item>
             <!-- 富文本编辑器 -->
-            <el-form-item v-if="subItem.type=='ueditor'" :label="subItem.title+':'">
-              <tinymce-editor v-model="form[subItem.code]" :init="initEditor"/>
+            <el-form-item v-if="subItem.type == 'ueditor'" :label="subItem.title + ':'">
+              <tinymce-editor v-model="form[subItem.code]" :init="initEditor" />
             </el-form-item>
             <!-- 图标 -->
-            <el-form-item v-if="subItem.type=='icon'" :label="subItem.title+':'">
-              <ele-icon-picker v-model="form[subItem.code]" :placeholder="'请选择'+subItem.title"/>
+            <el-form-item v-if="subItem.type == 'icon'" :label="subItem.title + ':'">
+              <ele-icon-picker v-model="form[subItem.code]" :placeholder="'请选择' + subItem.title" />
             </el-form-item>
           </el-form>
           <div style="margin-left: 150px;">
@@ -94,7 +84,7 @@ import TinymceEditor from '@/components/TinymceEditor'
 
 export default {
   name: "ConfigWeb",
-  components: {uploadImage, TinymceEditor},
+  components: { uploadImage, TinymceEditor },
   data() {
     return {
       active: 'tab_0',  // tab页选中
@@ -140,8 +130,8 @@ export default {
   methods: {
     // 获取配置信息
     getConfigInfo() {
-      this.$http.get('/configweb/index').then(res => {
-        if (res.data.code === 0) {
+      this.$http.get('/config/list').then(res => {
+        if (res.data.code === 200) {
           this.configList = res.data.data;
           if (this.configList.length > 0) {
             let itemList = this.configList[0]['dataList'];
@@ -159,6 +149,7 @@ export default {
           }
         }
       }).catch(e => {
+        this.form = {}
         this.$message.error(e.message);
       });
     },

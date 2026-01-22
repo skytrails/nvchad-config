@@ -23,8 +23,10 @@
               </el-tag>
               <span class="workplace-count-name">游戏总数</span>
             </div>
-            <div class="workplace-count-num">{{ formatNumber(this.statistics.validGameCount) }} / {{
-              formatNumber(this.statistics.totalGameCount) }}
+            <div class="workplace-count-num">
+              {{ formatNumber(this.statistics.validGameCount) }}
+              /
+              {{ formatNumber(this.statistics.totalGameCount) }}
             </div>
           </div>
           <div class="workplace-count-item">

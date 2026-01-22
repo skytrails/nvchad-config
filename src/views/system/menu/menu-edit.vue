@@ -39,14 +39,14 @@
         <el-col :sm="12">
           <el-form-item label="菜单类型:">
             <el-radio-group v-model="form.type" @change="onMenuTypeChange">
-              <el-radio :label="0">菜单</el-radio>
-              <el-radio :label="1">按钮</el-radio>
+              <el-radio :label="false">菜单</el-radio>
+              <el-radio :label="true">按钮</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="打开方式:">
             <el-radio-group
               v-model="form.target"
-              :disabled="form.type === 1"
+              :disabled="form.type === true"
               @change="onTargetChange"
             >
               <el-radio :label="0">组件</el-radio>
@@ -65,7 +65,7 @@
             <ele-icon-picker
               v-model="form.icon"
               placeholder="请选择菜单图标"
-              :disabled="form.type === 1"
+              :disabled="form.type === true"
             />
           </el-form-item>
           <el-form-item name="path">
@@ -82,7 +82,7 @@
             <el-input
               clearable
               v-model="form.path"
-              :disabled="form.type === 1"
+              :disabled="form.type === true"
               :placeholder="
                 form.target === 2 ? '请输入外链地址' : '请输入路由地址'
               "
@@ -102,7 +102,7 @@
             <el-input
               clearable
               v-model="form.component"
-              :disabled="form.type === 1 || form.target === 2"
+              :disabled="form.type === true || form.target === 2"
               :placeholder="
                 form.target === 1 ? '请输入内链地址' : '请输入组件路径'
               "
@@ -121,7 +121,7 @@
               clearable
               v-model="form.permission"
               placeholder="请输入权限标识"
-              :disabled="form.type === 0"
+              :disabled="form.type === false"
             />
           </el-form-item>
           <el-form-item label="排序号:" prop="sort">
@@ -134,7 +134,7 @@
             />
           </el-form-item>
           <el-form-item label="是否可见:">
-            <el-switch v-model="form.hide" active-value="1" inactive-value="0">
+            <el-switch v-model="form.hide" :active-value="0" :inactive-value="1">
             </el-switch>
             <!--            <el-radio-group-->
             <!--              v-model="form.hide"-->
@@ -154,7 +154,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="权限节点:" v-if="form.type == 0">
+      <el-form-item label="权限节点:" v-if="form.type == false">
         <el-transfer
           v-model="form.checkedList"
           :data="permissionList"
@@ -274,6 +274,7 @@ export default {
     data() {
       this.isUpdate = !!(this.data && this.data.id);
       this.form = this.initFormData(this.data);
+      console.log('----form:', this.form)
     },
   },
   methods: {
@@ -323,7 +324,7 @@ export default {
     },
     /* type选择改变 */
     onMenuTypeChange() {
-      if (this.form.type === 0) {
+      if (this.form.type === false) {
         this.form.permission = null;
       } else {
         this.form.target = 0;
@@ -342,7 +343,7 @@ export default {
     /* 初始化form数据 */
     initFormData(data) {
       let form = {
-        type: 0,
+        type: false,
         target: 1,
         hide: 1,
         status: 1,
