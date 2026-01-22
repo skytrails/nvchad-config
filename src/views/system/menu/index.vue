@@ -2,28 +2,17 @@
   <div class="ele-body">
     <el-card shadow="never">
       <!-- 搜索表单 -->
-      <el-form
-        :model="where"
-        label-width="77px"
-        class="ele-form-search"
-        @keyup.enter.native="reload"
+      <el-form :model="where" label-width="77px" class="ele-form-search" @keyup.enter.native="reload"
         @submit.native.prevent>
         <el-row :gutter="15">
           <el-col :lg="6" :md="12">
             <el-form-item label="菜单名称:">
-              <el-input
-                clearable
-                v-model="where.title"
-                placeholder="请输入菜单名称"/>
+              <el-input clearable v-model="where.title" placeholder="请输入菜单名称" />
             </el-form-item>
           </el-col>
           <el-col :lg="6" :md="12">
             <div class="ele-form-actions">
-              <el-button
-                type="primary"
-                icon="el-icon-search"
-                class="ele-btn-icon"
-                @click="reload">查询
+              <el-button type="primary" icon="el-icon-search" class="ele-btn-icon" @click="reload">查询
               </el-button>
               <el-button @click="reset">重置</el-button>
             </div>
@@ -31,34 +20,15 @@
         </el-row>
       </el-form>
       <!-- 数据表格 -->
-      <ele-pro-table
-        ref="table"
-        :where="where"
-        row-key="id"
-        :datasource="url"
-        :columns="columns"
-        default-expand-all
-        :need-page="false"
-        :parse-data="parseData"
-        height="calc(100vh - 270px)">
+      <ele-pro-table ref="table" :where="where" row-key="id" :datasource="url" :columns="columns" default-expand-all
+        :need-page="false" :parse-data="parseData" height="calc(100vh - 270px)">
         <!-- 表头工具栏 -->
         <template slot="toolbar">
-          <el-button
-            size="small"
-            type="primary"
-            icon="el-icon-plus"
-            class="ele-btn-icon"
-            @click="openEdit(null)">添加
+          <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="openEdit(null)">添加
           </el-button>
-          <el-button
-            @click="expandAll"
-            class="ele-btn-icon"
-            size="small">展开全部
+          <el-button @click="expandAll" class="ele-btn-icon" size="small">展开全部
           </el-button>
-          <el-button
-            @click="foldAll"
-            class="ele-btn-icon"
-            size="small">折叠全部
+          <el-button @click="foldAll" class="ele-btn-icon" size="small">折叠全部
           </el-button>
         </template>
         <!-- 标题列 -->
@@ -67,62 +37,34 @@
         </template>
         <!-- 类型列 -->
         <template slot="type" slot-scope="{row}">
-          <el-tag
-            v-if="isUrl(row.path)"
-            type="warning"
-            size="mini">外链
+          <el-tag v-if="isUrl(row.path)" type="warning" size="mini">外链
           </el-tag>
-          <el-tag
-            v-else-if="isUrl(row.component)"
-            type="success"
-            size="mini">内链
+          <el-tag v-else-if="isUrl(row.component)" type="success" size="mini">内链
           </el-tag>
-          <el-tag
-            v-else
-            :type="['primary', 'info'][row.type]"
-            size="mini">
-            {{ ['菜单', '按钮'][row.type] }}
+          <el-tag v-else :type="row.type ? 'success' : 'warning'" size="mini">
+            {{ row.type ? '按钮' : '菜单' }}
           </el-tag>
         </template>
         <!-- 状态列 -->
         <template slot="status" slot-scope="{row}">
-          <ele-dot :type="['danger', 'success'][row.status]" :ripple="row.status===0"
-                   :text="['禁用','正常'][row.status]"/>
+          <ele-dot :type="['danger', 'success'][row.status]" :ripple="row.status === 0"
+            :text="['禁用', '正常'][row.status]" />
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{row}">
-          <el-link
-            type="primary"
-            :underline="false"
-            icon="el-icon-plus"
-            @click="openEdit(null, row.id)">添加
+          <el-link type="primary" :underline="false" icon="el-icon-plus" @click="openEdit(null, row.id)">添加
           </el-link>
-          <el-link
-            type="primary"
-            :underline="false"
-            icon="el-icon-edit"
-            @click="openEdit(row)">修改
+          <el-link type="primary" :underline="false" icon="el-icon-edit" @click="openEdit(row)">修改
           </el-link>
-          <el-popconfirm
-            class="ele-action"
-            title="确定要删除吗？"
-            @confirm="remove(row)">
-            <el-link
-              type="danger"
-              slot="reference"
-              :underline="false"
-              icon="el-icon-delete">删除
+          <el-popconfirm class="ele-action" title="确定要删除吗？" @confirm="remove(row)">
+            <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete">删除
             </el-link>
           </el-popconfirm>
         </template>
       </ele-pro-table>
     </el-card>
     <!-- 编辑弹窗 -->
-    <menu-edit
-      :data="current"
-      :menu-list="menuList"
-      :visible.sync="showEdit"
-      @done="reload"/>
+    <menu-edit :data="current" :menu-list="menuList" :visible.sync="showEdit" @done="reload" />
   </div>
 </template>
 
@@ -132,7 +74,7 @@ import MenuEdit from './menu-edit';
 
 export default {
   name: 'SystemMenu',
-  components: {MenuEdit},
+  components: { MenuEdit },
   computed: {
     ...mapGetters(["permission"]),
   },
@@ -240,16 +182,16 @@ export default {
       this.menuList = res.data;
       // return res;
       return {
-        code : res.code,
-        message : res.message,
-        data : {
-          records : res.data
+        code: res.code,
+        message: res.message,
+        data: {
+          records: res.data
         }
       };
     },
     /* 刷新表格 */
     reload() {
-      this.$refs.table.reload({where: this.where});
+      this.$refs.table.reload({ where: this.where });
     },
     /* 重置搜索 */
     reset() {
@@ -286,7 +228,7 @@ export default {
         this.$message.error('请先删除子节点');
         return;
       }
-      const loading = this.$loading({lock: true});
+      const loading = this.$loading({ lock: true });
       this.$http.delete('/menu/delete/' + row.id).then(res => {
         loading.close();
         if (res.data.code === 200) {
@@ -323,5 +265,4 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

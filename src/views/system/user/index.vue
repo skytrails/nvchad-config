@@ -2,31 +2,17 @@
   <div class="ele-body">
     <el-card shadow="never">
       <!-- 搜索表单 -->
-      <el-form
-        :model="where"
-        label-width="77px"
-        class="ele-form-search"
-        @keyup.enter.native="reload"
-        @submit.native.prevent
-      >
+      <el-form :model="where" label-width="77px" class="ele-form-search" @keyup.enter.native="reload"
+        @submit.native.prevent>
         <el-row :gutter="15">
           <el-col :lg="6" :md="12">
             <el-form-item label="用户账号:">
-              <el-input
-                clearable
-                v-model="where.username"
-                placeholder="请输入用户账号"
-              />
+              <el-input clearable v-model="where.username" placeholder="请输入用户账号" />
             </el-form-item>
           </el-col>
           <el-col :lg="6" :md="12">
             <el-form-item label="性别:">
-              <el-select
-                clearable
-                v-model="where.gender"
-                placeholder="请选择性别"
-                class="ele-fluid"
-              >
+              <el-select clearable v-model="where.gender" placeholder="请选择性别" class="ele-fluid">
                 <el-option label="男" value="1" />
                 <el-option label="女" value="2" />
                 <el-option label="保密" value="3" />
@@ -35,12 +21,7 @@
           </el-col>
           <el-col :lg="6" :md="12">
             <div class="ele-form-actions">
-              <el-button
-                type="primary"
-                icon="el-icon-search"
-                class="ele-btn-icon"
-                @click="reload"
-                >查询
+              <el-button type="primary" icon="el-icon-search" class="ele-btn-icon" @click="reload">查询
               </el-button>
               <el-button @click="reset">重置</el-button>
             </div>
@@ -48,31 +29,13 @@
         </el-row>
       </el-form>
       <!-- 数据表格 -->
-      <ele-pro-table
-        ref="table"
-        :where="where"
-        :datasource="url"
-        :columns="columns"
-        :selection.sync="selection"
-        height="calc(100vh - 315px)"
-      >
+      <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection"
+        height="calc(100vh - 315px)">
         <!-- 表头工具栏 -->
         <template slot="toolbar">
-          <el-button
-            @click="openEdit(null)"
-            type="primary"
-            icon="el-icon-plus"
-            class="ele-btn-icon"
-            size="small"
-            >添加
+          <el-button @click="openEdit(null)" type="primary" icon="el-icon-plus" class="ele-btn-icon" size="small">添加
           </el-button>
-          <el-button
-            @click="removeBatch"
-            type="danger"
-            icon="el-icon-delete"
-            class="ele-btn-icon"
-            size="small"
-            >删除
+          <el-button @click="removeBatch" type="danger" icon="el-icon-delete" class="ele-btn-icon" size="small">删除
           </el-button>
         </template>
         <!-- 用户名列 -->
@@ -83,10 +46,7 @@
         </template>
         <!-- 性别列 -->
         <template slot="gender" slot-scope="{ row }">
-          <el-tag
-            :type="['success', 'primary', 'warning'][row.gender - 1]"
-            size="mini"
-          >
+          <el-tag :type="['success', 'primary', 'warning'][row.gender - 1]" size="mini">
             {{ ["男", "女", "保密"][row.gender - 1] }}
           </el-tag>
         </template>
@@ -96,64 +56,35 @@
         </template>
         <!-- 角色列 -->
         <template slot="roles" slot-scope="{ row }">
-          <el-tag
-            v-for="item in row.roles"
-            :key="item.id"
-            size="mini"
-            type="primary"
-            :disable-transitions="true"
-          >
+          <el-tag v-for="item in row.roles" :key="item.id" size="mini" type="primary" :disable-transitions="true">
             {{ item.name }}
           </el-tag>
         </template>
         <!-- 状态列 -->
         <template slot="status" slot-scope="{ row }">
-          <el-tag v-if="row.status === 1" size="mini">启用 </el-tag>
-          <el-tag v-if="row.status === 2" type="info" size="mini">停用 </el-tag>
-          <!--          <el-switch-->
-          <!--            v-model="row.status"-->
-          <!--            @change="editStatus(row)"-->
-          <!--            :active-value="1"-->
-          <!--            :inactive-value="2"/>-->
+          <!--el-tag v-if="row.status === 1" size="mini">启用 </el-tag>
+          <el-tag v-if="row.status === 2" type="info" size="mini">停用 </el-tag-->
+          <el-switch v-if="row.id !== 1" v-model="row.status" @change="editStatus(row)" :active-value="1"
+            :inactive-value="2" />
+          <el-tag v-else size="mini">启用 </el-tag>
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
-          <el-link
-            type="primary"
-            :underline="false"
-            icon="el-icon-edit"
-            @click="openEdit(row)"
-            v-if="row.id !== 1"
-            >修改
-          </el-link>
-          <el-popconfirm
-            class="ele-action"
-            title="确定要删除此用户吗？"
-            @confirm="remove(row)"
-          >
-            <el-link
-              type="danger"
-              slot="reference"
-              :underline="false"
-              icon="el-icon-delete"
-              v-if="row.id !== 1"
-              >删除
+          <div>
+            <el-link type="primary" :underline="false" icon="el-icon-edit" @click="openEdit(row)" v-if="row.id !== 1">修改
             </el-link>
-          </el-popconfirm>
-          <el-popconfirm
-            class="ele-action"
-            title="确定要重置密码吗？"
-            @confirm="resetPwd(row)"
-          >
-            <el-link
-              type="success"
-              slot="reference"
-              :underline="false"
-              icon="el-icon-copy-document"
-              v-if="row.id !== 1"
-              >重置密码
-            </el-link>
-          </el-popconfirm>
+            <el-popconfirm class="ele-action" title="确定要删除此用户吗？" @confirm="remove(row)">
+              <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete" v-if="row.id !== 1">删除
+              </el-link>
+            </el-popconfirm>
+          </div>
+          <div>
+            <el-popconfirm class="ele-action" title="确定要重置密码吗？" @confirm="resetPwd(row)">
+              <el-link type="success" slot="reference" :underline="false" icon="el-icon-key"
+                v-if="row.id !== 1">重置密码
+              </el-link>
+            </el-popconfirm>
+          </div>
         </template>
       </ele-pro-table>
     </el-card>
@@ -357,7 +288,7 @@ export default {
               this.$message.error(e.message);
             });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     /* 更改状态 */
     editStatus(row) {
@@ -367,11 +298,12 @@ export default {
         status: row.status,
       });
       this.$http
-        .post("/sysUser/status", params)
+        .post("/admin/updateStatus", params)
         .then((res) => {
           loading.close();
           if (res.data.code === 200) {
             this.$message({ type: "success", message: res.data.message });
+            this.reload();
           } else {
             row.status = !row.status ? 1 : 2;
             this.$message.error(res.data.message);
