@@ -39,107 +39,33 @@
               <el-tag type="success" size="small" class="ele-tag-round">
                 <i class="el-icon-bell"></i>-->
               </el-tag>
-              <span class="workplace-count-name">其他</span>
+              <span class="workplace-count-name">客户端激活数</span>
             </div>
-            <div class="workplace-count-num">1,689</div>
+            <div class="workplace-count-num">1,689 / 2,898</div>
           </div>
         </div>
       </div>
     </el-card>
     <!-- 快捷方式 -->
-    <el-row :gutter="15">
-      <el-col :lg="3" :md="6" :sm="6" :xs="12">
-        <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/system/user" class="app-link-block">
-            <div>
-              <el-progress :width="200" :percentage="40" type="dashboard" :format="() => {
-                return '4348';
-              }
-                " />
+    <template>
+      <div class="dashboard-list">
+        <el-card v-for="(item, index) in list" :key="index" shadow="hover" class="dashboard-card">
+          <div class="app-link-block">
+            <el-progress :width="160" :percentage="100" type="circle" show-text="true" :format="() => item.value" />
+            <div class="workplace-goal-text">
+              {{ item.label }}
             </div>
-            <div class="workplace-goal-text">昨日激活数</div>
-          </router-link>
+          </div>
         </el-card>
-      </el-col>
-      <el-col :lg="3" :md="6" :sm="6" :xs="12">
-        <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/system/user" class="app-link-block">
-            <div>
-              <el-progress :width="200" :percentage="68" type="dashboard" :format="() => {
-                return '9143';
-              }
-                " />
-            </div>
-            <div class="workplace-goal-text">昨日激活数</div>
-          </router-link>
+        <el-card shadow="hover" class="dashboard-chart-card">
+          <div class="dashboard-chart-title">
+            最近 7 天激活数
+          </div>
+          <div ref="lineChart" class="dashboard-line-chart"></div>
         </el-card>
-      </el-col>
-      <el-col :lg="3" :md="6" :sm="6" :xs="12">
-        <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/system/user" class="app-link-block">
-            <div>
-              <el-progress :width="200" :percentage="70" type="dashboard" :format="() => {
-                return '1343';
-              }
-                " />
-            </div>
-            <div class="workplace-goal-text">昨日激活数</div>
-          </router-link>
-        </el-card>
-      </el-col>
-      <el-col :lg="3" :md="6" :sm="6" :xs="12">
-        <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/system/user" class="app-link-block">
-            <div>
-              <el-progress :width="200" :percentage="40" type="dashboard" :format="() => {
-                return '3721';
-              }
-                " />
-            </div>
-            <div class="workplace-goal-text">昨日激活数</div>
-          </router-link>
-        </el-card>
-      </el-col>
-      <el-col :lg="3" :md="6" :sm="6" :xs="12">
-        <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/system/user" class="app-link-block">
-            <div>
-              <el-progress :width="200" :percentage="40" type="dashboard" :format="() => {
-                return '3947';
-              }
-                " />
-            </div>
-            <div class="workplace-goal-text">昨日激活数</div>
-          </router-link>
-        </el-card>
-      </el-col>
-      <el-col :lg="3" :md="6" :sm="6" :xs="12">
-        <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/system/user" class="app-link-block">
-            <div>
-              <el-progress :width="200" :percentage="40" type="dashboard" :format="() => {
-                return '3947';
-              }
-                " />
-            </div>
-            <div class="workplace-goal-text">昨日激活数</div>
-          </router-link>
-        </el-card>
-      </el-col>
-      <el-col :lg="3" :md="6" :sm="6" :xs="12">
-        <el-card shadow="hover" body-style="padding: 0;">
-          <router-link to="/system/user" class="app-link-block">
-            <div>
-              <el-progress :width="200" :percentage="40" type="dashboard" :format="() => {
-                return '3947';
-              }
-                " />
-            </div>
-            <div class="workplace-goal-text">昨日激活数</div>
-          </router-link>
-        </el-card>
-      </el-col>
-    </el-row>
+      </div>
+    </template>
+
     <!-- 最新动态、我的任务、本月目标 -->
     <el-row :gutter="15">
       <el-col :lg="16" :md="24">
@@ -201,10 +127,23 @@
 </template>
 
 <script>
+import * as echarts from "echarts";
 export default {
   name: "DashboardWorkplace",
   data() {
     return {
+      list: [
+        { percent: 68, value: "9143", label: "昨日激活数(A)" },
+        { percent: 40, value: "4348", label: "今日激活数(A)" },
+        { percent: 70, value: "1343", label: "昨日激活数(C)" },
+        { percent: 70, value: "1343", label: "昨日激活数(C)" },
+        { percent: 70, value: "1343", label: "昨日CDK生成" },
+      ],
+      // 折线图数据
+      lineChartData: {
+        xAxis: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+        series: [120, 200, 150, 80, 70, 110, 130],
+      },
       // 项目进度数据
       projectList: [
         {
@@ -266,6 +205,51 @@ export default {
       return this.$store.state.user.user;
     },
   },
+  mounted() {
+    this.initLineChart();
+    window.addEventListener("resize", this.resizeChart);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.resizeChart);
+    this.lineChart && this.lineChart.dispose();
+  },
+  methods: {
+    initLineChart() {
+      this.lineChart = echarts.init(this.$refs.lineChart);
+
+      this.lineChart.setOption({
+        tooltip: {
+          trigger: "axis",
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true,
+        },
+        xAxis: {
+          type: "category",
+          data: this.lineChartData.xAxis,
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            name: "激活用户",
+            type: "line",
+            smooth: true,
+            areaStyle: {},
+            data: this.lineChartData.series,
+          },
+        ],
+      });
+    },
+
+    resizeChart() {
+      this.lineChart && this.lineChart.resize();
+    },
+  }
 };
 </script>
 
@@ -425,6 +409,44 @@ export default {
 
 .user-list-item .ele-cell-desc {
   margin-top: 5px;
+}
+
+.dashboard-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.dashboard-list>*:first-child {
+  margin-top: 14px;
+}
+
+.dashboard-card {
+  flex: 1 10 200px;
+  /* 最小宽度 200px，自动换行 */
+  max-width: 240px;
+}
+
+/* 折线图卡片：吃掉剩余空间 */
+.dashboard-chart-card {
+  flex: 1;
+  min-width: 0;
+  /* 非常关键，防止溢出 */
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-chart-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.dashboard-line-chart {
+  width: 100%;
+  height: 180px;
+  /* 必须有高度 */
 }
 
 /* 小屏幕优化 */
