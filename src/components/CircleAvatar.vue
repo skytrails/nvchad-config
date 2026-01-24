@@ -19,7 +19,7 @@ export default {
       default: 'U'
     },
     size: {
-      type: Number,
+      type: [Number, String],
       default: 40
     },
     color: {
@@ -38,8 +38,8 @@ export default {
       const sizePx = `${this.size}px`
       const fontSize = `${Math.floor(this.size * 0.4)}px`
 
-      // 生成随机颜色或使用指定颜色
-      const bgColor = this.color || this.getRandomColor()
+      // 生成固定颜色或使用指定颜色
+      const bgColor = this.color || this.getFixedColor(this.text)
 
       return {
         width: sizePx,
@@ -59,14 +59,33 @@ export default {
   },
 
   methods: {
-    getRandomColor() {
+    // 简单的字符串哈希函数
+    hashString(str) {
+      let hash = 0
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash)
+      }
+      return hash
+    },
+
+    // 根据字符串获取固定颜色
+    getFixedColor(str) {
       const colors = [
         '#f44336', '#e91e63', '#9c27b0', '#673ab7',
         '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4',
         '#009688', '#4caf50', '#8bc34a', '#cddc39',
         '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'
       ]
-      return colors[Math.floor(Math.random() * colors.length)]
+
+      // 如果字符串为空，使用默认颜色
+      if (!str || str.trim() === '') {
+        return colors[0]
+      }
+
+      // 计算哈希值并映射到颜色数组
+      const hash = this.hashString(str.trim().toLowerCase())
+      const index = Math.abs(hash) % colors.length
+      return colors[index]
     }
   }
 }

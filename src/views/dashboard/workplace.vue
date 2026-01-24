@@ -4,7 +4,7 @@
     <div class="welcome-card">
       <div class="welcome-content">
         <div class="user-info">
-          <el-avatar :size="72" :src="require('@/assets/logo.png')" class="user-avatar" />
+          <circle-avatar text="abc" size="64" />
           <div class="user-details">
             <h2 class="welcome-title">早上好，{{ loginUser.nickname }}！</h2>
             <p class="welcome-subtitle">
@@ -65,12 +65,8 @@
         </div>
         <div class="metric-value">{{ item.value }}</div>
         <div class="metric-progress">
-          <el-progress
-            :percentage="item.percent"
-            :stroke-width="8"
-            :show-text="false"
-            :color="getProgressColor(item.percent)"
-          />
+          <el-progress :percentage="item.percent" :stroke-width="8" :show-text="false"
+            :color="getProgressColor(item.percent)" />
           <span class="metric-percent">{{ item.percent }}%</span>
         </div>
         <div class="metric-trend">
@@ -107,12 +103,7 @@
           <el-tag type="success" size="small">本月达标</el-tag>
         </div>
         <div class="goal-content">
-          <el-progress
-            :width="160"
-            :percentage="85"
-            type="dashboard"
-            :color="['#36c', '#6739b6', '#f2719c']"
-          />
+          <el-progress :width="160" :percentage="85" type="dashboard" :color="['#36c', '#6739b6', '#f2719c']" />
           <div class="goal-info">
             <div class="goal-current">
               <div class="goal-amount">¥ 2,850</div>
@@ -146,23 +137,14 @@
       <div class="section-header">
         <h3>代理管理</h3>
         <div class="header-actions">
-          <el-input
-            v-model="searchText"
-            placeholder="搜索代理..."
-            size="small"
-            style="width: 200px;"
-            prefix-icon="el-icon-search"
-            clearable
-          />
+          <el-input v-model="searchText" placeholder="搜索代理..." size="small" style="width: 200px;"
+            prefix-icon="el-icon-search" clearable />
           <el-button type="primary" size="small" icon="el-icon-plus">新增代理</el-button>
         </div>
       </div>
       <div class="agent-table">
-        <el-table
-          :data="filteredAgents"
-          style="width: 100%"
-          :header-cell-style="{ background: '#fafafa', color: '#303133' }"
-        >
+        <el-table :data="filteredAgents" style="width: 100%"
+          :header-cell-style="{ background: '#fafafa', color: '#303133' }">
           <el-table-column type="index" label="序号" width="60" align="center" />
           <el-table-column prop="projectName" label="代理名称" min-width="120">
             <template slot-scope="{ row }">
@@ -195,12 +177,7 @@
             <template slot-scope="{ row }">
               <div class="agent-balance">
                 <span class="balance-amount">¥ {{ row.balance || '0.00' }}</span>
-                <el-tag
-                  v-if="row.balance < 100"
-                  size="mini"
-                  type="warning"
-                  class="balance-warning"
-                >
+                <el-tag v-if="row.balance < 100" size="mini" type="warning" class="balance-warning">
                   余额不足
                 </el-tag>
               </div>
@@ -215,12 +192,7 @@
           </el-table-column>
           <el-table-column label="状态" width="100" align="center">
             <template slot-scope="{ row }">
-              <el-tag
-                :type="getStatusType(row.state)"
-                size="small"
-                effect="dark"
-                class="status-tag"
-              >
+              <el-tag :type="getStatusType(row.state)" size="small" effect="dark" class="status-tag">
                 {{ getStatusText(row.state) }}
               </el-tag>
             </template>
@@ -228,32 +200,18 @@
           <el-table-column label="进度" min-width="140" align="center">
             <template slot-scope="{ row }">
               <div class="progress-cell">
-                <el-progress
-                  :percentage="row.progress"
-                  :stroke-width="6"
-                  :show-text="false"
-                  :color="getProgressColor(row.progress)"
-                />
+                <el-progress :percentage="row.progress" :stroke-width="6" :show-text="false"
+                  :color="getProgressColor(row.progress)" />
                 <span class="progress-text">{{ row.progress }}%</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="120" align="center" fixed="right">
             <template slot-scope="{ row }">
-              <el-button
-                type="text"
-                size="small"
-                icon="el-icon-view"
-                @click="viewAgent(row)"
-              >
+              <el-button type="text" size="small" icon="el-icon-view" @click="viewAgent(row)">
                 查看
               </el-button>
-              <el-button
-                type="text"
-                size="small"
-                icon="el-icon-edit"
-                @click="editAgent(row)"
-              >
+              <el-button type="text" size="small" icon="el-icon-edit" @click="editAgent(row)">
                 编辑
               </el-button>
             </template>
@@ -284,10 +242,12 @@
 </template>
 
 <script>
+import CircleAvatar from "@/components/CircleAvatar.vue";
 import * as echarts from "echarts";
 
 export default {
   name: "DashboardWorkplace",
+  components: { CircleAvatar },
   data() {
     return {
       searchText: '',
@@ -1101,6 +1061,7 @@ export default {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
