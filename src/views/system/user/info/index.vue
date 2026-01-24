@@ -1,11 +1,5 @@
 <template>
   <div class="ele-body user-profile-container">
-    <!-- 页面标题 -->
-    <div class="page-header">
-      <h2 class="page-title">用户信息编辑</h2>
-      <p class="page-subtitle">管理用户的基本信息和权限设置</p>
-    </div>
-
     <div class="profile-content">
       <!-- 余额日志表格 -->
       <el-card shadow="never" class="balance-card">
@@ -99,7 +93,7 @@
           <el-table-column prop="operator" label="操作人" width="120" align="center">
             <template v-slot="{ row }">
               <div class="operator-cell">
-                <circle-avatar text="row.username" size="16"/>
+                <circle-avatar text="row.username" size="16" />
                 <span class="operator-name">{{ row.operatorName || '-' }}</span>
               </div>
             </template>
@@ -181,7 +175,7 @@ import { setPageTab } from '@/utils/page-tab-util';
 
 export default {
   name: 'SystemUserInfo',
-  components: {CircleAvatar},
+  components: { CircleAvatar },
   data() {
     return {
       // 省市区数据
@@ -468,7 +462,77 @@ export default {
               operatorName: '管理员',
               operatorAvatar: '',
               remark: '活动奖励'
-            }
+            },
+            {
+              id: 2,
+              changeTime: new Date('2024-01-16 14:20:00'),
+              changeType: 2,
+              changeAmount: -200,
+              balanceAfter: 800,
+              operatorName: '系统',
+              operatorAvatar: '',
+              remark: '购买商品'
+            },
+            {
+              id: 2,
+              changeTime: new Date('2024-01-16 14:20:00'),
+              changeType: 2,
+              changeAmount: -200,
+              balanceAfter: 800,
+              operatorName: '系统',
+              operatorAvatar: '',
+              remark: '购买商品'
+            },
+            {
+              id: 2,
+              changeTime: new Date('2024-01-16 14:20:00'),
+              changeType: 2,
+              changeAmount: -200,
+              balanceAfter: 800,
+              operatorName: '系统',
+              operatorAvatar: '',
+              remark: '购买商品'
+            },
+            {
+              id: 2,
+              changeTime: new Date('2024-01-16 14:20:00'),
+              changeType: 2,
+              changeAmount: -200,
+              balanceAfter: 800,
+              operatorName: '系统',
+              operatorAvatar: '',
+              remark: '购买商品'
+            },
+            {
+              id: 2,
+              changeTime: new Date('2024-01-16 14:20:00'),
+              changeType: 2,
+              changeAmount: -200,
+              balanceAfter: 800,
+              operatorName: '系统',
+              operatorAvatar: '',
+              remark: '购买商品'
+            },
+            {
+              id: 2,
+              changeTime: new Date('2024-01-16 14:20:00'),
+              changeType: 2,
+              changeAmount: -200,
+              balanceAfter: 800,
+              operatorName: '系统',
+              operatorAvatar: '',
+              remark: '购买商品'
+            },
+            {
+              id: 2,
+              changeTime: new Date('2024-01-16 14:20:00'),
+              changeType: 2,
+              changeAmount: -200,
+              balanceAfter: 800,
+              operatorName: '系统',
+              operatorAvatar: '',
+              remark: '购买商品'
+            },
           ];
 
           this.balanceTotal = 50;
@@ -698,7 +762,7 @@ export default {
           // 模拟API调用
           setTimeout(() => {
             this.loading = false;
-            this.$message.success('保存���功');
+            this.$message.success('保存�����功');
           }, 1000);
         }
       });

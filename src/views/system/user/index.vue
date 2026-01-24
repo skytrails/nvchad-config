@@ -83,10 +83,10 @@
             </el-col>
             <el-col :xs="24" :sm="24" :md="24" :lg="6">
               <div class="form-actions">
-                <el-button type="primary" icon="el-icon-search" @click="reload" class="search-btn">
+                <el-button icon="el-icon-search" @click="reload" class="search-btn">
                   查询
                 </el-button>
-                <el-button @click="reset" class="reset-btn">
+                <el-button icon="el-icon-refresh-right" @click="reset" class="reset-btn">
                   重置
                 </el-button>
                 <el-button type="text" icon="el-icon-s-operation" @click="toggleAdvanced">
@@ -791,6 +791,7 @@ export default {
 }
 
 .align-bottom {
+  display: flex;
   align-items: flex-end !important;
 }
 
@@ -827,11 +828,16 @@ export default {
 .search-btn {
   background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
   border: none;
+  color: white;
   padding: 10px 24px;
 }
 
-.reset-btn {
-  padding: 10px 24px;
+.search-btn:hover {
+  background: linear-gradient(135deg, #1890ff 0%, #36cfc9 60%);
+}
+
+.search-btn:active {
+  opacity: 0.8;
 }
 
 .advanced-search {
@@ -1011,13 +1017,18 @@ export default {
 }
 
 .reset-btn {
+  padding: 10px 24px;
   background: linear-gradient(135deg, #faad14 0%, #ffc53d 100%);
   border: none;
   color: white;
 }
 
 .reset-btn:hover {
-  background: linear-gradient(135deg, #d48806 0%, #faad14 100%);
+  background: linear-gradient(135deg, #faad14 0%, #ffc53d 60%);
+}
+
+.reset-btn:active {
+  opacity: 0.8;
 }
 
 .delete-btn {
