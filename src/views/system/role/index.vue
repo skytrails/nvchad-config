@@ -110,7 +110,7 @@ export default {
           label: "角色标识",
           align: "center",
           showOverflowTooltip: true,
-          width: 150,
+          minWidth: 150,
         },
         {
           prop: "status",

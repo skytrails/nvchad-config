@@ -46,6 +46,11 @@
             {{ row.realname }}
           </router-link>
         </template>
+        <template slot="avatar" slot-scope="{ row }">
+          <div style="display: flex; justify-content: center; align-items: center;">
+            <circle-avatar :text="row.username" size="64"></circle-avatar>
+          </div>
+        </template>
         <!-- 性别列 -->
         <template slot="gender" slot-scope="{ row }">
           <el-tag :type="['success', 'primary', 'warning'][row.gender - 1]" size="mini">
@@ -53,7 +58,7 @@
           </el-tag>
         </template>
         <!-- 头像 -->
-        <template slot="avatar" slot-scope="{ row }">
+        <template slot="avatar1" slot-scope="{ row }">
           <el-avatar shape="square" :size="25" :src="row.avatar" />
         </template>
         <!-- 角色列 -->
@@ -64,11 +69,9 @@
         </template>
         <!-- 状态列 -->
         <template slot="status" slot-scope="{ row }">
-          <!--el-tag v-if="row.status === 1" size="mini">启用 </el-tag>
-          <el-tag v-if="row.status === 2" type="info" size="mini">停用 </el-tag-->
           <el-switch v-if="row.id !== 1" v-model="row.status" @change="editStatus(row)" :active-value="1"
             :inactive-value="2" />
-          <el-tag v-else size="mini">启用 </el-tag>
+          <el-tag v-else type="danger" size="mini">不可禁用</el-tag>
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
@@ -77,8 +80,7 @@
               :disabled="!permission.includes('sys:user:edit')">修改
             </el-link>
             <el-popconfirm class="ele-action" title="确定要删除此用户吗？" @confirm="remove(row)"
-                :disabled="!permission.includes('sys:user:delete')"
-              >
+              :disabled="!permission.includes('sys:user:delete')">
               <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete" v-if="row.id !== 1"
                 :disabled="!permission.includes('sys:user:delete')">删除
               </el-link>
@@ -86,8 +88,7 @@
           </div>
           <div>
             <el-popconfirm class="ele-action" title="确定要重置密码吗？" @confirm="resetPwd(row)"
-                :disabled="!permission.includes('sys:user:resetPwd')"
-              >
+              :disabled="!permission.includes('sys:user:resetPwd')">
               <el-link type="success" slot="reference" :underline="false" icon="el-icon-key" v-if="row.id !== 1"
                 :disabled="!permission.includes('sys:user:resetPwd')">重置密码
               </el-link>
@@ -107,10 +108,11 @@
 import { mapGetters } from "vuex";
 import UserEdit from "./user-edit";
 import PasswordCopy from "./password-copy";
+import CircleAvatar from "@/components/CircleAvatar.vue";
 
 export default {
   name: "SystemUser",
-  components: { UserEdit, PasswordCopy },
+  components: { UserEdit, PasswordCopy, CircleAvatar },
   computed: {
     ...mapGetters(["permission"]),
   },
@@ -126,7 +128,6 @@ export default {
           type: "selection",
           width: 45,
           align: "center",
-          fixed: "left",
         },
         {
           prop: "id",
@@ -137,6 +138,13 @@ export default {
           fixed: "left",
         },
         {
+          prop: "avatar",
+          label: "头像",
+          align: "center",
+          minWidth: 60,
+          slot: "avatar",
+        },
+        {
           prop: "username",
           label: "用户账号",
           align: "center",
@@ -145,7 +153,7 @@ export default {
         },
         {
           prop: "realname",
-          label: "用户姓名",
+          label: "用户名",
           align: "center",
           showOverflowTooltip: true,
           minWidth: 110,

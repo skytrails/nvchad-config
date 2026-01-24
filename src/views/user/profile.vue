@@ -4,9 +4,8 @@
       <el-col :md="6" :sm="8">
         <el-card shadow="never" body-style="padding: 25px;">
           <div class="user-info-card">
-            <!-- 头像上传 -->
             <div class="user-info-avatar">
-              <uploadImage :limit="1" v-model="form.avatar" style="left: 0px"></uploadImage>
+              <circle-avatar :text="form.realname" size="96" />
             </div>
             <h2 class="user-info-name">{{ form.realname }}</h2>
             <div class="user-info-desc">
@@ -14,7 +13,7 @@
             </div>
           </div>
           <div style="margin: 30px 0 20px 0;">
-            <el-divider class="ele-divider-dashed ele-divider-base"/>
+            <el-divider class="ele-divider-dashed ele-divider-base" />
           </div>
           <div class="user-info-list">
             <div class="user-info-item">
@@ -33,10 +32,6 @@
               <i class="el-icon-location-information"></i>
               <span>{{ form.address }}</span>
             </div>
-<!--            <div class="user-info-item">-->
-<!--              <i class="el-icon-_school"></i>-->
-<!--              <span>SpringBoot2、Shiro、MySQL、Vue、ElementUI</span>-->
-<!--            </div>-->
           </div>
         </el-card>
       </el-col>
@@ -44,67 +39,35 @@
         <el-card shadow="never" body-style="padding-top: 5px;">
           <el-tabs v-model="active" class="user-info-tabs">
             <el-tab-pane label="基本信息" name="info">
-              <el-form
-                ref="infoForm"
-                :model="form"
-                :rules="rules"
-                label-width="90px"
-                style="max-width: 450px;padding-top: 40px;"
-                @keyup.enter.native="save"
-                @submit.native.prevent>
+              <el-form ref="infoForm" :model="form" :rules="rules" label-width="90px"
+                style="max-width: 450px;padding-top: 40px;" @keyup.enter.native="save" @submit.native.prevent>
                 <el-form-item label="姓名:" prop="realname">
-                  <el-input
-                    v-model="form.realname"
-                    placeholder="请输入姓名"
-                    clearable/>
+                  <el-input v-model="form.realname" placeholder="请输入姓名" clearable />
                 </el-form-item>
                 <el-form-item label="昵称:" prop="nickname">
-                  <el-input
-                    v-model="form.nickname"
-                    placeholder="请输入昵称"
-                    clearable/>
+                  <el-input v-model="form.nickname" placeholder="请输入昵称" clearable />
                 </el-form-item>
                 <el-form-item label="性别:" prop="gender">
-                  <el-select
-                    v-model="form.gender"
-                    placeholder="请选择性别"
-                    class="ele-fluid"
-                    clearable>
-                    <el-option label="男" :value="1"/>
-                    <el-option label="女" :value="2"/>
-                    <el-option label="保密" :value="3"/>
+                  <el-select v-model="form.gender" placeholder="请选择性别" class="ele-fluid" clearable>
+                    <el-option label="男" :value="1" />
+                    <el-option label="女" :value="2" />
+                    <el-option label="保密" :value="3" />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="联系方式:" prop="mobile">
-                  <el-input
-                    v-model="form.mobile"
-                    placeholder="请输入联系方式"
-                    clearable/>
+                  <el-input v-model="form.mobile" placeholder="请输入联系方式" clearable />
                 </el-form-item>
                 <el-form-item label="邮箱:" prop="email">
-                  <el-input
-                    v-model="form.email"
-                    placeholder="请输入邮箱"
-                    clearable/>
+                  <el-input v-model="form.email" placeholder="请输入邮箱" clearable />
                 </el-form-item>
                 <el-form-item label="详细地址:">
-                  <el-input
-                    v-model="form.address"
-                    placeholder="请输入详细地址"
-                    clearable/>
+                  <el-input v-model="form.address" placeholder="请输入详细地址" clearable />
                 </el-form-item>
                 <el-form-item label="个人简介:">
-                  <el-input
-                    v-model="form.intro"
-                    placeholder="请输入个人简介"
-                    :rows="4"
-                    type="textarea"/>
+                  <el-input v-model="form.intro" placeholder="请输入个人简介" :rows="4" type="textarea" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button
-                    type="primary"
-                    @click="save"
-                    :loading="loading">保存更改
+                  <el-button type="primary" @click="save" :loading="loading">保存更改
                   </el-button>
                 </el-form-item>
               </el-form>
@@ -118,11 +81,11 @@
 
 <script>
 import setting from '@/config/setting';
-import uploadImage from '@/components/uploadImage'
+import CircleAvatar from '@/components/CircleAvatar.vue';
 
 export default {
   name: 'UserInfo',
-  components: {uploadImage},
+  components: { CircleAvatar },
   data() {
     return {
       // tab页选中
@@ -132,16 +95,16 @@ export default {
       // 表单验证规则
       rules: {
         realname: [
-          {required: true, message: '请输入姓名', trigger: 'blur'}
+          { required: true, message: '请输入姓名', trigger: 'blur' }
         ],
         nickname: [
-          {required: true, message: '请输入昵称', trigger: 'blur'}
+          { required: true, message: '请输入昵称', trigger: 'blur' }
         ],
         gender: [
-          {required: true, message: '请选择性别', trigger: 'blur'}
+          { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         email: [
-          {required: true, message: '请输入邮箱', trigger: 'blur'}
+          { required: true, message: '请输入邮箱', trigger: 'blur' }
         ]
       },
       // 保存按钮loading
@@ -231,7 +194,7 @@ export default {
   justify-content: center;
 }
 
-.user-info-card .user-info-avatar-group > i {
+.user-info-card .user-info-avatar-group>i {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -242,7 +205,7 @@ export default {
   z-index: 2;
 }
 
-.user-info-card .user-info-avatar-group:hover > i {
+.user-info-card .user-info-avatar-group:hover>i {
   display: block;
 }
 
@@ -276,12 +239,12 @@ export default {
   align-items: baseline;
 }
 
-.user-info-item > i {
+.user-info-item>i {
   margin-right: 10px;
   font-size: 16px;
 }
 
-.user-info-item > span {
+.user-info-item>span {
   flex: 1;
   display: block;
 }

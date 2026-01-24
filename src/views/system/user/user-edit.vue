@@ -37,7 +37,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="用户姓名:" prop="realname">
+          <el-form-item label="用户名:" prop="realname">
             <el-input
               clearable
               :maxlength="20"
