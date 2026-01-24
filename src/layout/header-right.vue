@@ -30,8 +30,9 @@
     <div class="ele-admin-header-tool-item">
       <el-dropdown @command="onUserDropClick">
         <div class="ele-admin-header-avatar">
-          <el-avatar :src="require('@/assets/logo.png')" />
-          <span class="hidden-xs-only">{{ loginUser.realname }}</span>
+          <!--el-avatar :src="require('@/assets/logo.png')" /-->
+          <circle-avatar size="32" :text="loginUser.realname" />
+          <span class="hidden-xs-only" style="margin-left: 8px;">{{ loginUser.realname }}</span>
           <i class="el-icon-arrow-down hidden-xs-only"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -52,11 +53,12 @@
 
 <script>
 // import EleNotice from './notice';
-import {isFullscreen, toggleFullscreen} from 'ele-admin/packages/util';
+import CircleAvatar from '@/components/CircleAvatar.vue';
+import { isFullscreen, toggleFullscreen } from 'ele-admin/packages/util';
 
 export default {
   name: 'EleHeaderRight',
-  components: {},
+  components: { CircleAvatar },
   emits: ['item-click', 'change-language'],
   props: {
     // 是否显示打开设置抽屉按钮
@@ -89,7 +91,7 @@ export default {
         this.$confirm(
           this.$t('layout.logout.message'),
           this.$t('layout.logout.title'),
-          {type: 'warning'}
+          { type: 'warning' }
         ).then(() => {
           // 调用接口退出登录
           this.$http.get('/admin/logout').then(res => {

@@ -24,20 +24,10 @@
               ¥ <span class="balance-number">{{ formatCurrency(balance) }}</span>
             </div>
             <div class="balance-actions">
-              <el-button
-                type="primary"
-                size="small"
-                icon="el-icon-plus"
-                @click="showRechargeDialog"
-              >
+              <el-button type="primary" size="small" icon="el-icon-plus" @click="showRechargeDialog">
                 充值
               </el-button>
-              <el-button
-                type="success"
-                size="small"
-                icon="el-icon-shopping-cart-full"
-                @click="showConsumeDialog"
-              >
+              <el-button type="success" size="small" icon="el-icon-shopping-cart-full" @click="showConsumeDialog">
                 消费
               </el-button>
             </div>
@@ -99,46 +89,267 @@
           <el-tabs v-model="active" class="user-info-tabs">
             <!-- 基本信息标签页 -->
             <el-tab-pane label="基本信息" name="info">
-              <el-form
-                ref="infoForm"
-                :model="form"
-                :rules="rules"
-                label-width="90px"
-                style="max-width: 450px; padding-top: 40px;"
-                @keyup.enter.native="save"
-                @submit.native.prevent
-              >
-                <el-form-item label="姓名:" prop="realname">
-                  <el-input v-model="form.realname" placeholder="请输入姓名" clearable />
-                </el-form-item>
-                <el-form-item label="昵称:" prop="nickname">
-                  <el-input v-model="form.nickname" placeholder="请输入昵称" clearable />
-                </el-form-item>
-                <el-form-item label="性别:" prop="gender">
-                  <el-select v-model="form.gender" placeholder="请选择性别" class="ele-fluid" clearable>
-                    <el-option label="男" :value="1" />
-                    <el-option label="女" :value="2" />
-                    <el-option label="保密" :value="3" />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="联系方式:" prop="mobile">
-                  <el-input v-model="form.mobile" placeholder="请输入联系方式" clearable />
-                </el-form-item>
-                <el-form-item label="邮箱:" prop="email">
-                  <el-input v-model="form.email" placeholder="请输入邮箱" clearable />
-                </el-form-item>
-                <el-form-item label="详细地址:">
-                  <el-input v-model="form.address" placeholder="请输入详细地址" clearable />
-                </el-form-item>
-                <el-form-item label="个人简介:">
-                  <el-input v-model="form.intro" placeholder="请输入个人简介" :rows="4" type="textarea" />
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary" @click="save" :loading="loading">
+              <div class="info-container">
+                <!-- 个人信息卡片 -->
+                <div class="info-card">
+                  <div class="card-header">
+                    <i class="el-icon-user-solid"></i>
+                    <span class="card-title">个人信息</span>
+                  </div>
+                  <div class="card-body">
+                    <el-row :gutter="30">
+                      <el-col :xs="24" :sm="12">
+                        <div class="form-group">
+                          <label class="form-label required">
+                            <i class="el-icon-user"></i>
+                            姓名
+                          </label>
+                          <el-input v-model="form.realname" placeholder="请输入您的真实姓名" size="medium" class="form-input"
+                            :class="{ 'has-error': !form.realname }">
+                            <i slot="prefix" class="el-input__icon el-icon-user"></i>
+                          </el-input>
+                          <div v-if="!form.realname" class="error-tip">姓名不能为空</div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="form-label required">
+                            <i class="el-icon-magic-stick"></i>
+                            昵称
+                          </label>
+                          <el-input v-model="form.nickname" placeholder="请输入您的昵称" size="medium" class="form-input"
+                            :class="{ 'has-error': !form.nickname }">
+                            <i slot="prefix" class="el-input__icon el-icon-magic-stick"></i>
+                          </el-input>
+                          <div v-if="!form.nickname" class="error-tip">昵称不能为空</div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="form-label required">
+                            <i class="el-icon-male"></i>
+                            性别
+                          </label>
+                          <el-radio-group v-model="form.gender" class="gender-group">
+                            <el-radio :label="1" class="gender-option">
+                              <i class="el-icon-male male-icon"></i>
+                              <span>男</span>
+                            </el-radio>
+                            <el-radio :label="2" class="gender-option">
+                              <i class="el-icon-female female-icon"></i>
+                              <span>女</span>
+                            </el-radio>
+                            <el-radio :label="3" class="gender-option">
+                              <i class="el-icon-question question-icon"></i>
+                              <span>保密</span>
+                            </el-radio>
+                          </el-radio-group>
+                          <div v-if="!form.gender" class="error-tip">请选择性别</div>
+                        </div>
+                      </el-col>
+
+                      <el-col :xs="24" :sm="12">
+                        <div class="form-group">
+                          <label class="form-label required">
+                            <i class="el-icon-mobile-phone"></i>
+                            手机号
+                          </label>
+                          <el-input v-model="form.mobile" placeholder="请输入手机号码" size="medium" class="form-input"
+                            :maxlength="11">
+                            <i slot="prefix" class="el-input__icon el-icon-mobile-phone"></i>
+                            <el-button v-if="form.mobile && form.mobile.length === 11" slot="append" type="text"
+                              @click="verifyMobile">
+                              验证
+                            </el-button>
+                          </el-input>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="form-label required">
+                            <i class="el-icon-message"></i>
+                            邮箱
+                          </label>
+                          <el-input v-model="form.email" placeholder="请输入邮箱地址" size="medium" class="form-input"
+                            :class="{ 'has-error': !form.email }">
+                            <i slot="prefix" class="el-input__icon el-icon-message"></i>
+                            <el-button v-if="form.email && isEmailValid" slot="append" type="text" @click="verifyEmail">
+                              验证
+                            </el-button>
+                          </el-input>
+                          <div v-if="!form.email" class="error-tip">邮箱不能为空</div>
+                          <div v-else-if="!isEmailValid" class="error-tip">邮箱格式不正确</div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="form-label">
+                            <i class="el-icon-location-information"></i>
+                            所在地区
+                          </label>
+                          <el-cascader v-model="selectedArea" :options="areaOptions" placeholder="请选择省/市/区"
+                            class="form-input" size="medium" clearable filterable />
+                        </div>
+                      </el-col>
+                    </el-row>
+                  </div>
+                </div>
+
+                <!-- 详细资料卡片 -->
+                <div class="info-card">
+                  <div class="card-header">
+                    <i class="el-icon-document"></i>
+                    <span class="card-title">详细资料</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label class="form-label">
+                        <i class="el-icon-location"></i>
+                        详细地址
+                      </label>
+                      <el-input v-model="form.address" placeholder="请输入详细地址" size="medium" class="form-input">
+                        <i slot="prefix" class="el-input__icon el-icon-location"></i>
+                      </el-input>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">
+                        <i class="el-icon-edit"></i>
+                        个人简介
+                      </label>
+                      <div class="intro-container">
+                        <el-input v-model="form.intro" type="textarea" :rows="4" placeholder="介绍一下自己吧~" maxlength="200"
+                          show-word-limit resize="none" class="intro-textarea" />
+                        <div class="intro-tips">
+                          <i class="el-icon-info"></i>
+                          <span>好的简介能让大家更好地了解你</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">
+                        <i class="el-icon-date"></i>
+                        出生日期
+                      </label>
+                      <el-date-picker v-model="form.birthday" type="date" placeholder="选择出生日期" format="yyyy 年 MM 月 dd 日"
+                        value-format="yyyy-MM-dd" class="form-input" size="medium" />
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">
+                        <i class="el-icon-suitcase"></i>
+                        职业信息
+                      </label>
+                      <el-input v-model="form.occupation" placeholder="请输入您的职业" size="medium" class="form-input">
+                        <i slot="prefix" class="el-input__icon el-icon-suitcase"></i>
+                      </el-input>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 社交信息卡片 -->
+                <div class="info-card">
+                  <div class="card-header">
+                    <i class="el-icon-share"></i>
+                    <span class="card-title">社交信息</span>
+                    <span class="card-subtitle">关联您的社交账号</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="social-connections">
+                      <div class="social-item">
+                        <div class="social-icon wechat">
+                          <i class="el-icon-chat-line-round"></i>
+                        </div>
+                        <div class="social-info">
+                          <span class="social-name">微信</span>
+                          <span class="social-status" :class="{ 'connected': form.wechat }">
+                            {{ form.wechat ? '已绑定' : '未绑定' }}
+                          </span>
+                        </div>
+                        <el-button v-if="!form.wechat" type="text" size="small" @click="bindWechat">
+                          绑定
+                        </el-button>
+                        <el-button v-else type="text" size="small" @click="unbindWechat">
+                          解绑
+                        </el-button>
+                      </div>
+
+                      <div class="social-item">
+                        <div class="social-icon qq">
+                          <i class="el-icon-chat-dot-round"></i>
+                        </div>
+                        <div class="social-info">
+                          <span class="social-name">QQ</span>
+                          <span class="social-status" :class="{ 'connected': form.qq }">
+                            {{ form.qq ? '已绑定' : '未绑定' }}
+                          </span>
+                        </div>
+                        <el-button v-if="!form.qq" type="text" size="small" @click="bindQQ">
+                          绑定
+                        </el-button>
+                        <el-button v-else type="text" size="small" @click="unbindQQ">
+                          解绑
+                        </el-button>
+                      </div>
+
+                      <div class="social-item">
+                        <div class="social-icon weibo">
+                          <i class="el-icon-star-off"></i>
+                        </div>
+                        <div class="social-info">
+                          <span class="social-name">微博</span>
+                          <span class="social-status" :class="{ 'connected': form.weibo }">
+                            {{ form.weibo ? '已绑定' : '未绑定' }}
+                          </span>
+                        </div>
+                        <el-button v-if="!form.weibo" type="text" size="small" @click="bindWeibo">
+                          绑定
+                        </el-button>
+                        <el-button v-else type="text" size="small" @click="unbindWeibo">
+                          解绑
+                        </el-button>
+                      </div>
+
+                      <div class="social-item">
+                        <div class="social-icon github">
+                          <i class="el-icon-service"></i>
+                        </div>
+                        <div class="social-info">
+                          <span class="social-name">GitHub</span>
+                          <span class="social-status" :class="{ 'connected': form.github }">
+                            {{ form.github ? '已绑定' : '未绑定' }}
+                          </span>
+                        </div>
+                        <el-button v-if="!form.github" type="text" size="small" @click="bindGithub">
+                          绑定
+                        </el-button>
+                        <el-button v-else type="text" size="small" @click="unbindGithub">
+                          解绑
+                        </el-button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="action-buttons">
+                  <el-button type="primary" size="large" :loading="loading" @click="save" class="save-btn">
+                    <i class="el-icon-check"></i>
                     保存更改
                   </el-button>
-                </el-form-item>
-              </el-form>
+                  <el-button size="large" @click="resetForm" class="reset-btn">
+                    <i class="el-icon-refresh"></i>
+                    重置
+                  </el-button>
+                  <el-button type="text" size="large" @click="previewProfile" class="preview-btn">
+                    <i class="el-icon-view"></i>
+                    预览效果
+                  </el-button>
+                </div>
+
+                <!-- 保存提示 -->
+                <div class="save-tips">
+                  <i class="el-icon-warning-outline"></i>
+                  <span>修改资料后需要重新登录才能生效</span>
+                </div>
+              </div>
             </el-tab-pane>
 
             <!-- 余额记录标签页 -->
@@ -157,14 +368,8 @@
                       </el-select>
                     </el-form-item>
                     <el-form-item label="时间范围:">
-                      <el-date-picker
-                        v-model="recordQuery.dateRange"
-                        type="daterange"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        value-format="yyyy-MM-dd"
-                      />
+                      <el-date-picker v-model="recordQuery.dateRange" type="daterange" range-separator="至"
+                        start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd" />
                     </el-form-item>
                     <el-form-item>
                       <el-button type="primary" @click="searchRecords">查询</el-button>
@@ -227,37 +432,19 @@
                 </div>
 
                 <!-- 余额记录表格 -->
-                <el-table
-                  :data="recordList"
-                  style="width: 100%;"
-                  :loading="recordLoading"
-                  stripe
-                  highlight-current-row
-                >
-                  <el-table-column
-                    prop="orderNo"
-                    label="订单号"
-                    width="200"
-                  >
+                <el-table :data="recordList" style="width: 100%;" :loading="recordLoading" stripe highlight-current-row>
+                  <el-table-column prop="orderNo" label="订单号" width="200">
                     <template slot-scope="{ row }">
                       <span class="order-no">{{ row.orderNo }}</span>
-                      <el-tag
-                        v-if="row.orderNo"
-                        size="mini"
-                        type="info"
-                        style="margin-left: 5px; cursor: pointer;"
-                        @click="copyOrderNo(row.orderNo)"
-                      >
+                      <el-tag v-if="row.orderNo" size="mini" type="info" style="margin-left: 5px; cursor: pointer;"
+                        @click="copyOrderNo(row.orderNo)">
                         复制
                       </el-tag>
                     </template>
                   </el-table-column>
                   <el-table-column prop="type" label="交易类型" width="120">
                     <template slot-scope="{ row }">
-                      <el-tag
-                        :type="getRecordTypeTag(row.type)"
-                        size="small"
-                      >
+                      <el-tag :type="getRecordTypeTag(row.type)" size="small">
                         {{ getRecordTypeText(row.type) }}
                       </el-tag>
                     </template>
@@ -278,12 +465,7 @@
                     <template slot-scope="{ row }">
                       <div class="record-description">
                         <span>{{ row.description }}</span>
-                        <el-tag
-                          v-if="row.status === 0"
-                          size="mini"
-                          type="warning"
-                          style="margin-left: 5px;"
-                        >
+                        <el-tag v-if="row.status === 0" size="mini" type="warning" style="margin-left: 5px;">
                           待处理
                         </el-tag>
                       </div>
@@ -296,21 +478,11 @@
                   </el-table-column>
                   <el-table-column label="操作" width="100" fixed="right">
                     <template slot-scope="{ row }">
-                      <el-button
-                        v-if="row.orderNo"
-                        type="text"
-                        size="small"
-                        @click="viewOrderDetail(row)"
-                      >
+                      <el-button v-if="row.orderNo" type="text" size="small" @click="viewOrderDetail(row)">
                         详情
                       </el-button>
-                      <el-button
-                        v-if="row.type === 1 && row.status === 0"
-                        type="text"
-                        size="small"
-                        style="color: #F56C6C;"
-                        @click="cancelRecharge(row)"
-                      >
+                      <el-button v-if="row.type === 1 && row.status === 0" type="text" size="small"
+                        style="color: #F56C6C;" @click="cancelRecharge(row)">
                         取消
                       </el-button>
                     </template>
@@ -319,14 +491,9 @@
 
                 <!-- 分页 -->
                 <div class="pagination-container">
-                  <el-pagination
-                    :current-page="recordQuery.page"
-                    :page-size="recordQuery.size"
-                    :total="recordTotal"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                  />
+                  <el-pagination :current-page="recordQuery.page" :page-size="recordQuery.size" :total="recordTotal"
+                    layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange" />
                 </div>
               </div>
             </el-tab-pane>
@@ -342,12 +509,7 @@
                         <i class="el-icon-shopping-cart-full"></i>
                         <span>最近消费记录</span>
                       </div>
-                      <el-table
-                        :data="recentConsumeList"
-                        style="width: 100%;"
-                        :loading="recentLoading"
-                        size="small"
-                      >
+                      <el-table :data="recentConsumeList" style="width: 100%;" :loading="recentLoading" size="small">
                         <el-table-column prop="productName" label="商品名称" />
                         <el-table-column prop="amount" label="金额" width="100" align="right">
                           <template slot-scope="{ row }">
@@ -362,10 +524,7 @@
                         </el-table-column>
                         <el-table-column label="状态" width="100">
                           <template slot-scope="{ row }">
-                            <el-tag
-                              :type="row.status === 1 ? 'success' : 'warning'"
-                              size="small"
-                            >
+                            <el-tag :type="row.status === 1 ? 'success' : 'warning'" size="small">
                               {{ row.status === 1 ? '已完成' : '进行中' }}
                             </el-tag>
                           </template>
@@ -385,29 +544,17 @@
                         <div class="chart-item">
                           <div class="chart-label">本月消费</div>
                           <div class="chart-value">¥ {{ formatCurrency(monthConsume) }}</div>
-                          <el-progress
-                            :percentage="getMonthProgress()"
-                            :color="customColors"
-                            :show-text="false"
-                          />
+                          <el-progress :percentage="getMonthProgress()" :color="customColors" :show-text="false" />
                         </div>
                         <div class="chart-item">
                           <div class="chart-label">本周消费</div>
                           <div class="chart-value">¥ {{ formatCurrency(weekConsume) }}</div>
-                          <el-progress
-                            :percentage="getWeekProgress()"
-                            :color="customColors"
-                            :show-text="false"
-                          />
+                          <el-progress :percentage="getWeekProgress()" :color="customColors" :show-text="false" />
                         </div>
                         <div class="chart-item">
                           <div class="chart-label">今日消费</div>
                           <div class="chart-value">¥ {{ formatCurrency(todayConsume) }}</div>
-                          <el-progress
-                            :percentage="getTodayProgress()"
-                            :color="customColors"
-                            :show-text="false"
-                          />
+                          <el-progress :percentage="getTodayProgress()" :color="customColors" :show-text="false" />
                         </div>
                       </div>
 
@@ -418,19 +565,12 @@
                           <span>消费偏好</span>
                         </div>
                         <div class="preference-list">
-                          <div
-                            v-for="item in consumePreferences"
-                            :key="item.category"
-                            class="preference-item"
-                          >
+                          <div v-for="item in consumePreferences" :key="item.category" class="preference-item">
                             <div class="preference-info">
                               <span class="preference-category">{{ item.category }}</span>
                               <span class="preference-count">{{ item.count }}次</span>
                             </div>
-                            <el-progress
-                              :percentage="item.percentage"
-                              :color="getPreferenceColor(item.category)"
-                            />
+                            <el-progress :percentage="item.percentage" :color="getPreferenceColor(item.category)" />
                           </div>
                         </div>
                       </div>
@@ -445,29 +585,12 @@
     </el-row>
 
     <!-- 充值对话框 -->
-    <el-dialog
-      title="账户充值"
-      :visible.sync="rechargeDialogVisible"
-      width="500px"
-      :close-on-click-modal="false"
-      @closed="handleRechargeDialogClose"
-    >
-      <el-form
-        ref="rechargeForm"
-        :model="rechargeForm"
-        :rules="rechargeRules"
-        label-width="80px"
-      >
+    <el-dialog title="账户充值" :visible.sync="rechargeDialogVisible" width="500px" :close-on-click-modal="false"
+      @closed="handleRechargeDialogClose">
+      <el-form ref="rechargeForm" :model="rechargeForm" :rules="rechargeRules" label-width="80px">
         <el-form-item label="充值金额" prop="amount">
-          <el-input-number
-            v-model="rechargeForm.amount"
-            :min="1"
-            :max="10000"
-            :step="100"
-            :precision="2"
-            placeholder="请输入充值金额"
-            style="width: 100%;"
-          >
+          <el-input-number v-model="rechargeForm.amount" :min="1" :max="10000" :step="100" :precision="2"
+            placeholder="请输入充值金额" style="width: 100%;">
             <template slot="prepend">¥</template>
           </el-input-number>
         </el-form-item>
@@ -480,100 +603,51 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注信息">
-          <el-input
-            v-model="rechargeForm.remark"
-            type="textarea"
-            :rows="2"
-            placeholder="请输入备注信息（选填）"
-          />
+          <el-input v-model="rechargeForm.remark" type="textarea" :rows="2" placeholder="请输入备注信息（选填）" />
         </el-form-item>
 
         <!-- 快捷金额 -->
         <div class="quick-amount">
           <span class="quick-label">快捷金额：</span>
-          <el-button
-            v-for="amount in [100, 200, 500, 1000]"
-            :key="amount"
-            size="small"
-            @click="setQuickAmount(amount)"
-          >
+          <el-button v-for="amount in [100, 200, 500, 1000]" :key="amount" size="small" @click="setQuickAmount(amount)">
             ¥ {{ amount }}
           </el-button>
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="rechargeDialogVisible = false">取消</el-button>
-        <el-button
-          type="primary"
-          :loading="rechargeLoading"
-          @click="submitRecharge"
-        >
+        <el-button type="primary" :loading="rechargeLoading" @click="submitRecharge">
           确认充值
         </el-button>
       </div>
     </el-dialog>
 
     <!-- 消费对话框 -->
-    <el-dialog
-      title="消费支出"
-      :visible.sync="consumeDialogVisible"
-      width="600px"
-      :close-on-click-modal="false"
-    >
-      <el-form
-        ref="consumeForm"
-        :model="consumeForm"
-        :rules="consumeRules"
-        label-width="80px"
-      >
+    <el-dialog title="消费支出" :visible.sync="consumeDialogVisible" width="600px" :close-on-click-modal="false">
+      <el-form ref="consumeForm" :model="consumeForm" :rules="consumeRules" label-width="80px">
         <el-form-item label="商品名称" prop="productName">
-          <el-select
-            v-model="consumeForm.productId"
-            filterable
-            remote
-            :remote-method="searchProducts"
-            :loading="productLoading"
-            placeholder="请输入商品名称搜索"
-            style="width: 100%;"
-          >
-            <el-option
-              v-for="item in productOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+          <el-select v-model="consumeForm.productId" filterable remote :remote-method="searchProducts"
+            :loading="productLoading" placeholder="请输入商品名称搜索" style="width: 100%;">
+            <el-option v-for="item in productOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="数量" prop="quantity">
-              <el-input-number
-                v-model="consumeForm.quantity"
-                :min="1"
-                :max="999"
-                placeholder="请输入数量"
-                style="width: 100%;"
-              />
+              <el-input-number v-model="consumeForm.quantity" :min="1" :max="999" placeholder="请输入数量"
+                style="width: 100%;" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="单价" prop="price">
-              <el-input
-                v-model="consumeForm.price"
-                placeholder="请输入单价"
-                style="width: 100%;"
-              >
+              <el-input v-model="consumeForm.price" placeholder="请输入单价" style="width: 100%;">
                 <template slot="prepend">¥</template>
               </el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="总金额">
-          <el-input
-            :value="calculateTotalAmount"
-            disabled
-            style="width: 100%;"
-          >
+          <el-input :value="calculateTotalAmount" disabled style="width: 100%;">
             <template slot="prepend">¥</template>
           </el-input>
         </el-form-item>
@@ -586,21 +660,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注信息">
-          <el-input
-            v-model="consumeForm.remark"
-            type="textarea"
-            :rows="2"
-            placeholder="请输入备注信息（选填）"
-          />
+          <el-input v-model="consumeForm.remark" type="textarea" :rows="2" placeholder="请输入备注信息（选填）" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="consumeDialogVisible = false">取消</el-button>
-        <el-button
-          type="primary"
-          :loading="consumeLoading"
-          @click="submitConsume"
-        >
+        <el-button type="primary" :loading="consumeLoading" @click="submitConsume">
           确认消费
         </el-button>
       </div>
@@ -983,7 +1048,7 @@ export default {
             this.$message.error(res.data.message);
           }
         });
-      }).catch(() => {});
+      }).catch(() => { });
     },
 
     /* 复制订单号 */
@@ -1482,5 +1547,431 @@ export default {
 .user-info-tabs ::v-deep .el-tabs__active-bar {
   background-color: #1890ff;
   height: 3px;
+}
+
+              /* 基本信息容器 */
+.info-container {
+  padding: 20px 0;
+}
+
+/* 卡片样式 */
+.info-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.info-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.card-header i {
+  font-size: 20px;
+  color: #1890ff;
+  margin-right: 12px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.card-subtitle {
+  margin-left: 12px;
+  font-size: 14px;
+  color: #909399;
+  font-weight: normal;
+}
+
+.card-body {
+  padding: 28px;
+}
+
+/* 表单组样式 */
+.form-group {
+  margin-bottom: 28px;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #606266;
+}
+
+.form-label.required:after {
+  content: '*';
+  color: #f56c6c;
+  margin-left: 4px;
+}
+
+.form-label i {
+  margin-right: 8px;
+  font-size: 16px;
+  color: #909399;
+}
+
+.form-input {
+  width: 100%;
+}
+
+/* 输入框样式 */
+.form-input ::v-deep .el-input__inner {
+  border-radius: 8px;
+  border: 1px solid #dcdfe6;
+  transition: all 0.3s;
+  padding-left: 40px;
+  height: 42px;
+  line-height: 42px;
+}
+
+.form-input ::v-deep .el-input__inner:hover {
+  border-color: #c0c4cc;
+}
+
+.form-input ::v-deep .el-input__inner:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.form-input ::v-deep .el-input__prefix {
+  left: 10px;
+  color: #c0c4cc;
+}
+
+.form-input.has-error ::v-deep .el-input__inner {
+  border-color: #f56c6c;
+}
+
+.form-input.has-error ::v-deep .el-input__inner:focus {
+  border-color: #f56c6c;
+  box-shadow: 0 0 0 2px rgba(245, 108, 108, 0.2);
+}
+
+.error-tip {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #f56c6c;
+}
+
+/* 性别选择 */
+.gender-group {
+  display: flex;
+  gap: 20px;
+}
+
+.gender-option ::v-deep .el-radio__input {
+  display: none;
+}
+
+.gender-option ::v-deep .el-radio__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 20px;
+  border: 2px solid #e4e7ed;
+  border-radius: 10px;
+  min-width: 80px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.gender-option ::v-deep .el-radio.is-checked .el-radio__label {
+  border-color: #1890ff;
+  background: rgba(24, 144, 255, 0.05);
+}
+
+.gender-option i {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.male-icon {
+  color: #1890ff;
+}
+
+.female-icon {
+  color: #f56c6c;
+}
+
+.question-icon {
+  color: #909399;
+}
+
+.gender-option span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 个人简介 */
+.intro-container {
+  position: relative;
+}
+
+.intro-textarea ::v-deep .el-textarea__inner {
+  border-radius: 8px;
+  border: 1px solid #dcdfe6;
+  padding: 12px 16px;
+  transition: all 0.3s;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.intro-textarea ::v-deep .el-textarea__inner:hover {
+  border-color: #c0c4cc;
+}
+
+.intro-textarea ::v-deep .el-textarea__inner:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.intro-tips {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #909399;
+}
+
+.intro-tips i {
+  margin-right: 4px;
+}
+
+/* 社交信息 */
+.social-connections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.social-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+}
+
+.social-item:hover {
+  background: #ffffff;
+  border-color: #1890ff;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.1);
+}
+
+.social-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  font-size: 22px;
+  color: white;
+}
+
+.social-icon.wechat {
+  background: linear-gradient(135deg, #09bb07 0%, #2ad100 100%);
+}
+
+.social-icon.qq {
+  background: linear-gradient(135deg, #12b7f5 0%, #4ec0fd 100%);
+}
+
+.social-icon.weibo {
+  background: linear-gradient(135deg, #e6162d 0%, #ff4757 100%);
+}
+
+.social-icon.github {
+  background: linear-gradient(135deg, #333333 0%, #666666 100%);
+}
+
+.social-info {
+  flex: 1;
+}
+
+.social-name {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #303133;
+  margin-bottom: 4px;
+}
+
+.social-status {
+  font-size: 12px;
+  color: #909399;
+}
+
+.social-status.connected {
+  color: #52c41a;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: 40px 0 20px;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.save-btn {
+  padding: 12px 40px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1890ff 0%, #36cfc9 100%);
+  border: none;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.save-btn i {
+  margin-right: 8px;
+}
+
+.reset-btn {
+  padding: 12px 40px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #d9d9d9;
+}
+
+.reset-btn:hover {
+  color: #1890ff;
+  border-color: #1890ff;
+}
+
+.reset-btn i {
+  margin-right: 8px;
+}
+
+.preview-btn {
+  color: #909399;
+}
+
+.preview-btn:hover {
+  color: #1890ff;
+}
+
+.preview-btn i {
+  margin-right: 8px;
+}
+
+/* 保存提示 */
+.save-tips {
+  text-align: center;
+  padding: 16px;
+  background: #fff7e6;
+  border: 1px solid #ffd591;
+  border-radius: 8px;
+  color: #fa8c16;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.save-tips i {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 20px;
+  }
+
+  .gender-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .social-item {
+    padding: 12px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .save-btn,
+  .reset-btn {
+    width: 100%;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.info-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* 验证通过样式 */
+.verified {
+  position: relative;
+}
+
+.verified:after {
+  content: '✓';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #52c41a;
+  font-weight: bold;
+}
+
+/* 下拉框样式美化 */
+.form-input ::v-deep .el-cascader__search-input,
+.form-input ::v-deep .el-date-editor .el-input__inner {
+  border-radius: 8px;
+  border: 1px solid #dcdfe6;
+  padding-left: 40px;
+  height: 42px;
+  line-height: 42px;
+}
+
+.form-input ::v-deep .el-date-editor .el-input__prefix {
+  left: 10px;
+  color: #c0c4cc;
 }
 </style>
