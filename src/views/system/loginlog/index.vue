@@ -20,7 +20,7 @@
         </el-row>
       </el-form>
       <!-- 数据表格 -->
-      <ele-pro-table ref="table" :datasource="url" :columns="columns" :where="where" height="calc(100vh - 315px)">
+      <ele-pro-table ref="table" :datasource="url" :columns="columns" :where="where">
         <!-- 表头工具栏 -->
         <template slot="toolbar">
           <el-button @click="exportData" type="primary" icon="el-icon-download" class="ele-btn-icon" size="small"
@@ -40,7 +40,8 @@
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{row}">
-          <el-popconfirm class="ele-action" title="确定要删除此登录日志吗？" @confirm="remove(row)" :disabled="!permission.includes('sys:loginlog:delete')">
+          <el-popconfirm class="ele-action" title="确定要删除此登录日志吗？" @confirm="remove(row)"
+            :disabled="!permission.includes('sys:loginlog:delete')">
             <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete"
               :disabled="!permission.includes('sys:loginlog:delete')">删除</el-link>
           </el-popconfirm>

@@ -22,7 +22,7 @@
       </el-form>
       <!-- 数据表格 -->
       <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection"
-        height="calc(100vh - 315px)">
+        >
         <!-- 表头工具栏 -->
         <template slot="toolbar">
           <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="openEdit(null)"
