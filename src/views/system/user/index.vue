@@ -1,7 +1,7 @@
 <template>
   <div class="user-management">
     <!-- 页面头部 -->
-    <div class="page-header">
+    <!--div class="page-header">
       <div class="header-content">
         <h2 class="page-title">
           <i class="el-icon-user-solid"></i>
@@ -38,7 +38,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div-->
 
     <!-- 主要卡片 -->
     <el-card shadow="never" class="main-card">
@@ -174,7 +174,7 @@
 
       <!-- 数据表格 -->
       <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection"
-        height="calc(100vh - 380px)" class="data-table" @selection-change="handleSelectionChange">
+        class="data-table" @selection-change="handleSelectionChange">
         <!-- 用户头像 -->
         <template slot="avatar" slot-scope="{ row }">
           <div class="avatar-cell">

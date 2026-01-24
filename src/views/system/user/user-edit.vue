@@ -1,14 +1,7 @@
 <!-- 修正后的模板 -->
 <template>
-  <el-dialog
-    width="720px"
-    :visible="visible"
-    :lock-scroll="false"
-    :destroy-on-close="true"
-    custom-class="ele-dialog-form user-edit-dialog"
-    :title="isUpdate ? '修改用户' : '添加用户'"
-    @update:visible="updateVisible"
-  >
+  <el-dialog width="720px" :visible="visible" :lock-scroll="false" :destroy-on-close="true"
+    custom-class="ele-dialog-form user-edit-dialog" :title="isUpdate ? '修改用户' : '添加用户'" @update:visible="updateVisible">
     <div class="dialog-content">
       <el-form ref="form" :model="form" :rules="rules" label-width="90px" label-position="left">
         <el-row :gutter="24">
@@ -16,41 +9,22 @@
             <!-- 登录账号 -->
             <el-form-item label="登录账号:" prop="username" class="form-item-enhanced">
               <div class="input-wrapper">
-                <el-input
-                  clearable
-                  :maxlength="20"
-                  :disabled="isUpdate"
-                  v-model="form.username"
-                  placeholder="请输入用户账号"
-                  :prefix-icon="isUpdate ? 'el-icon-lock' : 'el-icon-user'"
-                  size="medium"
-                />
+                <el-input clearable :maxlength="20" :disabled="isUpdate" v-model="form.username" placeholder="请输入用户账号"
+                  :prefix-icon="isUpdate ? 'el-icon-lock' : 'el-icon-user'" size="medium" />
                 <div v-if="!isUpdate" class="input-tips">登录后不可修改</div>
               </div>
             </el-form-item>
 
             <!-- 用户名 -->
             <el-form-item label="用户名:" prop="realname" class="form-item-enhanced">
-              <el-input
-                clearable
-                :maxlength="20"
-                v-model="form.realname"
-                placeholder="请输入用户姓名"
-                prefix-icon="el-icon-user"
-                size="medium"
-              />
+              <el-input clearable :maxlength="20" v-model="form.realname" placeholder="请输入用户姓名"
+                prefix-icon="el-icon-user" size="medium" />
             </el-form-item>
 
             <!-- 邮箱 -->
             <el-form-item label="邮箱:" prop="email" class="form-item-enhanced">
-              <el-input
-                clearable
-                :maxlength="100"
-                v-model="form.email"
-                placeholder="请输入邮箱地址"
-                prefix-icon="el-icon-message"
-                size="medium"
-              >
+              <el-input clearable :maxlength="100" v-model="form.email" placeholder="请输入邮箱地址"
+                prefix-icon="el-icon-message" size="medium">
                 <!-- 修正插槽语法 -->
                 <template v-if="form.email && validate.email.test(form.email)" #append>
                   <i class="el-icon-check email-check" />
@@ -77,28 +51,15 @@
             <!-- 登录密码 -->
             <el-form-item label="登录密码:" prop="password" class="form-item-enhanced">
               <div class="input-wrapper">
-                <el-input
-                  show-password
-                  :disabled="isUpdate"
-                  :maxlength="20"
-                  v-model="form.password"
-                  placeholder="请输入登录密码"
-                  prefix-icon="el-icon-lock"
-                  size="medium"
-                />
+                <el-input show-password :disabled="isUpdate" :maxlength="20" v-model="form.password"
+                  placeholder="请输入登录密码" prefix-icon="el-icon-lock" size="medium" />
                 <div v-if="!isUpdate" class="input-tips">建议包含字母、数字和符号</div>
               </div>
             </el-form-item>
 
             <!-- 性别 -->
             <el-form-item label="性别:" prop="gender" class="form-item-enhanced">
-              <el-select
-                clearable
-                class="ele-block"
-                v-model="form.gender"
-                placeholder="请选择性别"
-                size="medium"
-              >
+              <el-select clearable class="ele-block" v-model="form.gender" placeholder="请选择性别" size="medium">
                 <el-option label="男" :value="1">
                   <div class="gender-option">
                     <i class="el-icon-male male-icon"></i>
@@ -122,14 +83,8 @@
 
             <!-- 手机号 -->
             <el-form-item label="手机号:" prop="mobile" class="form-item-enhanced">
-              <el-input
-                clearable
-                :maxlength="11"
-                v-model="form.mobile"
-                placeholder="请输入手机号码"
-                prefix-icon="el-icon-phone"
-                size="medium"
-              >
+              <el-input clearable :maxlength="11" v-model="form.mobile" placeholder="请输入手机号码"
+                prefix-icon="el-icon-phone" size="medium">
                 <!-- 修正插槽语法 -->
                 <template #prepend>
                   <div class="mobile-prefix">+86</div>
@@ -139,37 +94,16 @@
 
             <!-- 创建日期 -->
             <el-form-item label="创建日期:" prop="birthday" class="form-item-enhanced">
-              <el-date-picker
-                type="date"
-                disabled
-                class="ele-fluid"
-                v-model="form.birthday"
-                value-format="yyyy-MM-dd"
-                format="yyyy-MM-dd"
-                placeholder="创建日期"
-                prefix-icon="el-icon-date"
-                size="medium"
-              />
+              <el-date-picker type="date" disabled class="ele-fluid" v-model="form.birthday" value-format="yyyy-MM-dd"
+                format="yyyy-MM-dd" placeholder="创建日期" prefix-icon="el-icon-date" size="medium" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <!-- 角色 -->
         <el-form-item label="角色:" prop="roleIds" class="form-item-enhanced role-select">
-          <el-select
-            multiple
-            clearable
-            class="ele-block"
-            v-model="form.roleIds"
-            placeholder="请选择角色（可多选）"
-            size="medium"
-          >
-            <el-option
-              v-for="item in roleList"
-              :key="item.id"
-              :value="item.id"
-              :label="item.name"
-            />
+          <el-select multiple clearable class="ele-block" v-model="form.roleIds" placeholder="请选择角色（可多选）" size="medium">
+            <el-option v-for="item in roleList" :key="item.id" :value="item.id" :label="item.name" />
           </el-select>
           <div class="select-tips">已选择 {{ (form.roleIds && form.roleIds.length) || 0 }} 个角色</div>
         </el-form-item>
@@ -177,16 +111,8 @@
         <!-- 个人简介 -->
         <el-form-item label="个人简介:" class="form-item-enhanced">
           <div class="textarea-wrapper">
-            <el-input
-              :rows="4"
-              clearable
-              type="textarea"
-              :maxlength="200"
-              v-model="form.intro"
-              placeholder="请输入个人简介（限200字）"
-              resize="none"
-              show-word-limit
-            />
+            <el-input :rows="4" clearable type="textarea" :maxlength="200" v-model="form.intro"
+              placeholder="请输入个人简介（限200字）" resize="none" show-word-limit />
             <div class="textarea-icon">
               <i class="el-icon-edit"></i>
             </div>
@@ -198,20 +124,10 @@
     <!-- 修正插槽语法 -->
     <template #footer>
       <div class="dialog-footer">
-        <el-button
-          size="medium"
-          @click="updateVisible(false)"
-          class="cancel-btn"
-        >
+        <el-button size="medium" @click="updateVisible(false)" class="cancel-btn">
           取消
         </el-button>
-        <el-button
-          type="primary"
-          size="medium"
-          :loading="loading"
-          @click="save"
-          class="save-btn"
-        >
+        <el-button type="primary" size="medium" :loading="loading" @click="save" class="save-btn">
           <i class="el-icon-check"></i>
           保存
         </el-button>
@@ -309,10 +225,11 @@ export default {
             .post(this.isUpdate ? "/admin/update" : "/admin/create", this.form)
             .then((res) => {
               this.loading = false;
+              console.log("-----data:", res.data)
               if (res.data.code === 200) {
                 this.$message({
                   type: "success",
-                  message: res.data.$message,
+                  message: res.data.message,
                   duration: 2000
                 });
                 if (!this.isUpdate) {
@@ -321,7 +238,7 @@ export default {
                 this.updateVisible(false);
                 this.$emit("done");
               } else {
-                this.$message.error(res.data.$message);
+                this.$message.error(res.data.message);
               }
             })
             .catch((e) => {
@@ -341,7 +258,7 @@ export default {
           if (res.data.code === 200) {
             this.roleList = res.data.data;
           } else {
-            this.$message.error(res.data.$message);
+            this.$message.error(res.data.message);
           }
         })
         .catch((e) => {
