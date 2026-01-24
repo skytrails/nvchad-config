@@ -24,11 +24,14 @@
         :need-page="false" :parse-data="parseData" height="calc(100vh - 270px)">
         <!-- 表头工具栏 -->
         <template slot="toolbar">
-          <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="openEdit(null)">添加
+          <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="openEdit(null)"
+            :disabled="!permission.includes('sys:menu:add')">添加
           </el-button>
-          <el-button @click="expandAll" class="ele-btn-icon" size="small">展开全部
+          <el-button @click="expandAll" class="ele-btn-icon" size="small"
+            :disabled="!permission.includes('sys:menu:collapse')">展开全部
           </el-button>
-          <el-button @click="foldAll" class="ele-btn-icon" size="small">折叠全部
+          <el-button @click="foldAll" class="ele-btn-icon" size="small"
+            :disabled="!permission.includes('sys:menu:expand')">折叠全部
           </el-button>
         </template>
         <!-- 标题列 -->
@@ -52,12 +55,16 @@
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{row}">
-          <el-link type="primary" :underline="false" icon="el-icon-plus" @click="openEdit(null, row.id)">添加
+          <el-link type="primary" :underline="false" icon="el-icon-plus" @click="openEdit(null, row.id)"
+            :disabled="!permission.includes('sys:menu:addz')">添加
           </el-link>
-          <el-link type="primary" :underline="false" icon="el-icon-edit" @click="openEdit(row)">修改
+          <el-link type="primary" :underline="false" icon="el-icon-edit" @click="openEdit(row)"
+            :disabled="!permission.includes('sys:menu:edit')">修改
           </el-link>
-          <el-popconfirm class="ele-action" title="确定要删除吗？" @confirm="remove(row)">
-            <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete">删除
+          <el-popconfirm class="ele-action" title="确定要删除吗？" @confirm="remove(row)"
+            :disabled="!permission.includes('sys:menu:delete')">
+            <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete"
+              :disabled="!permission.includes('sys:menu:delete')">删除
             </el-link>
           </el-popconfirm>
         </template>

@@ -31,7 +31,7 @@
       <el-dropdown @command="onUserDropClick">
         <div class="ele-admin-header-avatar">
           <el-avatar :src="require('@/assets/logo.png')" />
-          <span class="hidden-xs-only">{{ loginUser.nickname }}</span>
+          <span class="hidden-xs-only">{{ loginUser.realname }}</span>
           <i class="el-icon-arrow-down hidden-xs-only"></i>
         </div>
         <el-dropdown-menu slot="dropdown">

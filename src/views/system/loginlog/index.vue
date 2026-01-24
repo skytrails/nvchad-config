@@ -40,9 +40,9 @@
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{row}">
-          <el-popconfirm class="ele-action" title="确定要删除此登录日志吗？" @confirm="remove(row)">
-            <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete">删除
-            </el-link>
+          <el-popconfirm class="ele-action" title="确定要删除此登录日志吗？" @confirm="remove(row)" :disabled="!permission.includes('sys:loginlog:delete')">
+            <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete"
+              :disabled="!permission.includes('sys:loginlog:delete')">删除</el-link>
           </el-popconfirm>
         </template>
       </ele-pro-table>

@@ -2,94 +2,48 @@
   <div class="ele-body">
     <el-card shadow="never">
       <!-- 搜索表单 -->
-      <el-form
-        :model="where"
-        label-width="77px"
-        class="ele-form-search"
-        @keyup.enter.native="reload"
-        @submit.native.prevent
-      >
+      <el-form :model="where" label-width="77px" class="ele-form-search" @keyup.enter.native="reload"
+        @submit.native.prevent>
         <el-row :gutter="15">
           <el-col :lg="6" :md="12">
             <el-form-item label="角色名称:">
-              <el-input
-                clearable
-                v-model="where.name"
-                placeholder="请输入角色名称"
-              />
+              <el-input clearable v-model="where.name" placeholder="请输入角色名称" />
             </el-form-item>
           </el-col>
           <el-col :lg="6" :md="12">
             <div class="ele-form-actions">
-              <el-button
-                type="primary"
-                icon="el-icon-search"
-                class="ele-btn-icon"
-                @click="reload"
-                >查询
+              <el-button type="primary" icon="el-icon-search" class="ele-btn-icon" @click="reload"
+                :disabled="!permission.includes('sys:role:index')">查询
               </el-button>
-              <el-button @click="reset">重置</el-button>
+              <el-button @click="reset" :disabled="!permission.includes('sys:role:index')">重置</el-button>
             </div>
           </el-col>
         </el-row>
       </el-form>
       <!-- 数据表格 -->
-      <ele-pro-table
-        ref="table"
-        :where="where"
-        :datasource="url"
-        :columns="columns"
-        :selection.sync="selection"
-        height="calc(100vh - 315px)"
-      >
+      <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection"
+        height="calc(100vh - 315px)">
         <!-- 表头工具栏 -->
         <template slot="toolbar">
-          <el-button
-            size="small"
-            type="primary"
-            icon="el-icon-plus"
-            class="ele-btn-icon"
-            @click="openEdit(null)"
-            >添加
+          <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="openEdit(null)"
+            :disabled="!permission.includes('sys:role:add')">添加
           </el-button>
-          <el-button
-            size="small"
-            type="danger"
-            icon="el-icon-delete"
-            class="ele-btn-icon"
-            @click="removeBatch"
-            >删除
+          <el-button size="small" type="danger" icon="el-icon-delete" class="ele-btn-icon" @click="removeBatch"
+            :disabled="!permission.includes('sys:role:delete')">删除
           </el-button>
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
-          <el-link
-            type="primary"
-            :underline="false"
-            icon="el-icon-edit"
-            @click="openEdit(row)"
-            >修改
+          <el-link v-if="row['code'] != 'ROLE_SUPER'" type="primary" :underline="false" icon="el-icon-finished"
+            :disabled="!permission.includes('sys:role:permission')" @click="openAuth(row)">分配权限
           </el-link>
-          <el-link
-            v-if="row['code'] != 'ROLE_SUPER'"
-            type="primary"
-            :underline="false"
-            icon="el-icon-finished"
-            @click="openAuth(row)"
-            >分配权限
+          <el-link type="primary" :underline="false" icon="el-icon-edit" @click="openEdit(row)"
+            :disabled="!permission.includes('sys:role:edit')">修改
           </el-link>
-          <el-popconfirm
-            class="ele-action"
-            title="确定要删除此角色吗？"
-            @confirm="remove(row)"
-          >
-            <el-link
-              v-if="row['code'] != 'ROLE_SUPER'"
-              type="danger"
-              slot="reference"
-              :underline="false"
-              icon="el-icon-delete"
-              >删除
+          <el-popconfirm class="ele-action" title="确定要删除此角色吗？" @confirm="remove(row)"
+            :disabled="!permission.includes('sys:role:delete')">
+            <el-link v-if="row['code'] != 'ROLE_SUPER'" type="danger" slot="reference" :underline="false"
+              :disabled="!permission.includes('sys:role:delete')" icon="el-icon-delete">删除
             </el-link>
           </el-popconfirm>
         </template>
@@ -295,7 +249,7 @@ export default {
               this.$message.error(e.message);
             });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     /* 更改状态 */
     editStatus(row) {

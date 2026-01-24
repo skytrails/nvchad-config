@@ -17,9 +17,10 @@
           </el-col>
           <el-col :lg="6" :md="12">
             <div class="ele-form-actions">
-              <el-button type="primary" icon="el-icon-search" class="ele-btn-icon" @click="reload">查询
+              <el-button type="primary" icon="el-icon-search" class="ele-btn-icon" @click="reload"
+                :disabled="!permission.includes('sys:game:index')">查询
               </el-button>
-              <el-button @click="reset">重置</el-button>
+              <el-button @click="reset" :disabled="!permission.includes('sys:game:index')">重置</el-button>
             </div>
           </el-col>
         </el-row>
@@ -28,7 +29,8 @@
       <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection">
         <!-- 表头工具栏 -->
         <template slot="toolbar">
-          <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="openEdit(null)">添加
+          <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="openEdit(null)"
+            :disabled="!permission.includes('sys:game:add')">添加
           </el-button>
         </template>
 
@@ -50,20 +52,24 @@
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
           <div>
-            <el-link type="primary" :underline="false" icon="el-icon-edit" @click="openEdit(row)">修改
+            <el-link type="primary" :underline="false" icon="el-icon-edit" @click="openEdit(row)"
+              :disabled="!permission.includes('sys:game:edit')">修改
             </el-link>
             <el-popconfirm class="ele-action" title="确定要删除此游戏吗？" @confirm="remove(row)">
-              <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete">删除
+              <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete"
+                :disabled="!permission.includes('sys:game:delete')">删除
               </el-link>
             </el-popconfirm>
           </div>
           <div>
-            <el-popconfirm :disabled="row.status === 1" class="ele-action" title="确定要启用此游戏吗？" @confirm="enable(row)">
-              <el-link :disabled="row.status === 1" type="success" slot="reference" :underline="false"
-                icon="el-icon-check"> 启用
+            <el-popconfirm :disabled="row.status === 1" class="ele-action" title="确定要启用此游戏吗？" @confirm="enable(row)"
+              v-if="permission.includes('sys:game:status')">
+              <el-link :disabled="row.status === 1" type="success & !permission.includes('sys:game:status')"
+                slot="reference" :underline="false" icon="el-icon-check"> 启用
               </el-link>
             </el-popconfirm>
-            <el-popconfirm :disabled="row.status === 0" class="ele-action" title="确定要禁用此游戏吗？" @confirm="disable(row)">
+            <el-popconfirm :disabled="row.status === 0" v-if="permission.includes('sys:game:status')" class="ele-action"
+              title="确定要禁用此游戏吗？" @confirm="disable(row)">
               <el-link :disabled="row.status === 0" type="warning" slot="reference" :underline="false"
                 icon="el-icon-close"> 禁用
               </el-link>

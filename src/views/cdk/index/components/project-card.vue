@@ -61,7 +61,8 @@
       <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection"
         height="calc(100vh - 405px)">
         <template slot="toolbar">
-          <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="handleGenerate">生成CDK
+          <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="handleGenerate"
+            :disabled="!permission.includes('sys:cdk:generate')">生成CDK
           </el-button>
         </template>
         <!-- 表头工具栏 -->
@@ -76,9 +77,11 @@
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
-          <el-link :underline="false" type="primary" icon="el-icon-delete" @click="handleUnlink(row)">解绑
+          <el-link :underline="false" type="primary" icon="el-icon-delete" @click="handleUnlink(row)"
+            :disabled="!permission.includes('sys:cdk:unlink')">解绑
           </el-link>
-          <el-link :underline="false" type="danger" icon="el-icon-delete" @click="handleDelete(row)">删除
+          <el-link :underline="false" type="danger" icon="el-icon-delete" @click="handleDelete(row)"
+            :disabled="!permission.includes('sys:cdk:delete')">删除
           </el-link>
         </template>
         <!-- 地区列 -->

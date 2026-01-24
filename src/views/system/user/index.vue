@@ -33,9 +33,11 @@
         height="calc(100vh - 315px)">
         <!-- 表头工具栏 -->
         <template slot="toolbar">
-          <el-button @click="openEdit(null)" type="primary" icon="el-icon-plus" class="ele-btn-icon" size="small">添加
+          <el-button @click="openEdit(null)" type="primary" icon="el-icon-plus" class="ele-btn-icon" size="small"
+            :disabled="!permission.includes('sys:user:add')">添加
           </el-button>
-          <el-button @click="removeBatch" type="danger" icon="el-icon-delete" class="ele-btn-icon" size="small">删除
+          <el-button @click="removeBatch" type="danger" icon="el-icon-delete" class="ele-btn-icon" size="small"
+            :disabled="!permission.includes('sys:user:dall')">删除
           </el-button>
         </template>
         <!-- 用户名列 -->
@@ -71,17 +73,23 @@
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
           <div>
-            <el-link type="primary" :underline="false" icon="el-icon-edit" @click="openEdit(row)" v-if="row.id !== 1">修改
+            <el-link type="primary" :underline="false" icon="el-icon-edit" @click="openEdit(row)" v-if="row.id !== 1"
+              :disabled="!permission.includes('sys:user:edit')">修改
             </el-link>
-            <el-popconfirm class="ele-action" title="确定要删除此用户吗？" @confirm="remove(row)">
-              <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete" v-if="row.id !== 1">删除
+            <el-popconfirm class="ele-action" title="确定要删除此用户吗？" @confirm="remove(row)"
+                :disabled="!permission.includes('sys:user:delete')"
+              >
+              <el-link type="danger" slot="reference" :underline="false" icon="el-icon-delete" v-if="row.id !== 1"
+                :disabled="!permission.includes('sys:user:delete')">删除
               </el-link>
             </el-popconfirm>
           </div>
           <div>
-            <el-popconfirm class="ele-action" title="确定要重置密码吗？" @confirm="resetPwd(row)">
-              <el-link type="success" slot="reference" :underline="false" icon="el-icon-key"
-                v-if="row.id !== 1">重置密码
+            <el-popconfirm class="ele-action" title="确定要重置密码吗？" @confirm="resetPwd(row)"
+                :disabled="!permission.includes('sys:user:resetPwd')"
+              >
+              <el-link type="success" slot="reference" :underline="false" icon="el-icon-key" v-if="row.id !== 1"
+                :disabled="!permission.includes('sys:user:resetPwd')">重置密码
               </el-link>
             </el-popconfirm>
           </div>

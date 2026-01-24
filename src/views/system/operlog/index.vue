@@ -45,8 +45,8 @@
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{row}">
-          <el-link type="primary" :underline="false" icon="el-icon-view" @click="openDetail(row)">查看详情
-          </el-link>
+          <el-link type="primary" :underline="false" icon="el-icon-view" @click="openDetail(row)"
+            :disabled="!permission.includes('sys:operlog:detail')">详情 </el-link>
         </template>
       </ele-pro-table>
     </el-card>
