@@ -2,36 +2,22 @@
   <div class="ele-body">
     <el-card shadow="never">
       <!-- 搜索表单 -->
-      <el-form
-        :model="where"
-        label-width="77px"
-        class="ele-form-search"
-        @keyup.enter.native="reload"
+      <el-form :model="where" label-width="77px" class="ele-form-search" @keyup.enter.native="reload"
         @submit.native.prevent>
         <el-row :gutter="15">
           <el-col :lg="6" :md="12">
             <el-form-item label="用户账号:">
-              <el-input
-                clearable
-                v-model="where.operName"
-                placeholder="请输入用户账号"/>
+              <el-input clearable v-model="where.operName" placeholder="请输入用户账号" />
             </el-form-item>
           </el-col>
           <el-col :lg="6" :md="12">
             <el-form-item label="操作模块:">
-              <el-input
-                clearable
-                v-model="where.title"
-                placeholder="请输入操作模块"/>
+              <el-input clearable v-model="where.title" placeholder="请输入操作模块" />
             </el-form-item>
           </el-col>
           <el-col :lg="6" :md="12">
             <div class="ele-form-actions">
-              <el-button
-                type="primary"
-                icon="el-icon-search"
-                class="ele-btn-icon"
-                @click="reload">查询
+              <el-button type="primary" icon="el-icon-search" class="ele-btn-icon" @click="reload">查询
               </el-button>
               <el-button @click="reset">重置</el-button>
             </div>
@@ -39,49 +25,33 @@
         </el-row>
       </el-form>
       <!-- 数据表格 -->
-      <ele-pro-table
-        ref="table"
-        :where="where"
-        :datasource="url"
-        :columns="columns"
-        height="calc(100vh - 315px)">
+      <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" height="calc(100vh - 315px)">
         <!-- 表头工具栏 -->
         <template slot="toolbar">
-          <el-button
-            size="small"
-            type="primary"
-            class="ele-btn-icon"
-            icon="el-icon-download"
-            @click="exportData"
+          <el-button size="small" type="primary" class="ele-btn-icon" icon="el-icon-download" @click="exportData"
             v-if="permission.includes('sys:operlog:export')">导出
           </el-button>
         </template>
         <!-- 操作类型列 -->
         <template slot="logType" slot-scope="{row}">
-          <el-tag
-            :type="['success','danger','warning','info'][row.logType]"
-            size="mini">
-            {{ ['其他', '新增', '修改', '删除', '导出数据', '导入模板', '强退', '生成代码', '清空数据', '设置状态'][row.logType] }}
+          <el-tag :type="['success', 'danger', 'warning', 'info'][row.operType]" size="mini">
+            {{ ['其他', '新增', '修改', '删除', '导出数据', '登录', '登出'][row.operType] }}
           </el-tag>
         </template>
         <!-- 操作状态列 -->
         <template slot="status" slot-scope="{row}">
-          <ele-dot :type="['', 'success'][row.status]" :ripple="row.status===0"
-                   :text="['操作成功', '操作失败'][row.status]"/>
+          <ele-dot :type="['', 'success'][row.status]" :ripple="row.status === 0"
+            :text="['操作成功', '操作失败'][row.status]" />
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{row}">
-          <el-link
-            type="primary"
-            :underline="false"
-            icon="el-icon-view"
-            @click="openDetail(row)">查看详情
+          <el-link type="primary" :underline="false" icon="el-icon-view" @click="openDetail(row)">查看详情
           </el-link>
         </template>
       </ele-pro-table>
     </el-card>
     <!-- 详情弹窗 -->
-    <oper-log-detail :visible.sync="showInfo" :data="current||{}"/>
+    <oper-log-detail :visible.sync="showInfo" :data="current || {}" />
   </div>
 </template>
 
@@ -92,14 +62,14 @@ import OperLogDetail from './operlog-detail';
 
 export default {
   name: 'SystemOperLog',
-  components: {OperLogDetail},
+  components: { OperLogDetail },
   computed: {
     ...mapGetters(["permission"]),
   },
   data() {
     return {
       // 表格数据接口
-      url: '/sysOperLog/index',
+      url: '/admin/oper/list',
       // 表格列配置
       columns: [
         {
@@ -189,7 +159,7 @@ export default {
           showOverflowTooltip: true,
           minWidth: 160,
           formatter: (row, column, cellValue) => {
-            return this.$util.toDateString(cellValue);
+            return this.$util.toDateString(new Date(cellValue));
           }
         },
         {
@@ -213,7 +183,7 @@ export default {
   methods: {
     /* 刷新表格 */
     reload() {
-      this.$refs.table.reload({where: this.where});
+      this.$refs.table.reload({ where: this.where });
     },
     /* 重置搜索 */
     reset() {
@@ -228,7 +198,7 @@ export default {
     /* 导出数据 */
     exportData() {
       let array = [['编号ID', '操作模块', '操作类型', '操作账号', '请求方法', '请求地址', '请求IP', 'IP区域', '操作状态', '操作时间']];
-      const loading = this.$loading({lock: true});
+      const loading = this.$loading({ lock: true });
       this.$http.get('/sysOperLog/index?page=1&limit=2000').then(res => {
         loading.close();
         if (res.data.code === 200) {
@@ -259,5 +229,4 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

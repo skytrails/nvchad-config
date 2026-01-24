@@ -33,11 +33,10 @@
         </template>
 
         <template slot="denuvo" slot-scope="{ row }">
-          <el-tag :type="row.denuvo === '1' ? 'success' : 'info'">D加密: {{ row.denuvo === '1' ? 'True' :
-            'False' }}</el-tag>
-          <!--el-tag type="success">未配置: {{row.denuvo}}</el-tag>
-          <el-tag type="success">未配置</el-tag>
-          <el-tag type="success">未配置</el-tag-->
+          <el-tag :type="row.denuvo ? 'success' : 'info'">D加密: {{ row.denuvo ? 'True' : 'False' }}</el-tag>
+          <el-tag :type="row.drm ? 'success' : 'info'">DRM: {{ row.drm ? 'True' : 'False' }}</el-tag>
+          <el-tag :type="row.online ? 'success' : 'info'">联机: {{ row.online ? 'True' : 'False' }}</el-tag>
+          <el-tag :type="row.online_plus ? 'success' : 'info'">联机补丁: {{ row.online_plus ? 'True' : 'False' }}</el-tag>
         </template>
         <template v-slot:DLCIDs="{
           /*row*/

@@ -7,7 +7,7 @@ import axios from 'axios';
 import store from '../store';
 import router from '../router';
 import setting from './setting';
-import {MessageBox} from 'element-ui';
+import { MessageBox } from 'element-ui';
 
 Vue.use(VueAxios, axios);
 
@@ -45,7 +45,8 @@ axios.interceptors.response.use((res) => {
         }
       });
     }
-    return Promise.reject(new Error(res.data.msg));
+    console.log('------data:', res.data)
+    return Promise.reject(new Error(res.data.message));
   }
   // token自动续期
   const access_token = res.headers[setting.tokenHeaderName];
@@ -68,7 +69,7 @@ function goLogin(reload) {
       const path = router.currentRoute.path;
       return router.push({
         path: '/login',
-        query: path && path !== '/' ? {form: path} : null
+        query: path && path !== '/' ? { form: path } : null
       });
     }
   });

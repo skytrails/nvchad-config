@@ -1,60 +1,30 @@
 <!-- 文章编辑弹窗 -->
 <template>
-  <el-drawer
-    class="edit-table"
-    :title="isUpdate ? '修改游戏' : '添加游戏'"
-    :visible.sync="showDrawer"
-    :direction="direction"
-    :size="'75%'"
-    :before-close="close"
-  >
-    <el-form
-      ref="form"
-      :model="form"
-      :rules="rules"
-      label-width="90px"
-      style="padding: 50px 100px"
-    >
+  <el-drawer class="edit-table" :title="isUpdate ? '修改游戏' : '添加游戏'" :visible.sync="showDrawer" :direction="direction"
+    :size="'75%'" :before-close="close">
+    <el-form ref="form" :model="form" :rules="rules" label-width="90px" style="padding: 50px 100px">
       <el-row :gutter="15">
         <el-col :sm="16">
           <el-form-item label="游戏ID:" prop="gameId">
-            <el-input
-              clearable
-              :maxlength="200"
-              v-model="form.gameId"
-              placeholder="请输入游戏ID"
-            />
+            <el-input clearable :maxlength="200" v-model="form.gameId" placeholder="请输入游戏ID" />
           </el-form-item>
         </el-col>
         <el-col :sm="16">
           <el-form-item label="游戏名称:" prop="gameName">
-            <el-input
-              clearable
-              :maxlength="200"
-              v-model="form.gameName"
-              placeholder="请输入游戏名称"
-            />
+            <el-input clearable :maxlength="200" v-model="form.gameName" placeholder="请输入游戏名称" />
           </el-form-item>
         </el-col>
         <el-col :sm="16">
           <el-form-item label="DLC内容:" prop="profile">
-            <el-input
-              type="textarea"
-              :rows="20"
-              v-model="form.dlcs"
-              placeholder="请输入DLC内容"
-              maxlength="10000"
-              show-word-limit
-            />
+            <el-input type="textarea" :rows="20" v-model="form.dlcs" placeholder="请输入DLC内容" maxlength="10000"
+              show-word-limit />
           </el-form-item>
-          <el-form-item label="Stub:" prop="stub">
-            <el-input
-              :rows="20"
-              v-model="form.stub"
-              placeholder="请输入Stub内容"
-              maxlength="10000"
-              show-word-limit
-            />
+          <el-form-item label="配置状态:" prop="profile">
+            <el-checkbox label="D加密" v-model="form.denuvo" />
+            <el-checkbox label="DRM" v-model="form.drm" />
+          </el-form-item>
+          <el-form-item v-if="form.drm === true" label="Stub:" prop="stub">
+            <el-input :rows="20" v-model="form.stub" placeholder="请输入Stub内容" maxlength="10000" show-word-limit />
           </el-form-item>
           <el-form-item label="游戏状态:" prop="status">
             <el-radio-group v-model="form.status">
@@ -65,9 +35,7 @@
         </el-col>
       </el-row>
       <!-- 富文本编辑器 -->
-      <el-form-item
-        style="text-align: center; margin-left: -100px; margin-top: 10px"
-      >
+      <el-form-item style="text-align: center; margin-left: -100px; margin-top: 10px">
         <el-button @click="save" type="primary" size="medium">保存 </el-button>
         <el-button @click="$emit('close')" size="medium">返回</el-button>
       </el-form-item>
@@ -159,7 +127,7 @@ export default {
             });
         },
         file_picker_types: "media",
-        file_picker_callback: () => {},
+        file_picker_callback: () => { },
       };
     },
     formDateRange: {

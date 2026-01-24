@@ -1,16 +1,8 @@
 <!-- 详情弹窗 -->
 <template>
-  <el-dialog
-    title="详情"
-    width="700px"
-    :visible="visible"
-    :lock-scroll="false"
-    :destroy-on-close="true"
+  <el-dialog title="详情" width="700px" :visible="visible" :lock-scroll="false" :destroy-on-close="true"
     @update:visible="updateVisible">
-    <el-form
-      size="mini"
-      label-width="82px"
-      class="ele-form-detail">
+    <el-form size="mini" label-width="82px" class="ele-form-detail">
       <el-row :gutter="15">
         <el-col :sm="12">
           <el-form-item label="操作用户:">
@@ -25,7 +17,7 @@
           </el-form-item>
           <el-form-item label="操作时间:">
             <div class="ele-text-secondary">
-              {{ data.createdAt | toDateString }}
+              {{ new Date(data.createdAt) | toDateString }}
             </div>
           </el-form-item>
           <el-form-item label="操作方式:">
@@ -42,20 +34,20 @@
           </el-form-item>
           <el-form-item label="操作类型:">
             <div class="ele-text-secondary">
-              {{ data.operType }}
+              <el-tag :type="['success', 'danger', 'warning', 'info'][data.operType]" size="mini">
+                {{ ['其他', '新增', '修改', '删除', '导出数据', '登录', '登出'][data.operType] }}
+              </el-tag>
             </div>
           </el-form-item>
           <el-form-item label="操作状态:">
-            <el-tag
-              :type="['success','danger'][data.status]"
-              size="mini">
+            <el-tag :type="['success', 'danger'][data.status]" size="mini">
               {{ ['操作成功', '操作失败'][data.status] }}
             </el-tag>
           </el-form-item>
         </el-col>
       </el-row>
       <div style="margin: 12px 0;">
-        <el-divider/>
+        <el-divider />
       </div>
       <el-form-item label="请求地址:">
         <div class="ele-text-secondary">
@@ -103,5 +95,4 @@ export default {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

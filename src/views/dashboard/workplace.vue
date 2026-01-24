@@ -225,7 +225,6 @@ export default {
   },
   methods: {
     formatNumber(num) {
-      console.log('----num:', num)
       if (num === undefined) return "0"
       if (!num) return "0"
       return num.toLocaleString('en-US')
