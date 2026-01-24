@@ -83,9 +83,9 @@ export default {
       loading: false,
       // 表单数据
       form: {
-        username: "admin",
-        password: "123456",
-        captcha: "520",
+        // username: "admin",
+        // password: "123456",
+         captcha: "123456",
         key: "",
         remember: true,
       },

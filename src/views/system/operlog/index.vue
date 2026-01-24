@@ -34,7 +34,7 @@
         </template>
         <!-- 操作类型列 -->
         <template slot="logType" slot-scope="{row}">
-          <el-tag :type="['success', 'danger', 'warning', 'info'][row.operType]" size="mini">
+          <el-tag :type="['info', 'success', 'warning', 'danger', 'primary'][row.operType]" size="mini">
             {{ ['其他', '新增', '修改', '删除', '导出数据', '登录', '登出'][row.operType] }}
           </el-tag>
         </template>

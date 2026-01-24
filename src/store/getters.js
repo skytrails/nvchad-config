@@ -4,5 +4,4 @@ export default {
   theme: state => state.theme,
   permission: state => state.user.permission,
   roles: state => state.user.roles,
-  fundList: (state) => state.fund.fundList,
 }

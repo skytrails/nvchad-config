@@ -2,13 +2,8 @@
   <div class="ele-projects-card">
     <el-card shadow="never">
       <!-- 搜索表单 -->
-      <el-form
-        :model="where"
-        label-width="77px"
-        class="ele-form-search"
-        @keyup.enter.native="reload"
-        @submit.native.prevent
-      >
+      <el-form :model="where" label-width="77px" class="ele-form-search" @keyup.enter.native="reload"
+        @submit.native.prevent>
         <el-row :gutter="15">
           <template>
             <el-col :lg="4" :md="12">
@@ -33,12 +28,7 @@
           </template>
           <el-col :lg="4" :md="12">
             <el-form-item label="状态:">
-              <el-select
-                clearable
-                v-model="where.status"
-                placeholder="全部"
-                class="ele-fluid"
-              >
+              <el-select clearable v-model="where.status" placeholder="全部" class="ele-fluid">
                 <el-option label="待使用" value="0">
                   <span style="color: #67c23a">待使用</span>
                 </el-option>
@@ -53,25 +43,14 @@
           </el-col>
           <el-col :lg="6" :md="12">
             <el-form-item label="生成日期:">
-              <el-date-picker
-                v-model="where.dateRange"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                class="ele-fluid"
-              >
+              <el-date-picker v-model="where.dateRange" type="daterange" range-separator="至" start-placeholder="开始日期"
+                end-placeholder="结束日期" class="ele-fluid">
               </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :lg="6" :md="8">
             <div class="ele-form-actions">
-              <el-button
-                type="primary"
-                icon="el-icon-search"
-                class="ele-btn-icon"
-                @click="reload"
-                >查询
+              <el-button type="primary" icon="el-icon-search" class="ele-btn-icon" @click="reload">查询
               </el-button>
               <el-button @click="reset">重置</el-button>
             </div>
@@ -79,22 +58,10 @@
         </el-row>
       </el-form>
       <!-- 数据表格 -->
-      <ele-pro-table
-        ref="table"
-        :where="where"
-        :datasource="url"
-        :columns="columns"
-        :selection.sync="selection"
-        height="calc(100vh - 405px)"
-      >
+      <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection"
+        height="calc(100vh - 405px)">
         <template slot="toolbar">
-          <el-button
-            size="small"
-            type="primary"
-            icon="el-icon-plus"
-            class="ele-btn-icon"
-            @click="handleGenerate"
-            >生成CDK
+          <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="handleGenerate">生成CDK
           </el-button>
         </template>
         <!-- 表头工具栏 -->
@@ -109,19 +76,9 @@
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
-          <el-link
-            :underline="false"
-            type="primary"
-            icon="el-icon-delete"
-            @click="handleUnlink(row)"
-            >解绑
+          <el-link :underline="false" type="primary" icon="el-icon-delete" @click="handleUnlink(row)">解绑
           </el-link>
-          <el-link
-            :underline="false"
-            type="danger"
-            icon="el-icon-delete"
-            @click="handleDelete(row)"
-            >删除
+          <el-link :underline="false" type="danger" icon="el-icon-delete" @click="handleDelete(row)">删除
           </el-link>
         </template>
         <!-- 地区列 -->
@@ -134,14 +91,11 @@
         </template>
         <!-- 经济情况列 -->
         <template slot="economic" slot-scope="{ row }">
-          <el-tag v-if="row.economicCondition" size="mini"
-            >{{ row.economicCondition }}
+          <el-tag v-if="row.economicCondition" size="mini">{{ row.economicCondition }}
           </el-tag>
-          <el-tag v-if="row.builtHouse" size="mini"
-            >{{ row.builtHouse }}
+          <el-tag v-if="row.builtHouse" size="mini">{{ row.builtHouse }}
           </el-tag>
-          <el-tag v-if="row.commercialHouse" size="mini"
-            >{{ row.commercialHouse }}
+          <el-tag v-if="row.commercialHouse" size="mini">{{ row.commercialHouse }}
           </el-tag>
         </template>
         <!-- 筹款周期列 -->
@@ -155,7 +109,7 @@
         <template slot="cdk" slot-scope="{ row }">
           <el-link type="success" @click="handleCopy(row.cdk)">{{
             row.cdk
-          }}</el-link>
+            }}</el-link>
         </template>
       </ele-pro-table>
     </el-card>
@@ -254,7 +208,7 @@ export default {
   name: "CfProjectsCard",
   props: {},
   computed: {
-    ...mapGetters(["permission", "fundList"]),
+    ...mapGetters(["permission"]),
   },
   data() {
     return {
@@ -272,11 +226,10 @@ export default {
       current: null,
     };
   },
-  mounted() {},
+  mounted() { },
   methods: {
     /* 刷新表格 */
     reload() {
-      // console.log(this.fundList.map((item) => item.id));
       this.showEdit = false;
       this.$refs.table.reload();
     },
@@ -408,7 +361,7 @@ export default {
               this.$message.error(e.message);
             });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     /* 更改状态 */
     editStatus(row) {
@@ -438,7 +391,7 @@ export default {
 </script>
 
 <style scoped>
-.ele-form-search >>> .ele-fluid .el-range-input {
+.ele-form-search>>>.ele-fluid .el-range-input {
   width: 100%;
 }
 </style>

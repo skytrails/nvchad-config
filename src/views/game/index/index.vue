@@ -94,7 +94,7 @@ export default {
   name: "CfEvents",
   components: { EventsEdit },
   computed: {
-    ...mapGetters(["permission", "fundList"]),
+    ...mapGetters(["permission"]),
   },
   data() {
     return {
@@ -178,11 +178,6 @@ export default {
     };
   },
   filters: {
-    fundNameById(id, fundList) {
-      // 显式传入fundList
-      const fund = fundList.find((item) => item.id == id);
-      return fund ? fund.name : "";
-    },
   },
   methods: {
     /* 刷新表格 */

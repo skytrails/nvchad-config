@@ -206,7 +206,7 @@ export default {
     /* 删除 */
     remove(row) {
       const loading = this.$loading({ lock: true });
-      this.$http.post('/sysLoginLog/delete', [row.id]).then(res => {
+      this.$http.post('/admin/log/delete', [row.id]).then(res => {
         loading.close();
         if (res.data.code === 200) {
           this.$message.success(res.data.message);

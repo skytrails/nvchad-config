@@ -45,7 +45,6 @@
 
 <script>
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import { mapGetters } from "vuex";
 export default {
   name: "EventsEdit",
   props: {
@@ -92,7 +91,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["fundList"]),
     // 初始化富文本
     initEditor() {
       return {

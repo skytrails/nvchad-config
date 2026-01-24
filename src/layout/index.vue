@@ -125,7 +125,6 @@ export default {
           if (result.code === 200) {
             const user = result.data;
             this.$store.dispatch('user/setUser', user);
-            // this.$store.dispatch('fund/getFundList',user.id);
             this.$store.dispatch('user/setRoles', user ? user.roles : null);
             this.$store.dispatch('user/setAuthorities', user ? user.authorities : null);
             // 设置节点权限

@@ -34,7 +34,7 @@
           </el-form-item>
           <el-form-item label="操作类型:">
             <div class="ele-text-secondary">
-              <el-tag :type="['success', 'danger', 'warning', 'info'][data.operType]" size="mini">
+              <el-tag :type="['info', 'success', 'warning', 'danger', 'primary'][data.operType]" size="mini">
                 {{ ['其他', '新增', '修改', '删除', '导出数据', '登录', '登出'][data.operType] }}
               </el-tag>
             </div>

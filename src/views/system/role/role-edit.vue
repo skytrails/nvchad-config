@@ -60,7 +60,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 export default {
   name: "RoleEdit",
   props: {
@@ -70,7 +69,6 @@ export default {
     data: Object,
   },
   computed: {
-    ...mapGetters(["fundList"]),
   },
   data() {
     return {

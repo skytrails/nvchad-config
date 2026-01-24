@@ -61,12 +61,6 @@
             >删除
           </el-button>
         </template>
-        <template v-slot:fundId="{ row }">
-          <el-tag type="success" v-if="row['fundId']">{{
-            row["fundId"] | fundNameById(fundList)
-          }}</el-tag>
-          <el-tag type="info" v-else>暂无</el-tag>
-        </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
           <el-link
@@ -127,7 +121,7 @@ export default {
   name: "SystemRole",
   components: { RoleEdit, RoleAuth },
   computed: {
-    ...mapGetters(["permission", "fundList"]),
+    ...mapGetters(["permission"]),
   },
   data() {
     return {
@@ -231,11 +225,6 @@ export default {
     };
   },
   filters: {
-    fundNameById(id, fundList) {
-      // 显式传入fundList
-      const fund = fundList.find((item) => item.id == id);
-      return fund ? fund.name : "";
-    },
   },
   methods: {
     /* 刷新表格 */
