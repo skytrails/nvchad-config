@@ -6,7 +6,7 @@
         <div class="user-info">
           <circle-avatar text="abc" size="64" />
           <div class="user-details">
-            <h2 class="welcome-title">早上好，{{ loginUser.nickname }}！</h2>
+            <h2 class="welcome-title">您好，{{ loginUser.realname }}！</h2>
             <p class="welcome-subtitle">
               <i class="el-icon-sunny"></i>
               今天又是充满活力的一天，努力工作，成就自我！
@@ -149,7 +149,7 @@
           <el-table-column prop="projectName" label="代理名称" min-width="120">
             <template slot-scope="{ row }">
               <div class="agent-name">
-                <el-avatar :size="32" :src="getAgentAvatar(row.projectName)" />
+                <circle-avatar text="row.projectName" size="32"/>
                 <div class="agent-info">
                   <div class="agent-title">{{ row.projectName }}</div>
                   <div class="agent-id">ID: {{ row.id || 'N/A' }}</div>
