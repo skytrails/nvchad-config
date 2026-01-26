@@ -67,13 +67,6 @@
         </template>
         <!-- 表头工具栏 -->
         <template slot="toolbar">
-          <!--          <el-button-->
-          <!--            size="small"-->
-          <!--            type="primary"-->
-          <!--            icon="el-icon-plus"-->
-          <!--            class="ele-btn-icon"-->
-          <!--            @click="rowEdit(null)">新增-->
-          <!--          </el-button>-->
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
@@ -112,7 +105,7 @@
         <template slot="cdk" slot-scope="{ row }">
           <el-link type="success" @click="handleCopy(row.cdk)">{{
             row.cdk
-            }}</el-link>
+          }}</el-link>
         </template>
       </ele-pro-table>
     </el-card>
