@@ -70,12 +70,21 @@
         </template>
         <!-- 操作列 -->
         <template slot="action" slot-scope="{ row }">
-          <el-link :underline="false" type="primary" icon="el-icon-delete" @click="handleUnlink(row)"
-            :disabled="!permission.includes('sys:cdk:unlink')">解绑
-          </el-link>
-          <el-link :underline="false" type="danger" icon="el-icon-delete" @click="handleDelete(row)"
-            :disabled="!permission.includes('sys:cdk:delete')">删除
-          </el-link>
+          <el-tooltip content="解绑激活码" placement="top">
+            <el-popconfirm class="ele-action" title="确定要解绑激活？" @confirm="unlink(row)"
+              :disabled="!permission.includes('sys:cdk:unlink')">
+              <el-link :underline="false" slot="reference" type="primary" icon="el-icon-key"
+                :disabled="!permission.includes('sys:cdk:unlink')">解绑
+              </el-link>
+            </el-popconfirm>
+          </el-tooltip>
+          <el-tooltip content="删除" placement="top">
+            <el-popconfirm class="ele-action" title="确定要删除激活码吗？" @confirm="remove(row)"
+              :disabled="row.id === 1 || !permission.includes('sys:cdk:delete')">
+              <el-link :underline="false" type="danger" icon="el-icon-delete" slot="reference"
+                :disabled="!permission.includes('sys:cdk:delete')">删除 </el-link>
+            </el-popconfirm>
+          </el-tooltip>
         </template>
         <!-- 地区列 -->
         <template slot="city" slot-scope="{ row }">
@@ -100,12 +109,12 @@
         </template>
         <!-- 状态列 -->
         <template slot="status" slot-scope="{}">
-          <el-tag>使用中 </el-tag>
+          <el-tag>可用</el-tag>
         </template>
         <template slot="cdk" slot-scope="{ row }">
           <el-link type="success" @click="handleCopy(row.cdk)">{{
             row.cdk
-          }}</el-link>
+            }}</el-link>
         </template>
       </ele-pro-table>
     </el-card>
@@ -114,9 +123,8 @@
 
 <script>
 import { mapGetters } from "vuex";
-import regions from "ele-admin/packages/regions";
 import * as $util from "ele-admin/packages/util.js";
-import { MessageBox, Message } from "element-ui";
+import { Message } from "element-ui";
 
 const columns = [
   {
@@ -152,13 +160,20 @@ const columns = [
   },
   {
     prop: "steamUserId",
-    label: "Steam关联ID",
+    label: "关联SteamID",
     showOverflowTooltip: true,
     minWidth: 200,
     align: "center",
   },
   {
-    prop: "updateBy",
+    prop: "description",
+    label: "备注信息",
+    showOverflowTooltip: true,
+    minWidth: 200,
+    align: "center",
+  },
+  {
+    prop: "status",
     label: "状态",
     align: "center",
     width: 150,
@@ -208,8 +223,6 @@ export default {
   },
   data() {
     return {
-      // 省市区数据
-      regions: regions,
       // 表格数据接口
       url: "/cdk/list",
       // 表格列配置
@@ -255,45 +268,11 @@ export default {
           this.$message.error("复制失败");
         });
     },
-    handleUnlink(item) {
-      console.log(item);
-      MessageBox.confirm(`确认要解除绑定吗？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          // 用户点击“确定”后的删除逻辑
-          this.unlink(item);
-          Message.success("解绑成功");
-        })
-        .catch(() => {
-          // 用户点击“取消”
-          Message.info("已取消解绑");
-        });
-    },
-    handleDelete(item) {
-      console.log(item);
-      MessageBox.confirm(`确认要删除吗？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          // 用户点击“确定”后的删除逻辑
-          this.remove(item);
-          Message.success("删除成功");
-        })
-        .catch(() => {
-          // 用户点击“取消”
-          Message.info("已取消删除");
-        });
-    },
     /*解除绑定*/
     unlink(row) {
       const loading = this.$loading({ lock: true });
       this.$http
-        .post("/cdk/unlink", [row.id])
+        .post("/cdk/unlink/" + row.id)
         .then((res) => {
           loading.close();
           if (res.data.code === 200) {
@@ -312,11 +291,11 @@ export default {
     remove(row) {
       const loading = this.$loading({ lock: true });
       this.$http
-        .post("/cfProjects/delete", [row.id])
+        .post("/cdk/delete/" + row.id)
         .then((res) => {
           loading.close();
           if (res.data.code === 200) {
-            this.$message.success(res.data.message);
+            Message.info("删除成功");
             this.reload();
           } else {
             this.$message.error(res.data.message);

@@ -1,6 +1,6 @@
 <template>
   <div class="ele-body">
-    <ProjectsTable ref="tableOrganization" @rowEdit="openEdit" />
+    <cdk-list ref="tableOrganization" @rowEdit="openEdit" />
     <cdk-gen v-if="showEdit && showType === 'edit'" @close="showEdit = false" :data="current" :visible="showEdit"
       @done="reload" />
   </div>
@@ -9,11 +9,11 @@
 <script>
 import { mapGetters } from "vuex";
 import CdkGen from "./cdk-gen";
-import ProjectsTable from "./components/project-card";
+import CdkList from "./components/cdk-list";
 
 export default {
   name: "cdk",
-  components: { ProjectsTable, CdkGen },
+  components: { CdkList, CdkGen },
   computed: {
     ...mapGetters(["permission"]),
   },

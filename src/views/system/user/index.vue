@@ -1,45 +1,5 @@
 <template>
   <div class="user-management">
-    <!-- 页面头部 -->
-    <!--div class="page-header">
-      <div class="header-content">
-        <h2 class="page-title">
-          <i class="el-icon-user-solid"></i>
-          用户管理
-        </h2>
-        <p class="page-subtitle">管理系统用户账号、权限和状态</p>
-      </div>
-      <div class="header-stats">
-        <div class="stat-item">
-          <div class="stat-icon total">
-            <i class="el-icon-user"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-value">{{ totalUsers }}</div>
-            <div class="stat-label">总用户数</div>
-          </div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-icon active">
-            <i class="el-icon-success"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-value">{{ activeUsers }}</div>
-            <div class="stat-label">活跃用户</div>
-          </div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-icon today">
-            <i class="el-icon-date"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-value">{{ todayNew }}</div>
-            <div class="stat-label">今日新增</div>
-          </div>
-        </div>
-      </div>
-    </div-->
-
     <!-- 主要卡片 -->
     <el-card shadow="never" class="main-card">
       <!-- 搜索栏 -->
@@ -314,8 +274,6 @@
 import { mapGetters } from "vuex";
 import UserEdit from "./user-edit";
 import PasswordCopy from "./password-copy";
-// import ImportDialog from "./import-dialog";
-// import ColumnCustomize from "./column-customize";
 import CircleAvatar from "@/components/CircleAvatar.vue";
 import ColumnCustomize from "@/components/ColumnCustomize.vue";
 import ImportDialog from "@/components/ImportDialog.vue";
