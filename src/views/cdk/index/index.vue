@@ -1,27 +1,19 @@
 <template>
   <div class="ele-body">
     <ProjectsTable ref="tableOrganization" @rowEdit="openEdit" />
-
-    <!-- 详情弹窗 -->
-    <!-- 编辑弹窗 -->
-    <projects-edit
-      v-if="showEdit && showType === 'edit'"
-      @close="showEdit = false"
-      :data="current"
-      :visible="showEdit"
-      @done="reload"
-    />
+    <cdk-gen v-if="showEdit && showType === 'edit'" @close="showEdit = false" :data="current" :visible="showEdit"
+      @done="reload" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import ProjectsEdit from "./project-edit";
+import CdkGen from "./cdk-gen";
 import ProjectsTable from "./components/project-card";
 
 export default {
   name: "cdk",
-  components: { ProjectsTable,  ProjectsEdit },
+  components: { ProjectsTable, CdkGen },
   computed: {
     ...mapGetters(["permission"]),
   },
@@ -42,7 +34,7 @@ export default {
       cateList: [],
     };
   },
-  mounted() {},
+  mounted() { },
   methods: {
     /* 刷新表格 */
     reload() {
@@ -61,7 +53,7 @@ export default {
 </script>
 
 <style scoped>
-.ele-form-search >>> .ele-fluid .el-range-input {
+.ele-form-search>>>.ele-fluid .el-range-input {
   width: 100%;
 }
 </style>
