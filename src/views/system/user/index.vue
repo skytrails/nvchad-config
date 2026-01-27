@@ -73,15 +73,6 @@
                 <el-col :xs="24" :sm="12" :md="8">
                   <div class="form-group">
                     <label class="form-label">
-                      <i class="el-icon-message"></i>
-                      邮箱
-                    </label>
-                    <el-input v-model="where.email" placeholder="输入邮箱" clearable class="search-input" />
-                  </div>
-                </el-col>
-                <el-col :xs="24" :sm="12" :md="8">
-                  <div class="form-group">
-                    <label class="form-label">
                       <i class="el-icon-date"></i>
                       创建时间
                     </label>
@@ -95,46 +86,32 @@
         </el-form>
       </div>
 
-      <!-- 工具栏 -->
-      <div class="toolbar">
-        <div class="toolbar-left">
-          <el-button type="primary" icon="el-icon-plus" @click="openEdit(null)"
-            :disabled="!permission.includes('sys:user:add')" class="add-btn">
-            添加用户
-          </el-button>
-          <el-button type="danger" icon="el-icon-delete" @click="removeBatch"
-            :disabled="selection.length === 0 || !permission.includes('sys:user:dall')" class="delete-btn">
-            批量删除
-          </el-button>
-          <el-button type="success" icon="el-icon-upload2" @click="exportData" class="export-btn">
-            导出数据
-          </el-button>
-          <el-button type="info" icon="el-icon-download" @click="importData" class="import-btn">
-            导入用户
-          </el-button>
-        </div>
-        <div class="toolbar-right">
-          <el-button icon="el-icon-refresh" circle @click="reload" class="refresh-btn" />
-          <el-dropdown @command="handleColumnCommand">
-            <el-button icon="el-icon-s-grid" circle />
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="customize">
-                <i class="el-icon-setting"></i>自定义列
-              </el-dropdown-item>
-              <el-dropdown-item command="density" divided>
-                <i class="el-icon-s-data"></i>表格密度
-              </el-dropdown-item>
-              <el-dropdown-item command="fullscreen">
-                <i class="el-icon-full-screen"></i>全屏显示
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </div>
 
       <!-- 数据表格 -->
       <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection"
         class="data-table" @selection-change="handleSelectionChange">
+        <!-- 工具栏 -->
+        <template slot="toolbar">
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <el-button type="primary" icon="el-icon-plus" @click="openEdit(null)"
+                :disabled="!permission.includes('sys:user:add')" class="add-btn">
+                添加用户
+              </el-button>
+              <el-button type="danger" icon="el-icon-delete" @click="removeBatch"
+                :disabled="selection.length === 0 || !permission.includes('sys:user:dall')" class="delete-btn">
+                批量删除
+              </el-button>
+              <el-button type="success" icon="el-icon-upload2" @click="exportData" class="export-btn">
+                导出数据
+              </el-button>
+              <el-button type="info" icon="el-icon-download" @click="importData" class="import-btn">
+                导入用户
+              </el-button>
+            </div>
+          </div>
+        </template>
+
         <!-- 用户头像 -->
         <template slot="avatar" slot-scope="{ row }">
           <div class="avatar-cell">
@@ -828,15 +805,6 @@ export default {
   gap: 8px;
 }
 
-.add-btn {
-  background: linear-gradient(135deg, #36c 0%, #6739b6 100%);
-  border: none;
-}
-
-.delete-btn {
-  background: linear-gradient(135deg, #f56c6c 0%, #f2719c 100%);
-  border: none;
-}
 
 .refresh-btn {
   border: 1px solid #dcdfe6;
@@ -987,6 +955,26 @@ export default {
 
 .reset-btn:active {
   opacity: 0.8;
+}
+
+.add-btn {
+  background: linear-gradient(135deg, #a66cff 0%, #6f42c1 100%);
+  border: none;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+/* hover：更亮一点 */
+.add-btn:hover {
+  background: linear-gradient(135deg, #b58cff 0%, #7b55d4 100%);
+  box-shadow: 0 6px 16px rgba(111, 66, 193, 0.35);
+}
+
+/* press / active：更暗 + 下压 */
+.add-btn:active {
+  background: linear-gradient(135deg, #8f5be0 0%, #5a2fa6 100%);
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(111, 66, 193, 0.35);
 }
 
 .delete-btn {

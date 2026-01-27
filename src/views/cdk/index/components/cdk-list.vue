@@ -58,54 +58,26 @@
         </el-row>
       </el-form>
       <!-- 数据表格 -->
-      <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection"
-        height="calc(100vh - 405px)">
+      <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection">
         <template slot="toolbar">
-          <el-button size="small" type="primary" icon="el-icon-plus" class="ele-btn-icon" @click="handleGenerate"
-            :disabled="!permission.includes('sys:cdk:generate')">生成CDK
-          </el-button>
-        </template>
-        <!-- 表头工具栏 -->
-        <template slot="toolbar">
-        </template>
-        <!-- 操作列 -->
-        <template slot="action" slot-scope="{ row }">
-          <el-tooltip content="解绑激活码" placement="top">
-            <el-popconfirm class="ele-action" title="确定要解绑激活？" @confirm="unlink(row)"
-              :disabled="!permission.includes('sys:cdk:unlink')">
-              <el-link :underline="false" slot="reference" type="primary" icon="el-icon-key"
-                :disabled="!permission.includes('sys:cdk:unlink')">解绑
-              </el-link>
-            </el-popconfirm>
-          </el-tooltip>
-          <el-tooltip content="删除" placement="top">
-            <el-popconfirm class="ele-action" title="确定要删除激活码吗？" @confirm="remove(row)"
-              :disabled="row.id === 1 || !permission.includes('sys:cdk:delete')">
-              <el-link :underline="false" type="danger" icon="el-icon-delete" slot="reference"
-                :disabled="!permission.includes('sys:cdk:delete')">删除 </el-link>
-            </el-popconfirm>
-          </el-tooltip>
-        </template>
-        <!-- 地区列 -->
-        <template slot="city" slot-scope="{ row }">
-          {{
-            (row.province ? row.province : "") +
-            (row.city ? row.city : "") +
-            (row.district ? row.district : "")
-          }}
-        </template>
-        <!-- 经济情况列 -->
-        <template slot="economic" slot-scope="{ row }">
-          <el-tag v-if="row.economicCondition" size="mini">{{ row.economicCondition }}
-          </el-tag>
-          <el-tag v-if="row.builtHouse" size="mini">{{ row.builtHouse }}
-          </el-tag>
-          <el-tag v-if="row.commercialHouse" size="mini">{{ row.commercialHouse }}
-          </el-tag>
-        </template>
-        <!-- 筹款周期列 -->
-        <template slot="rangeDate" slot-scope="{ row }">
-          {{ row.startDate }} 至 {{ row.endDate }}
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <el-button type="primary" icon="el-icon-plus" @click="handleGenerate(null)"
+                :disabled="!permission.includes('sys:cdk:generate')" class="add-btn">
+                生成CDK
+              </el-button>
+              <el-button type="danger" icon="el-icon-delete" @click="removeBatch"
+                :disabled="selection.length === 0 || !permission.includes('sys:user:dall')" class="delete-btn">
+                批量删除
+              </el-button>
+              <el-button type="success" icon="el-icon-upload2" @click="exportData" class="export-btn">
+                导出数据
+              </el-button>
+              <el-button type="info" icon="el-icon-download" @click="importData" class="import-btn">
+                导入用户
+              </el-button>
+            </div>
+          </div>
         </template>
         <!-- 状态列 -->
         <template slot="status" slot-scope="{row}">
@@ -117,7 +89,7 @@
         <template slot="cdk" slot-scope="{ row }">
           <el-link type="success" @click="handleCopy(row.cdk)">{{
             row.cdk
-            }}</el-link>
+          }}</el-link>
         </template>
       </ele-pro-table>
     </el-card>
@@ -143,7 +115,7 @@ const columns = [
     label: "CDK",
     sortable: "custom",
     showOverflowTooltip: true,
-    minWidth: 160,
+    minWidth: 180,
     align: "center",
     slot: "cdk",
   },
@@ -151,7 +123,6 @@ const columns = [
     prop: "gameId",
     label: "游戏ID",
     showOverflowTooltip: true,
-    minWidth: 150,
     align: "center",
   },
   {
@@ -165,7 +136,7 @@ const columns = [
     prop: "steamUserId",
     label: "关联SteamID",
     showOverflowTooltip: true,
-    minWidth: 200,
+    minWidth: 100,
     align: "center",
   },
   {
@@ -371,5 +342,25 @@ export default {
 <style scoped>
 .ele-form-search>>>.ele-fluid .el-range-input {
   width: 100%;
+}
+
+.add-btn {
+  background: linear-gradient(135deg, #a66cff 0%, #6f42c1 100%);
+  border: none;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+/* hover：更亮一点 */
+.add-btn:hover {
+  background: linear-gradient(135deg, #b58cff 0%, #7b55d4 100%);
+  box-shadow: 0 6px 16px rgba(111, 66, 193, 0.35);
+}
+
+/* press / active：更暗 + 下压 */
+.add-btn:active {
+  background: linear-gradient(135deg, #8f5be0 0%, #5a2fa6 100%);
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(111, 66, 193, 0.35);
 }
 </style>

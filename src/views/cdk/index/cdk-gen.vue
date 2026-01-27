@@ -76,11 +76,9 @@
                   </div>
                   <div class="selected-game-content">
                     <div class="game-icon">
-                      <img v-if="selectedGame.header_image" :src="selectedGame.header_image" :alt="selectedGame.name"
+                      <img v-if="selectedGame.image" :src="selectedGame.image" :alt="selectedGame.gameName"
                         @error="handleImageError" />
-                      <div v-else class="game-icon-placeholder">
-                        <i class="el-icon-video-game"></i>
-                      </div>
+                      <circle-avatar v-else :text="selectedGame.gameName" size="64" />
                     </div>
                     <div class="game-details">
                       <div class="game-name">{{ selectedGame.gameName }}</div>
@@ -203,8 +201,11 @@
 </template>
 
 <script>
+import CircleAvatar from '@/components/CircleAvatar.vue';
+
 export default {
   name: "CdkEdit",
+  components: { CircleAvatar },
   props: {
     visible: Boolean,
     data: Object,
@@ -514,7 +515,7 @@ export default {
     },
 
     /* 处理关闭 */
-    handleClose(done) {
+    handleClose() {
       if (this.loading) {
         this.$confirm('CDK正在生成中，确定要关闭吗？', '提示', {
           confirmButtonText: '确定',
@@ -523,10 +524,10 @@ export default {
           center: true
         }).then(() => {
           this.loading = false;
-          done();
+          this.$emit("done");
         });
       } else {
-        done();
+        this.$emit("done");
       }
     },
 
