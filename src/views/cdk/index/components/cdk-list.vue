@@ -2,33 +2,27 @@
   <div class="ele-projects-card">
     <el-card shadow="never">
       <!-- 搜索表单 -->
-      <el-form :model="where" label-width="77px" class="ele-form-search" @keyup.enter.native="reload"
+      <el-form :model="where" label-width="85px" class="ele-form-search" @keyup.enter.native="reload"
         @submit.native.prevent>
-        <el-row :gutter="15">
-          <template>
-            <el-col :lg="4" :md="12">
-              <el-form-item label="游戏名/ID:">
-                <el-input v-model="where.keyword"></el-input>
-              </el-form-item>
-            </el-col>
-          </template>
-          <template>
-            <el-col :lg="4" :md="12">
-              <el-form-item label="CDK:">
-                <el-input v-model="where.cdk"></el-input>
-              </el-form-item>
-            </el-col>
-          </template>
-          <template>
-            <el-col :lg="4" :md="12">
-              <el-form-item label="SteamId:">
-                <el-input v-model="where.steamId"></el-input>
-              </el-form-item>
-            </el-col>
-          </template>
-          <el-col :lg="4" :md="12">
-            <el-form-item label="状态:">
-              <el-select clearable v-model="where.status" placeholder="全部" class="ele-fluid">
+        <el-row :gutter="12">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-form-item label="游戏名/ID:" class="compact-form-item">
+              <el-input v-model="where.keyword" placeholder="请输入" clearable size="small"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-form-item label="CDK:" class="compact-form-item">
+              <el-input v-model="where.cdk" placeholder="请输入" clearable size="small"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-form-item label="SteamId:" class="compact-form-item">
+              <el-input v-model="where.steamId" placeholder="请输入" clearable size="small"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
+            <el-form-item label="状态:" class="compact-form-item">
+              <el-select v-model="where.status" placeholder="全部" clearable size="small" class="ele-fluid">
                 <el-option label="可用" value="0">
                   <span style="color: #67c23a">可用</span>
                 </el-option>
@@ -41,23 +35,23 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :lg="6" :md="12">
-            <el-form-item label="生成日期:">
+          <el-col :xs="24" :sm="12" :md="16" :lg="12" :xl="8">
+            <el-form-item label="生成日期:" class="compact-form-item">
               <el-date-picker v-model="where.dateRange" type="daterange" range-separator="至" start-placeholder="开始日期"
-                end-placeholder="结束日期" class="ele-fluid">
+                end-placeholder="结束日期" size="small" class="ele-fluid" value-format="yyyy-MM-dd">
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :lg="6" :md="8">
-            <div class="ele-form-actions">
-              <el-button type="primary" icon="el-icon-search" class="ele-btn-icon" @click="reload">查询
-              </el-button>
-              <el-button @click="reset">重置</el-button>
+          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="3">
+            <div class="ele-form-actions compact-actions">
+              <el-button class="search-btn" icon="el-icon-search" @click="reload">查询</el-button>
+              <el-button type="warning" class="reset-btn" @click="reset">重置</el-button>
             </div>
           </el-col>
         </el-row>
       </el-form>
       <!-- 数据表格 -->
+      <!-- 表格部分保持不变 -->
       <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection">
         <template slot="toolbar">
           <div class="toolbar">
@@ -70,14 +64,31 @@
                 :disabled="selection.length === 0 || !permission.includes('sys:user:dall')" class="delete-btn">
                 批量删除
               </el-button>
-              <el-button type="success" icon="el-icon-upload2" @click="exportData" class="export-btn">
+              <el-button type="success" icon="el-icon-upload2" class="export-btn">
                 导出数据
               </el-button>
-              <el-button type="info" icon="el-icon-download" @click="importData" class="import-btn">
-                导入用户
+              <el-button type="info" icon="el-icon-download" class="import-btn">
+                导入数据
               </el-button>
             </div>
           </div>
+        </template>
+        <template slot="action" slot-scope="{ row }">
+          <el-tooltip content="解绑激活码" placement="top">
+            <el-popconfirm class="ele-action" title="确定要解绑激活？" @confirm="unlink(row)"
+              :disabled="!permission.includes('sys:cdk:unlink')">
+              <el-link :underline="false" slot="reference" type="primary" icon="el-icon-key"
+                :disabled="!permission.includes('sys:cdk:unlink')">解绑
+              </el-link>
+            </el-popconfirm>
+          </el-tooltip>
+          <el-tooltip content="删除" placement="top">
+            <el-popconfirm class="ele-action" title="确定要删除激活码吗？" @confirm="remove(row)"
+              :disabled="row.id === 1 || !permission.includes('sys:cdk:delete')">
+              <el-link :underline="false" type="danger" icon="el-icon-delete" slot="reference"
+                :disabled="!permission.includes('sys:cdk:delete')">删除 </el-link>
+            </el-popconfirm>
+          </el-tooltip>
         </template>
         <!-- 状态列 -->
         <template slot="status" slot-scope="{row}">
@@ -97,6 +108,7 @@
 </template>
 
 <script>
+// script部分保持不变
 import { mapGetters } from "vuex";
 import * as $util from "ele-admin/packages/util.js";
 import { Message } from "element-ui";
@@ -201,7 +213,7 @@ export default {
       url: "/cdk/list",
       // 表格列配置
       columns: columns,
-      // 表格搜索条件
+      // 表格搜索��件
       where: {},
       // 表格选中数据
       selection: [],
@@ -283,7 +295,7 @@ export default {
     /* 批量删除 */
     removeBatch() {
       if (!this.selection.length) {
-        this.$message.error("请至少选择一条数据");
+        this.$message.error("���至少选择一条数据");
         return;
       }
       this.$confirm("确定要删除选中的项目吗?", "提示", {
@@ -340,6 +352,7 @@ export default {
 </script>
 
 <style scoped>
+/* 原有的样式保持不变 */
 .ele-form-search>>>.ele-fluid .el-range-input {
   width: 100%;
 }
@@ -357,10 +370,117 @@ export default {
   box-shadow: 0 6px 16px rgba(111, 66, 193, 0.35);
 }
 
-/* press / active：更暗 + 下压 */
 .add-btn:active {
   background: linear-gradient(135deg, #8f5be0 0%, #5a2fa6 100%);
   transform: translateY(1px);
   box-shadow: 0 3px 8px rgba(111, 66, 193, 0.35);
+}
+
+.search-btn {
+  background: linear-gradient(135deg, #5b8cff 0%, #3a5bdc 100%);
+  border: none;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+/* hover：更清亮 */
+.search-btn:hover {
+  background: linear-gradient(135deg, #6fa0ff 0%, #4c6eea 100%);
+  box-shadow: 0 6px 16px rgba(58, 91, 220, 0.35);
+}
+
+/* active */
+.search-btn:active {
+  background: linear-gradient(135deg, #4a78e0 0%, #2f4bb8 100%);
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(58, 91, 220, 0.35);
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #9aa0b5 0%, #7d8296 100%);
+  border: none;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+/* hover：稍微提亮 */
+.reset-btn:hover {
+  background: linear-gradient(135deg, #a9afc4 0%, #8c91a6 100%);
+  box-shadow: 0 6px 16px rgba(125, 130, 150, 0.3);
+}
+
+/* active */
+.reset-btn:active {
+  background: linear-gradient(135deg, #858aa0 0%, #686d82 100%);
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(125, 130, 150, 0.3);
+}
+
+/* 新增的样式 */
+.ele-form-search {
+  padding: 16px 16px 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.compact-form-item {
+  margin-bottom: 8px;
+}
+
+.compact-form-item :deep(.el-form-item__label) {
+  line-height: 32px;
+  padding-right: 8px;
+}
+
+.compact-form-item :deep(.el-form-item__content) {
+  line-height: 32px;
+}
+
+.compact-actions {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  margin-top: 4px;
+}
+
+.compact-actions .el-button {
+  flex: 1;
+  margin-right: 8px;
+}
+
+.compact-actions .el-button:last-child {
+  margin-right: 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .ele-form-search {
+    padding: 12px;
+  }
+
+  .compact-actions {
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .ele-form-search {
+    padding: 8px;
+  }
+
+  .compact-form-item {
+    margin-bottom: 12px;
+  }
+
+  .compact-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .compact-actions .el-button {
+    flex: 0 0 calc(50% - 4px);
+    margin-right: 0;
+  }
 }
 </style>
