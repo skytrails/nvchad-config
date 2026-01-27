@@ -2,14 +2,8 @@
   <div class="ele-body game-page">
     <el-card shadow="hover" class="search-card">
       <!-- 搜索表单 -->
-      <el-form
-        :model="where"
-        label-width="70px"
-        class="ele-form-search"
-        @keyup.enter.native="reload"
-        @submit.native.prevent
-        size="small"
-      >
+      <el-form :model="where" label-width="70px" class="ele-form-search" @keyup.enter.native="reload"
+        @submit.native.prevent size="small">
         <el-row :gutter="16">
           <el-col :lg="4" :md="8">
             <el-form-item label="游戏ID">
@@ -23,45 +17,33 @@
             </el-form-item>
           </el-col>
 
-          <el-col :lg="6" :md="8" class="form-actions">
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              @click="reload"
-              :disabled="!permission.includes('sys:game:index')"
-            >
-              查询
-            </el-button>
-            <el-button
-              icon="el-icon-refresh"
-              @click="reset"
-              :disabled="!permission.includes('sys:game:index')"
-            >
-              重置
-            </el-button>
+          <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="4">
+            <div class="ele-form-actions compact-actions">
+              <el-button class="search-btn" icon="el-icon-search" @click="reload">查询</el-button>
+              <el-button type="warning" class="reset-btn" @click="reset">重置</el-button>
+            </div>
           </el-col>
         </el-row>
       </el-form>
     </el-card>
 
     <el-card shadow="never" class="table-card">
-      <ele-pro-table
-        ref="table"
-        :where="where"
-        :datasource="url"
-        :columns="columns"
-        :selection.sync="selection"
-        size="small"
-      >
-        <!-- 表头工具栏 -->
+      <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection"
+        size="small">
         <template slot="toolbar">
-          <el-button
-            type="primary"
-            icon="el-icon-plus"
-            size="small"
-            @click="openEdit(null)"
-            :disabled="!permission.includes('sys:game:add')"
-          >
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <el-button type="primary" icon="el-icon-plus" @click="openEdit(null)"
+                :disabled="!permission.includes('sys:game:add')" class="add-btn">
+                添加游戏
+              </el-button>
+            </div>
+          </div>
+        </template>
+        <!-- 表头工具栏 -->
+        <template slot="toolbar1">
+          <el-button type="primary" icon="el-icon-plus" size="small" @click="openEdit(null)"
+            :disabled="!permission.includes('sys:game:add')">
             添加游戏
           </el-button>
         </template>
@@ -86,21 +68,12 @@
 
         <!-- 游戏封面 -->
         <template slot="imageUrl" slot-scope="{ row }">
-          <el-avatar
-            shape="square"
-            :size="56"
-            :src="row.imageUrl"
-            class="cover-img"
-          />
+          <el-avatar shape="square" :size="56" :src="row.imageUrl" class="cover-img" />
         </template>
 
         <!-- 状态 -->
         <template slot="status" slot-scope="{ row }">
-          <el-tag
-            size="mini"
-            :type="row.status === 1 ? 'success' : 'info'"
-            effect="dark"
-          >
+          <el-tag size="mini" :type="row.status === 1 ? 'success' : 'info'" effect="dark">
             {{ row.status === 1 ? '启用' : '停用' }}
           </el-tag>
         </template>
@@ -108,23 +81,14 @@
         <!-- 操作 -->
         <template slot="action" slot-scope="{ row }">
           <div class="action-buttons">
-            <el-button
-              type="text"
-              icon="el-icon-edit"
-              @click="openEdit(row)"
-              :disabled="!permission.includes('sys:game:edit')"
-            >
+            <el-button type="text" icon="el-icon-edit" @click="openEdit(row)"
+              :disabled="!permission.includes('sys:game:edit')">
               编辑
             </el-button>
 
             <el-popconfirm title="确认删除该游戏？" @confirm="remove(row)">
-              <el-button
-                type="text"
-                icon="el-icon-delete"
-                slot="reference"
-                class="danger"
-                :disabled="!permission.includes('sys:game:delete')"
-              >
+              <el-button type="text" icon="el-icon-delete" slot="reference" class="danger"
+                :disabled="!permission.includes('sys:game:delete')">
                 删除
               </el-button>
             </el-popconfirm>
@@ -134,13 +98,7 @@
     </el-card>
 
     <!-- 编辑弹窗 -->
-    <events-edit
-      v-if="showEdit"
-      :visible="showEdit"
-      :data="current"
-      @close="showEdit = false"
-      @done="reload"
-    />
+    <events-edit v-if="showEdit" :visible="showEdit" :data="current" @close="showEdit = false" @done="reload" />
   </div>
 </template>
 
@@ -249,5 +207,63 @@ export default {
 .action-buttons .danger {
   color: #f56c6c;
 }
-</style>
 
+.search-btn {
+  background: linear-gradient(135deg, #5b8cff 0%, #3a5bdc 100%);
+  border: none;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+/* hover：更清亮 */
+.search-btn:hover {
+  background: linear-gradient(135deg, #6fa0ff 0%, #4c6eea 100%);
+  box-shadow: 0 6px 16px rgba(58, 91, 220, 0.35);
+}
+
+/* active */
+.search-btn:active {
+  background: linear-gradient(135deg, #4a78e0 0%, #2f4bb8 100%);
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(58, 91, 220, 0.35);
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #9aa0b5 0%, #7d8296 100%);
+  border: none;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+/* hover：稍微提亮 */
+.reset-btn:hover {
+  background: linear-gradient(135deg, #a9afc4 0%, #8c91a6 100%);
+  box-shadow: 0 6px 16px rgba(125, 130, 150, 0.3);
+}
+
+/* active */
+.reset-btn:active {
+  background: linear-gradient(135deg, #858aa0 0%, #686d82 100%);
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(125, 130, 150, 0.3);
+}
+
+.add-btn {
+  background: linear-gradient(135deg, #a66cff 0%, #6f42c1 100%);
+  border: none;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+/* hover：更亮一点 */
+.add-btn:hover {
+  background: linear-gradient(135deg, #b58cff 0%, #7b55d4 100%);
+  box-shadow: 0 6px 16px rgba(111, 66, 193, 0.35);
+}
+
+.add-btn:active {
+  background: linear-gradient(135deg, #8f5be0 0%, #5a2fa6 100%);
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(111, 66, 193, 0.35);
+}
+</style>
