@@ -332,15 +332,8 @@ export default {
 
         if (response.data.code === 200) {
           const result = response.data.data;
-
-          // 假设API返回结构：{ list: [], total: 0, currentBalance: 0, ... }
           this.balanceLogs = result.records || [];
           this.balanceTotal = result.total || 0;
-
-          // 如果没有统计数据，则从列表计算
-          // if (result.totalRecharge === undefined || result.totalConsume === undefined) {
-          //   this.calculateBalanceStats();
-          // }
         } else {
           this.$message.error(response.data.message || '获取余额记录失败');
         }
@@ -393,8 +386,13 @@ export default {
     /* 刷新余额记录 */
     refreshBalanceLog() {
       this.balanceQuery.page = 1; // 重置到第一页
-      this.getBalanceLogs();
-      this.getBalanceStats() // 如果支持的话
+      Promise.all([
+        this.getBalanceLogs(),
+        this.queryBalanceInfo()  // 获取用户余额信息
+      ]).catch(error => {
+        console.error('刷新失败:', error);
+        this.$message.error('刷新失败');
+      });
     },
 
     /* 显示余额调整对话框 */

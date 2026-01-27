@@ -23,14 +23,14 @@
             <div class="balance-amount">
               ¥ <span class="balance-number">{{ formatCurrency(balance) }}</span>
             </div>
-            <div class="balance-actions">
+            <!--div class="balance-actions">
               <el-button type="primary" size="small" icon="el-icon-plus" @click="showRechargeDialog">
                 充值
               </el-button>
               <el-button type="success" size="small" icon="el-icon-shopping-cart-full" @click="showConsumeDialog">
                 消费
               </el-button>
-            </div>
+            </div-->
           </div>
 
           <div style="margin: 30px 0 20px 0;">
@@ -126,7 +126,7 @@
                         </div>
                         <div class="stat-content">
                           <div class="stat-label">总充值</div>
-                          <div class="stat-value">¥ {{ formatCurrency(recordStats.totalIncome) }}</div>
+                          <div class="stat-value">¥ {{ formatCurrency(totalRecharge) }}</div>
                         </div>
                       </div>
                     </el-col>
@@ -137,7 +137,7 @@
                         </div>
                         <div class="stat-content">
                           <div class="stat-label">总支出</div>
-                          <div class="stat-value">¥ {{ formatCurrency(recordStats.totalExpense) }}</div>
+                          <div class="stat-value">¥ {{ formatCurrency(totalConsume) }}</div>
                         </div>
                       </div>
                     </el-col>
@@ -148,7 +148,7 @@
                         </div>
                         <div class="stat-content">
                           <div class="stat-label">充值次数</div>
-                          <div class="stat-value">{{ recordStats.rechargeCount }} 次</div>
+                          <div class="stat-value">{{ rechargeCount }} 次</div>
                         </div>
                       </div>
                     </el-col>
@@ -159,7 +159,7 @@
                         </div>
                         <div class="stat-content">
                           <div class="stat-label">消费次数</div>
-                          <div class="stat-value">{{ recordStats.consumeCount }} 次</div>
+                          <div class="stat-value">{{ consumeCount }} 次</div>
                         </div>
                       </div>
                     </el-col>
@@ -447,6 +447,7 @@ export default {
       totalConsume: 0,
       totalRecharge: 0,
       consumeCount: 0,
+      rechargeCount: 0,
 
       // 余额记录相关
       recordList: [],
@@ -577,9 +578,9 @@ export default {
           const data = res.data.data;
           this.balance = data.amount || 0;
           this.totalConsume = data.totalConsume || 0;
-          this.totalConsume = data.totalConsume || 0;
           this.totalRecharge = data.totalRecharge || 0;
           this.consumeCount = data.consumeCount || 0;
+          this.rechargeCount = data.rechargeCount || 0;
         }
       }).catch(e => {
         console.error('获取余额信息失败:', e);
@@ -610,7 +611,7 @@ export default {
 
     /* 获取最近消费 */
     getRecentConsume() {
-      this.recentLoading = true;
+      /*this.recentLoading = true;
       this.$http.get('/user/consume/recent').then(res => {
         this.recentLoading = false;
         if (res.data.code === 200) {
@@ -624,7 +625,7 @@ export default {
       }).catch(e => {
         this.recentLoading = false;
         console.error('获取最近消费失败:', e);
-      });
+      });*/
     },
 
     /* 查询余额记录 */
