@@ -334,7 +334,7 @@ export default {
       this.balanceQuery.userId = id;
 
       Promise.all([
-        this.$http.get('/user/info/' + id).then(userRes => {
+        this.$http.get('/asset/info/' + id).then(userRes => {
           if (userRes.data.code === 0) {
             const userData = userRes.data.data;
             this.form = Object.assign({}, userData, {

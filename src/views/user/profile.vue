@@ -87,271 +87,6 @@
       <el-col :md="18" :sm="16">
         <el-card shadow="never" body-style="padding-top: 5px;">
           <el-tabs v-model="active" class="user-info-tabs">
-            <!-- 基本信息标签页 -->
-            <el-tab-pane label="基本信息" name="info">
-              <div class="info-container">
-                <!-- 个人信息卡片 -->
-                <div class="info-card">
-                  <div class="card-header">
-                    <i class="el-icon-user-solid"></i>
-                    <span class="card-title">个人信息</span>
-                  </div>
-                  <div class="card-body">
-                    <el-row :gutter="30">
-                      <el-col :xs="24" :sm="12">
-                        <div class="form-group">
-                          <label class="form-label required">
-                            <i class="el-icon-user"></i>
-                            姓名
-                          </label>
-                          <el-input v-model="form.realname" placeholder="请输入您的真实姓名" size="medium" class="form-input"
-                            :class="{ 'has-error': !form.realname }">
-                            <i slot="prefix" class="el-input__icon el-icon-user"></i>
-                          </el-input>
-                          <div v-if="!form.realname" class="error-tip">姓名不能为空</div>
-                        </div>
-
-                        <div class="form-group">
-                          <label class="form-label required">
-                            <i class="el-icon-magic-stick"></i>
-                            昵称
-                          </label>
-                          <el-input v-model="form.nickname" placeholder="请输入您的昵称" size="medium" class="form-input"
-                            :class="{ 'has-error': !form.nickname }">
-                            <i slot="prefix" class="el-input__icon el-icon-magic-stick"></i>
-                          </el-input>
-                          <div v-if="!form.nickname" class="error-tip">昵称不能为空</div>
-                        </div>
-
-                        <div class="form-group">
-                          <label class="form-label required">
-                            <i class="el-icon-male"></i>
-                            性别
-                          </label>
-                          <el-radio-group v-model="form.gender" class="gender-group">
-                            <el-radio :label="1" class="gender-option">
-                              <i class="el-icon-male male-icon"></i>
-                              <span>男</span>
-                            </el-radio>
-                            <el-radio :label="2" class="gender-option">
-                              <i class="el-icon-female female-icon"></i>
-                              <span>女</span>
-                            </el-radio>
-                            <el-radio :label="3" class="gender-option">
-                              <i class="el-icon-question question-icon"></i>
-                              <span>保密</span>
-                            </el-radio>
-                          </el-radio-group>
-                          <div v-if="!form.gender" class="error-tip">请选择性别</div>
-                        </div>
-                      </el-col>
-
-                      <el-col :xs="24" :sm="12">
-                        <div class="form-group">
-                          <label class="form-label required">
-                            <i class="el-icon-mobile-phone"></i>
-                            手机号
-                          </label>
-                          <el-input v-model="form.mobile" placeholder="请输入手机号码" size="medium" class="form-input"
-                            :maxlength="11">
-                            <i slot="prefix" class="el-input__icon el-icon-mobile-phone"></i>
-                            <el-button v-if="form.mobile && form.mobile.length === 11" slot="append" type="text"
-                              @click="verifyMobile">
-                              验证
-                            </el-button>
-                          </el-input>
-                        </div>
-
-                        <div class="form-group">
-                          <label class="form-label required">
-                            <i class="el-icon-message"></i>
-                            邮箱
-                          </label>
-                          <el-input v-model="form.email" placeholder="请输入邮箱地址" size="medium" class="form-input"
-                            :class="{ 'has-error': !form.email }">
-                            <i slot="prefix" class="el-input__icon el-icon-message"></i>
-                            <el-button v-if="form.email && isEmailValid" slot="append" type="text" @click="verifyEmail">
-                              验证
-                            </el-button>
-                          </el-input>
-                          <div v-if="!form.email" class="error-tip">邮箱不能为空</div>
-                          <div v-else-if="!isEmailValid" class="error-tip">邮箱格式不正确</div>
-                        </div>
-
-                        <div class="form-group">
-                          <label class="form-label">
-                            <i class="el-icon-location-information"></i>
-                            所在地区
-                          </label>
-                          <el-cascader v-model="selectedArea" :options="areaOptions" placeholder="请选择省/市/区"
-                            class="form-input" size="medium" clearable filterable />
-                        </div>
-                      </el-col>
-                    </el-row>
-                  </div>
-                </div>
-
-                <!-- 详细资料卡片 -->
-                <div class="info-card">
-                  <div class="card-header">
-                    <i class="el-icon-document"></i>
-                    <span class="card-title">详细资料</span>
-                  </div>
-                  <div class="card-body">
-                    <div class="form-group">
-                      <label class="form-label">
-                        <i class="el-icon-location"></i>
-                        详细地址
-                      </label>
-                      <el-input v-model="form.address" placeholder="请输入详细地址" size="medium" class="form-input">
-                        <i slot="prefix" class="el-input__icon el-icon-location"></i>
-                      </el-input>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="form-label">
-                        <i class="el-icon-edit"></i>
-                        个人简介
-                      </label>
-                      <div class="intro-container">
-                        <el-input v-model="form.intro" type="textarea" :rows="4" placeholder="介绍一下自己吧~" maxlength="200"
-                          show-word-limit resize="none" class="intro-textarea" />
-                        <div class="intro-tips">
-                          <i class="el-icon-info"></i>
-                          <span>好的简介能让大家更好地了解你</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="form-label">
-                        <i class="el-icon-date"></i>
-                        出生日期
-                      </label>
-                      <el-date-picker v-model="form.birthday" type="date" placeholder="选择出生日期" format="yyyy 年 MM 月 dd 日"
-                        value-format="yyyy-MM-dd" class="form-input" size="medium" />
-                    </div>
-
-                    <div class="form-group">
-                      <label class="form-label">
-                        <i class="el-icon-suitcase"></i>
-                        职业信息
-                      </label>
-                      <el-input v-model="form.occupation" placeholder="请输入您的职业" size="medium" class="form-input">
-                        <i slot="prefix" class="el-input__icon el-icon-suitcase"></i>
-                      </el-input>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 社交信息卡片 -->
-                <div class="info-card">
-                  <div class="card-header">
-                    <i class="el-icon-share"></i>
-                    <span class="card-title">社交信息</span>
-                    <span class="card-subtitle">关联您的社交账号</span>
-                  </div>
-                  <div class="card-body">
-                    <div class="social-connections">
-                      <div class="social-item">
-                        <div class="social-icon wechat">
-                          <i class="el-icon-chat-line-round"></i>
-                        </div>
-                        <div class="social-info">
-                          <span class="social-name">微信</span>
-                          <span class="social-status" :class="{ 'connected': form.wechat }">
-                            {{ form.wechat ? '已绑定' : '未绑定' }}
-                          </span>
-                        </div>
-                        <el-button v-if="!form.wechat" type="text" size="small" @click="bindWechat">
-                          绑定
-                        </el-button>
-                        <el-button v-else type="text" size="small" @click="unbindWechat">
-                          解绑
-                        </el-button>
-                      </div>
-
-                      <div class="social-item">
-                        <div class="social-icon qq">
-                          <i class="el-icon-chat-dot-round"></i>
-                        </div>
-                        <div class="social-info">
-                          <span class="social-name">QQ</span>
-                          <span class="social-status" :class="{ 'connected': form.qq }">
-                            {{ form.qq ? '已绑定' : '未绑定' }}
-                          </span>
-                        </div>
-                        <el-button v-if="!form.qq" type="text" size="small" @click="bindQQ">
-                          绑定
-                        </el-button>
-                        <el-button v-else type="text" size="small" @click="unbindQQ">
-                          解绑
-                        </el-button>
-                      </div>
-
-                      <div class="social-item">
-                        <div class="social-icon weibo">
-                          <i class="el-icon-star-off"></i>
-                        </div>
-                        <div class="social-info">
-                          <span class="social-name">微博</span>
-                          <span class="social-status" :class="{ 'connected': form.weibo }">
-                            {{ form.weibo ? '已绑定' : '未绑定' }}
-                          </span>
-                        </div>
-                        <el-button v-if="!form.weibo" type="text" size="small" @click="bindWeibo">
-                          绑定
-                        </el-button>
-                        <el-button v-else type="text" size="small" @click="unbindWeibo">
-                          解绑
-                        </el-button>
-                      </div>
-
-                      <div class="social-item">
-                        <div class="social-icon github">
-                          <i class="el-icon-service"></i>
-                        </div>
-                        <div class="social-info">
-                          <span class="social-name">GitHub</span>
-                          <span class="social-status" :class="{ 'connected': form.github }">
-                            {{ form.github ? '已绑定' : '未绑定' }}
-                          </span>
-                        </div>
-                        <el-button v-if="!form.github" type="text" size="small" @click="bindGithub">
-                          绑定
-                        </el-button>
-                        <el-button v-else type="text" size="small" @click="unbindGithub">
-                          解绑
-                        </el-button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 操作按钮 -->
-                <div class="action-buttons">
-                  <el-button type="primary" size="large" :loading="loading" @click="save" class="save-btn">
-                    <i class="el-icon-check"></i>
-                    保存更改
-                  </el-button>
-                  <el-button size="large" @click="resetForm" class="reset-btn">
-                    <i class="el-icon-refresh"></i>
-                    重置
-                  </el-button>
-                  <el-button type="text" size="large" @click="previewProfile" class="preview-btn">
-                    <i class="el-icon-view"></i>
-                    预览效果
-                  </el-button>
-                </div>
-
-                <!-- 保存提示 -->
-                <div class="save-tips">
-                  <i class="el-icon-warning-outline"></i>
-                  <span>修改资料后需要重新登录才能生效</span>
-                </div>
-              </div>
-            </el-tab-pane>
-
             <!-- 余额记录标签页 -->
             <el-tab-pane label="余额记录" name="balance">
               <div class="balance-record">
@@ -433,7 +168,7 @@
 
                 <!-- 余额记录表格 -->
                 <el-table :data="recordList" style="width: 100%;" :loading="recordLoading" stripe highlight-current-row>
-                  <el-table-column prop="orderNo" label="订单号" width="200">
+                  <el-table-column prop="orderNo" label="订单号" width="260">
                     <template slot-scope="{ row }">
                       <span class="order-no">{{ row.orderNo }}</span>
                       <el-tag v-if="row.orderNo" size="mini" type="info" style="margin-left: 5px; cursor: pointer;"
@@ -456,9 +191,9 @@
                       </span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="balanceAfter" label="余额" width="120" align="right">
+                  <el-table-column prop="amountAfter" label="余额" width="120" align="right">
                     <template slot-scope="{ row }">
-                      ¥ {{ formatCurrency(row.balanceAfter) }}
+                      ¥ {{ formatCurrency(row.amountAfter) }}
                     </template>
                   </el-table-column>
                   <el-table-column prop="description" label="描述">
@@ -471,9 +206,9 @@
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="createTime" label="时间" width="180">
+                  <el-table-column prop="createdAt" label="时间" width="180">
                     <template slot-scope="{ row }">
-                      {{ formatDateTime(row.createTime) }}
+                      {{ formatDateTime(row.createdAt) }}
                     </template>
                   </el-table-column>
                   <el-table-column label="操作" width="100" fixed="right">
@@ -594,8 +329,8 @@
             <template slot="prepend">¥</template>
           </el-input-number>
         </el-form-item>
-        <el-form-item label="充值方式" prop="payType">
-          <el-select v-model="rechargeForm.payType" placeholder="请选择充值方式" style="width: 100%;">
+        <el-form-item label="充值方式" prop="type">
+          <el-select v-model="rechargeForm.type" placeholder="请选择充值方式" style="width: 100%;">
             <el-option label="微信支付" :value="1" />
             <el-option label="支付宝" :value="2" />
             <el-option label="银行卡" :value="3" />
@@ -603,7 +338,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注信息">
-          <el-input v-model="rechargeForm.remark" type="textarea" :rows="2" placeholder="请输入备注信息（选填）" />
+          <el-input v-model="rechargeForm.description" type="textarea" :rows="2" placeholder="请输入备注信息（选填）" />
         </el-form-item>
 
         <!-- 快捷金额 -->
@@ -660,7 +395,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注信息">
-          <el-input v-model="consumeForm.remark" type="textarea" :rows="2" placeholder="请输入备注信息（选填）" />
+          <el-input v-model="consumeForm.description" type="textarea" :rows="2" placeholder="请输入备注信息（选填）" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -683,7 +418,7 @@ export default {
   data() {
     return {
       // tab页选中
-      active: 'info',
+      active: 'balance',
 
       // 表单数据
       form: {},
@@ -743,15 +478,15 @@ export default {
       rechargeLoading: false,
       rechargeForm: {
         amount: 100,
-        payType: 1,
-        remark: ''
+        type: 1,
+        description: ''
       },
       rechargeRules: {
         amount: [
           { required: true, message: '请输入充值金额', trigger: 'blur' },
           { type: 'number', min: 0.01, message: '充值金额必须大于0', trigger: 'blur' }
         ],
-        payType: [
+        type: [
           { required: true, message: '请选择充值方式', trigger: 'change' }
         ]
       },
@@ -767,7 +502,7 @@ export default {
         quantity: 1,
         price: 0,
         consumeType: 1,
-        remark: ''
+        description: ''
       },
       consumeRules: {
         productId: [
@@ -861,7 +596,7 @@ export default {
 
       delete params.dateRange;
 
-      this.$http.get('/user/balance/records', { params }).then(res => {
+      this.$http.get('/asset/log/list', { params }).then(res => {
         this.recordLoading = false;
         if (res.data.code === 200) {
           this.recordList = res.data.data.records || [];
@@ -942,7 +677,8 @@ export default {
       this.$refs['rechargeForm'].validate((valid) => {
         if (valid) {
           this.rechargeLoading = true;
-          this.$http.post('/user/balance/recharge', this.rechargeForm).then(res => {
+          this.rechargeForm.id = this.form.id;
+          this.$http.post('/asset/recharge', this.rechargeForm).then(res => {
             this.rechargeLoading = false;
             if (res.data.code === 200) {
               this.$message.success('充值提交成功！');
@@ -1000,7 +736,7 @@ export default {
     searchProducts(query) {
       if (query) {
         this.productLoading = true;
-        this.$http.get('/user/products/search', { params: { keyword: query } }).then(res => {
+        this.$http.get('/asset/products/search', { params: { keyword: query } }).then(res => {
           this.productLoading = false;
           if (res.data.code === 200) {
             this.productOptions = res.data.data || [];
@@ -1023,9 +759,10 @@ export default {
     handleRechargeDialogClose() {
       this.$refs['rechargeForm'].resetFields();
       this.rechargeForm = {
+        id: this.form.id,
         amount: 100,
-        payType: 1,
-        remark: ''
+        type: 1,
+        description: ''
       };
     },
 
@@ -1073,13 +810,13 @@ export default {
     /* 格式化日期 */
     formatDate(date) {
       if (!date) return '--';
-      return this.$moment(date).format('YYYY-MM-DD');
+      return new Date(date).toLocaleString()
     },
 
     /* 格式化日期时间 */
     formatDateTime(date) {
       if (!date) return '--';
-      return this.$moment(date).format('YYYY-MM-DD HH:mm:ss');
+      return new Date(date).toLocaleString()
     },
 
     /* 获取用户等级文本 */
@@ -1549,7 +1286,7 @@ export default {
   height: 3px;
 }
 
-              /* 基本信息容器 */
+/* 基本信息容器 */
 .info-container {
   padding: 20px 0;
 }
@@ -1935,6 +1672,7 @@ export default {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

@@ -28,8 +28,8 @@
     </el-card>
 
     <el-card shadow="never" class="table-card">
-      <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection"
-        size="small">
+      <ele-pro-table ref="table" :where="where" :datasource="url" :columns="columns" :selection.sync="selection">
+        <!-- 表头工具栏 -->
         <template slot="toolbar">
           <div class="toolbar">
             <div class="toolbar-left">
@@ -39,13 +39,6 @@
               </el-button>
             </div>
           </div>
-        </template>
-        <!-- 表头工具栏 -->
-        <template slot="toolbar1">
-          <el-button type="primary" icon="el-icon-plus" size="small" @click="openEdit(null)"
-            :disabled="!permission.includes('sys:game:add')">
-            添加游戏
-          </el-button>
         </template>
 
         <!-- 配置状态 -->
@@ -76,6 +69,9 @@
           <el-tag size="mini" :type="row.status === 1 ? 'success' : 'info'" effect="dark">
             {{ row.status === 1 ? '启用' : '停用' }}
           </el-tag>
+        </template>
+        <template slot="createTime" slot-scope="{ row }">
+          <div class="center"> {{ row.createTime }} </div>
         </template>
 
         <!-- 操作 -->
@@ -121,11 +117,20 @@ export default {
       showEdit: false,
       columns: [
         { prop: "gameId", label: "游戏ID", width: 140, align: "center" },
-        { prop: "gameName", label: "游戏名称", minWidth: 200 },
-        { prop: "denuvo", label: "配置状态", slot: "denuvo", minWidth: 220 },
+        { prop: "gameName", label: "游戏名称", minWidth: 60 },
+        { prop: "denuvo", label: "配置状态", slot: "denuvo", minWidth: 220, align: "center" },
         { prop: "status", label: "状态", slot: "status", width: 100, align: "center" },
-        { prop: "createTime", label: "创建时间", sortable: "custom", minWidth: 160 },
-        { prop: "updateTime", label: "更新时间", sortable: "custom", minWidth: 160 },
+        {
+          prop: "createTime", label: "创建时间", align: "center", sortable: "custom", minWidth: 60, formatter: (_row, __column, cellValue) => {
+            if (!cellValue) return "-"; const date = new Date(cellValue); return date.toLocaleString();
+          }
+        },
+        {
+          prop: "updateTime", label: "更新时间", sortable: "custom", minWidth: 60, align: "center", formatter: (_row, __column, cellValue) => {
+            if (!cellValue) return "-"; const date = new Date(cellValue); return date.toLocaleString();
+
+          }
+        },
         {
           columnKey: "action",
           label: "操作",
@@ -191,6 +196,7 @@ export default {
 .tag-group {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 6px;
 }
 
