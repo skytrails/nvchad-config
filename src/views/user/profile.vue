@@ -125,7 +125,7 @@
                           <i class="el-icon-money"></i>
                         </div>
                         <div class="stat-content">
-                          <div class="stat-label">总收入</div>
+                          <div class="stat-label">总充值</div>
                           <div class="stat-value">¥ {{ formatCurrency(recordStats.totalIncome) }}</div>
                         </div>
                       </div>
@@ -572,10 +572,11 @@ export default {
 
     /* 获取余额信息 */
     getBalanceInfo() {
-      this.$http.get('/user/balance/info').then(res => {
+      this.$http.get('/asset/balance/info').then(res => {
         if (res.data.code === 200) {
           const data = res.data.data;
-          this.balance = data.balance || 0;
+          this.balance = data.amount || 0;
+          this.totalConsume = data.totalConsume || 0;
           this.totalConsume = data.totalConsume || 0;
           this.totalRecharge = data.totalRecharge || 0;
           this.consumeCount = data.consumeCount || 0;
@@ -600,8 +601,6 @@ export default {
         this.recordLoading = false;
         if (res.data.code === 200) {
           this.recordList = res.data.data.records || [];
-          this.recordTotal = res.data.data.total || 0;
-          this.recordStats = res.data.data.stats || this.recordStats;
         }
       }).catch(e => {
         this.recordLoading = false;
