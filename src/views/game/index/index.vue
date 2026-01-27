@@ -98,17 +98,17 @@
     </el-card>
 
     <!-- 编辑弹窗 -->
-    <events-edit v-if="showEdit" :visible="showEdit" :data="current" @close="showEdit = false" @done="reload" />
+    <game-edit v-if="showEdit" :visible="showEdit" :data="current" @close="showEdit = false" @done="reload" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import EventsEdit from "./events-edit";
+import GameEdit from "./game-edit";
 
 export default {
-  name: "CfEvents",
-  components: { EventsEdit },
+  name: "GameIndex",
+  components: { GameEdit },
   computed: {
     ...mapGetters(["permission"]),
   },
