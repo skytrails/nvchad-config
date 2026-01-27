@@ -1,7 +1,7 @@
 <template>
   <!-- 调整余额对话框 -->
-  <el-dialog :visible="visible" title="调整用户余额" width="520px" :destroy-on-close="true" :close-on-click-modal="false"
-    class="balance-adjust-dialog">
+  <el-dialog :visible.sync="balanceDialogVisible" title="调整用户余额" width="520px" :destroy-on-close="true" :close-on-click-modal="false"
+    class="balance-adjust-dialog" @close="handleDialogClose">
 
     <div class="balance-dialog-content">
       <!-- 用户信息卡片 -->
@@ -14,7 +14,7 @@
           </div>
           <div class="current-balance">
             <div class="balance-label">当前余额</div>
-            <div class="balance-value">¥ {{ formatCurrency(currentBalance) }}</div>
+            <div class="balance-value">¥ {{ formatCurrency(data.amount) }}</div>
           </div>
         </div>
       </el-card>
@@ -23,7 +23,7 @@
       <el-form ref="balanceForm" :model="balanceForm" :rules="balanceRules" label-width="90px" class="balance-form">
         <!-- 调整类型 -->
         <el-form-item label="调整类型:" prop="changeType">
-          <el-radio-group v-model="balanceForm.changeType" class="type-radio-group">
+          <el-radio-group v-model="balanceForm.changeType" class="type-radio-group" @change="handleTypeChange">
             <el-radio-button :label="1" class="type-radio recharge-radio">
               <i class="el-icon-circle-plus-outline"></i>
               <span>充值</span>
@@ -43,8 +43,15 @@
         <el-form-item label="调整金额:" prop="changeAmount" class="amount-form-item">
           <div class="amount-input-wrapper">
             <div class="currency-symbol">¥</div>
-            <el-input v-model="balanceForm.changeAmount" placeholder="请输入调整金额" type="number" :min="0.01" :step="0.01"
-              @input="handleAmountInput" class="amount-input" ref="amountInput">
+            <el-input
+              v-model.number="balanceForm.changeAmount"
+              placeholder="请输入调整金额"
+              type="number"
+              :min="0.01"
+              :step="0.01"
+              @input="handleAmountInput"
+              class="amount-input"
+              ref="amountInput">
               <template slot="append">
                 <span class="amount-unit">元</span>
               </template>
@@ -59,18 +66,29 @@
             </div>
             <div class="quick-amount-buttons">
               <template v-for="amount in quickAmounts[balanceForm.changeType]">
-                <el-button :key="amount" size="mini" :type="balanceForm.changeAmount == amount ? 'primary' : 'default'"
-                  :class="['quick-amount-btn', { 'active': balanceForm.changeAmount == amount }]"
+                <el-button
+                  :key="amount"
+                  size="mini"
+                  :type="balanceForm.changeAmount == getAbsoluteAmount(amount) ? 'primary' : 'default'"
+                  :class="['quick-amount-btn', { 'active': balanceForm.changeAmount == getAbsoluteAmount(amount) }]"
                   @click="setQuickAmount(amount)">
-                  {{ amount > 0 ? '+' : '' }}{{ formatQuickAmount(amount) }}
+                  {{ amount > 0 ? '+' : '' }}{{ formatQuickAmount(Math.abs(amount)) }}
                 </el-button>
               </template>
             </div>
 
             <!-- 自定义金额 -->
             <div class="custom-amount">
-              <el-input-number v-model="customAmount" :min="0.01" :max="10000" :step="100" :precision="2" size="small"
-                placeholder="自定义" class="custom-input" @change="setCustomAmount">
+              <el-input-number
+                v-model="customAmount"
+                :min="0.01"
+                :max="10000"
+                :step="100"
+                :precision="2"
+                size="small"
+                placeholder="自定义"
+                class="custom-input"
+                @change="setCustomAmount">
                 <template slot="append">元</template>
               </el-input-number>
             </div>
@@ -93,16 +111,28 @@
 
         <!-- 备注信息 -->
         <el-form-item label="备注说明:" prop="remark">
-          <el-input v-model="balanceForm.remark" type="textarea" :rows="3" placeholder="请输入调整原因或备注信息" maxlength="200"
-            show-word-limit resize="none" class="remark-textarea">
+          <el-input
+            v-model="balanceForm.remark"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入调整原因或备注信息"
+            maxlength="200"
+            show-word-limit
+            resize="none"
+            class="remark-textarea">
           </el-input>
 
           <!-- 常用备注 -->
-          <div v-if="balanceForm.changeType === 1" class="quick-remark">
+          <div class="quick-remark">
             <div class="quick-remark-title">常用备注：</div>
             <div class="quick-remark-buttons">
-              <el-tag v-for="remark in quickRemarks[balanceForm.changeType]" :key="remark" size="small"
-                :class="{ 'active': balanceForm.remark === remark }" @click="setQuickRemark(remark)" class="remark-tag">
+              <el-tag
+                v-for="remark in quickRemarks[balanceForm.changeType]"
+                :key="remark"
+                size="small"
+                :class="{ 'active': balanceForm.remark === remark }"
+                @click="setQuickRemark(remark)"
+                class="remark-tag">
                 {{ remark }}
               </el-tag>
             </div>
@@ -113,11 +143,16 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="updateVisible(false)" size="medium" class="cancel-btn">
+        <el-button @click="handleCancel" size="medium" class="cancel-btn">
           取消
         </el-button>
-        <el-button type="primary" :loading="balanceSubmitLoading" @click="submitBalanceChange" size="medium"
-          class="submit-btn" :disabled="!balanceForm.changeAmount">
+        <el-button
+          type="primary"
+          :loading="balanceSubmitLoading"
+          @click="submitBalanceChange"
+          size="medium"
+          class="submit-btn"
+          :disabled="!balanceForm.changeAmount || balanceForm.changeAmount <= 0">
           <i class="el-icon-check"></i>
           {{ getSubmitButtonText() }}
         </el-button>
@@ -130,7 +165,7 @@
 import CircleAvatar from '@/components/CircleAvatar.vue';
 
 export default {
-  name: 'SystemUserInfo',
+  name: 'BalanceAdjustDialog',
   components: { CircleAvatar },
   props: {
     visible: Boolean,
@@ -138,8 +173,8 @@ export default {
   },
   data() {
     return {
-      // ... 其他数据保持不变 ...
-      form: Object.assign({ status: 1 }, this.data),
+      balanceDialogVisible: this.visible,
+      form: {},
 
       // 余额相关数据
       balanceSubmitLoading: false,
@@ -169,32 +204,69 @@ export default {
     };
   },
   watch: {
-    data() {
-      if (this.data) {
-        this.form = Object.assign({}, this.data)
-      } else {
-        this.form = { status: 1 };
-        this.isUpdate = false;
+    visible(val) {
+      this.balanceDialogVisible = val;
+      if (val) {
+        this.initDialog();
       }
     },
+    data: {
+      immediate: true,
+      handler(val) {
+        if (val) {
+          this.form = { ...val };
+          this.balanceForm.userId = val.id;
+        } else {
+          this.form = {};
+          this.balanceForm.userId = null;
+        }
+      }
+    }
+  },
+  computed: {
+    balanceRules() {
+      return {
+        changeType: [
+          { required: true, message: '请选择调整类型', trigger: 'change' }
+        ],
+        changeAmount: [
+          { required: true, message: '请输入调整金额', trigger: 'blur' },
+          {
+            type: 'number',
+            message: '金额必须为数字',
+            trigger: 'blur'
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (value <= 0) {
+                callback(new Error('调整金额必须大于0'));
+                return;
+              }
+
+              // 如果是消费类型，且调整后的余额会变成负数，给出警告
+              if (this.balanceForm.changeType === 2 && this.data.amount - value < 0) {
+                callback(new Error('消费金额不能大于当前余额'));
+                return;
+              }
+
+              callback();
+            },
+            trigger: 'blur'
+          }
+        ]
+      };
+    }
   },
   methods: {
-    /* 显示余额调整对话框 */
-    showBalanceDialog() {
-      if (!this.balanceQuery.userId) {
-        this.$message.warning('无法获取用户信息');
-        return;
-      }
-
+    /* 初始化对话框 */
+    initDialog() {
       this.balanceForm = {
-        userId: this.balanceQuery.userId,
+        userId: this.form.id,
         changeType: 1,
         changeAmount: null,
         remark: ''
       };
-
       this.customAmount = null;
-      this.updateVisible(true)
 
       // 自动聚焦金额输入框
       this.$nextTick(() => {
@@ -207,26 +279,88 @@ export default {
       });
     },
 
+    /* 处理对话框关闭 */
+    handleDialogClose() {
+      this.updateVisible(false);
+    },
+
+    /* 处理取消 */
+    handleCancel() {
+      this.updateVisible(false);
+    },
+
+    /* 更新visible */
+    updateVisible(value) {
+      this.$emit('update:visible', value);
+      if (!value) {
+        this.resetForm();
+      }
+    },
+
+    /* 重置表单 */
+    resetForm() {
+      if (this.$refs.balanceForm) {
+        this.$refs.balanceForm.resetFields();
+      }
+      this.balanceSubmitLoading = false;
+      this.customAmount = null;
+    },
+
+    /* 处理调整类型变化 */
+    handleTypeChange() {
+      // 切换类型时重置金额
+      this.balanceForm.changeAmount = null;
+      this.customAmount = null;
+
+      // 清除金额验证
+      if (this.$refs.balanceForm) {
+        this.$refs.balanceForm.clearValidate('changeAmount');
+      }
+    },
+
+    /* 获取绝对金额 */
+    getAbsoluteAmount(amount) {
+      return Math.abs(amount);
+    },
+
     /* 设置快速金额 */
     setQuickAmount(amount) {
-      this.balanceForm.changeAmount = Math.abs(amount);
+      const absAmount = Math.abs(amount);
 
-      // 如果是消费类型，确保金额为负
-      if (this.balanceForm.changeType === 2 && amount > 0) {
-        this.balanceForm.changeAmount = -amount;
+      // 如果是消费类型，使用负数金额
+      if (this.balanceForm.changeType === 2) {
+        this.balanceForm.changeAmount = -absAmount;
+      } else {
+        this.balanceForm.changeAmount = absAmount;
       }
 
+      // 同时更新自定义金额显示
+      this.customAmount = absAmount;
+
       // 触发验证
-      this.$refs.balanceForm.validateField('changeAmount');
+      this.$nextTick(() => {
+        if (this.$refs.balanceForm) {
+          this.$refs.balanceForm.validateField('changeAmount');
+        }
+      });
     },
 
     /* 设置自定义金额 */
     setCustomAmount(value) {
-      if (value) {
-        this.balanceForm.changeAmount = value;
+      if (value && value > 0) {
+        // 如果是消费类型，使用负数金额
         if (this.balanceForm.changeType === 2) {
           this.balanceForm.changeAmount = -value;
+        } else {
+          this.balanceForm.changeAmount = value;
         }
+
+        // 触发验证
+        this.$nextTick(() => {
+          if (this.$refs.balanceForm) {
+            this.$refs.balanceForm.validateField('changeAmount');
+          }
+        });
       }
     },
 
@@ -245,32 +379,47 @@ export default {
 
     /* 金额输入处理 */
     handleAmountInput(value) {
+      // 确保输入的是数字
+      if (value === '' || value === null || value === undefined) {
+        this.balanceForm.changeAmount = null;
+        return;
+      }
+
+      let numValue = Number(value);
+
+      // 检查是否为有效数字
+      if (isNaN(numValue)) {
+        this.balanceForm.changeAmount = null;
+        return;
+      }
+
       // 限制最多两位小数
-      if (value.includes('.')) {
-        const parts = value.split('.');
-        if (parts[1].length > 2) {
-          this.balanceForm.changeAmount = parseFloat(value).toFixed(2);
-        }
+      numValue = Math.round(numValue * 100) / 100;
+
+      // 限制最小值为0.01
+      if (numValue <= 0) {
+        numValue = 0.01;
       }
 
       // 根据类型处理正负号
-      if (this.balanceForm.changeType === 2 && value > 0) {
-        this.balanceForm.changeAmount = -Math.abs(value);
+      if (this.balanceForm.changeType === 2) {
+        // 消费类型确保为负数
+        this.balanceForm.changeAmount = -Math.abs(numValue);
+      } else {
+        // 充值和调整类型确保为正数
+        this.balanceForm.changeAmount = Math.abs(numValue);
       }
+
+      // 更新自定义金额显示
+      this.customAmount = Math.abs(numValue);
     },
 
     /* 计算新余额 */
     calculateNewBalance() {
-      if (!this.balanceForm.changeAmount) return this.currentBalance;
+      if (!this.balanceForm.changeAmount) return this.data.amount;
 
-      let changeAmount = Number(this.balanceForm.changeAmount);
-
-      // 如果是消费类型且输入正数，转为负数
-      if (this.balanceForm.changeType === 2 && changeAmount > 0) {
-        changeAmount = -changeAmount;
-      }
-
-      return this.currentBalance + changeAmount;
+      const changeAmount = Number(this.balanceForm.changeAmount);
+      return this.data.amount + changeAmount;
     },
 
     /* 获取预览余额的样式类 */
@@ -278,15 +427,12 @@ export default {
       const newBalance = this.calculateNewBalance();
       if (newBalance < 0) {
         return 'balance-negative';
-      } else if (newBalance > this.currentBalance) {
+      } else if (newBalance > this.data.amount) {
         return 'balance-positive';
-      } else if (newBalance < this.currentBalance) {
+      } else if (newBalance < this.data.amount) {
         return 'balance-decrease';
       }
       return '';
-    },
-    updateVisible(value) {
-      this.$emit("update:visible", value);
     },
 
     /* 获取提交按钮文本 */
@@ -296,7 +442,7 @@ export default {
       }
 
       const amount = this.balanceForm.changeAmount;
-      if (!amount) return '确认调整';
+      if (!amount || amount <= 0) return '确认调整';
 
       const absAmount = Math.abs(amount);
       const typeText = {
@@ -322,39 +468,38 @@ export default {
           3: '手动调整'
         }[this.balanceForm.changeType];
 
+        const newBalance = this.calculateNewBalance();
         const confirmMessage = `
           <div class="confirm-message">
             <p>确定要执行以下操作吗？</p>
             <p class="confirm-detail">
               <strong>操作类型：</strong>${typeText}<br>
               <strong>操作金额：</strong>¥ ${this.formatCurrency(amount)}<br>
-              <strong>当前余额：</strong>¥ ${this.formatCurrency(this.currentBalance)}<br>
-              <strong>调整后余额：</strong>¥ ${this.formatCurrency(this.calculateNewBalance())}
+              <strong>当前余额：</strong>¥ ${this.formatCurrency(this.data.amount)}<br>
+              <strong>调整后余额：</strong>¥ ${this.formatCurrency(newBalance)}
             </p>
-            <p class="confirm-warning" v-if="Math.abs(amount) >= 1000">
-              <i class="el-icon-warning"></i> 此操作涉及较大金额，请谨慎确认！
-            </p>
+            ${newBalance < 0 ? '<p class="confirm-warning"><i class="el-icon-warning"></i> 注意：调整后余额将变为负数！</p>' : ''}
+            ${Math.abs(amount) >= 1000 ? '<p class="confirm-warning"><i class="el-icon-warning"></i> 此操作涉及较大金额，请谨慎确认！</p>' : ''}
           </div>
         `;
 
         await this.$confirm(confirmMessage, '确认调整余额', {
           confirmButtonText: '确认调整',
           cancelButtonText: '再想想',
-          type: 'warning',
+          type: newBalance < 0 ? 'error' : 'warning',
           dangerouslyUseHTMLString: true,
-          customClass: 'balance-confirm-dialog'
+          customClass: 'balance-confirm-dialog',
+          showClose: false
         });
 
         this.balanceSubmitLoading = true;
 
         // 准备提交数据
         const submitData = {
-          ...this.balanceForm,
-          // changeAmount: Number(this.balanceForm.changeAmount),
-          // 如果是消费类型，确保为负数
-          changeAmount: this.balanceForm.changeType === 2 && this.balanceForm.changeAmount > 0
-            ? -this.balanceForm.changeAmount
-            : this.balanceForm.changeAmount
+          id: this.balanceForm.userId,
+          type: this.balanceForm.changeType,
+          amount: Number(this.balanceForm.changeAmount),
+          description: this.balanceForm.remark || `${typeText}调整`
         };
 
         const response = await this.$http.post('/asset/balance/adjust', submitData);
@@ -366,23 +511,21 @@ export default {
             duration: 2000
           });
 
-          this.updateVisible(false)
+          this.updateVisible(false);
 
-          // 刷新数据
-          await this.getBalanceLogs();
-
-          // 更新当前余额显示
-          if (response.data.data && response.data.data.newBalance) {
-            this.currentBalance = response.data.data.newBalance;
-            this.form.balance = this.currentBalance;
-          }
+          // 触发成功回调
+          this.$emit('success', {
+            newBalance: response.data.data?.newBalance || newBalance,
+            changeAmount: this.balanceForm.changeAmount,
+            changeType: this.balanceForm.changeType
+          });
 
         } else {
           this.$message.error(response.data.message || '余额调整失败');
         }
       } catch (error) {
         // 用户取消操作
-        if (error !== 'cancel') {
+        if (error !== 'cancel' && error !== 'close') {
           console.error('余额调整失败:', error);
           this.$message.error('余额调整失败：' + (error.message || '网络错误'));
         }
@@ -391,8 +534,7 @@ export default {
       }
     },
 
-    // ... 其他方法保持不变 ...
-    /* 格式化金额 - 增强版 */
+    /* 格式化金额 */
     formatCurrency(amount) {
       if (amount === null || amount === undefined) return '0.00';
 
@@ -405,30 +547,7 @@ export default {
 
       // 添加千位分隔符
       return formatted.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    },
-  },
-  computed: {
-    balanceRules() {
-      return {
-        changeType: [
-          { required: true, message: '请选择调整类型', trigger: 'blur' }
-        ],
-        changeAmount: [
-          { required: true, message: '请输入调整金额', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (value <= 0) {
-                callback(new Error('调整金额必须大于0'));
-              } else {
-                callback();
-              }
-            },
-            trigger: 'blur'
-          }
-        ]
-      };
-    },
-
+    }
   }
 };
 </script>

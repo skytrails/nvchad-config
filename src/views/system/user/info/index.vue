@@ -58,16 +58,16 @@
           <el-table-column prop="changeTime" label="变更时间" width="180" align="center">
             <template v-slot="{ row }">
               <div class="time-cell">
-                <div class="date">{{ formatDate(row.changeTime, 'date') }}</div>
-                <div class="time">{{ formatDate(row.changeTime, 'time') }}</div>
+                <div class="date">{{ formatDate(row.createdAt, 'date') }}</div>
+                <div class="time">{{ formatDate(row.createdAt, 'time') }}</div>
               </div>
             </template>
           </el-table-column>
 
           <el-table-column prop="changeType" label="变更类型" width="120" align="center">
             <template v-slot="{ row }">
-              <el-tag :type="getChangeTypeTag(row.changeType)" size="small" effect="light">
-                {{ getChangeTypeText(row.changeType) }}
+              <el-tag :type="getChangeTypeTag(row.type)" size="small" effect="light">
+                {{ getChangeTypeText(row.type) }}
               </el-tag>
             </template>
           </el-table-column>
@@ -75,10 +75,10 @@
           <el-table-column prop="changeAmount" label="变更金额" width="120" align="right">
             <template v-slot="{ row }">
               <span :class="{
-                'amount-positive': row.changeAmount > 0,
-                'amount-negative': row.changeAmount < 0
+                'amount-positive': row.amount > 0,
+                'amount-negative': row.amount < 0
               }">
-                {{ row.changeAmount > 0 ? '+' : '' }}{{ formatCurrency(row.changeAmount) }}
+                {{ row.amount > 0 ? '+' : '' }}{{ formatCurrency(row.amount) }}
               </span>
             </template>
           </el-table-column>
@@ -86,7 +86,7 @@
           <el-table-column prop="balanceAfter" label="变更后余额" width="120" align="right">
             <template v-slot="{ row }">
               <span class="balance-after">
-                {{ formatCurrency(row.balanceAfter) }}
+                {{ formatCurrency(row.amountAfter) }}
               </span>
             </template>
           </el-table-column>
@@ -94,8 +94,8 @@
           <el-table-column prop="operator" label="操作人" width="120" align="center">
             <template v-slot="{ row }">
               <div class="operator-cell">
-                <circle-avatar text="row.username" size="16" />
-                <span class="operator-name">{{ row.operatorName || '-' }}</span>
+                <circle-avatar :text="row.orderNo" size="24" />
+                <span class="operator-name">{{ row.adminId || '-' }}</span>
               </div>
             </template>
           </el-table-column>
@@ -103,7 +103,7 @@
           <el-table-column prop="remark" label="备注说明" min-width="200" show-overflow-tooltip>
             <template v-slot="{ row }">
               <div class="remark-cell">
-                {{ row.remark || '无备注' }}
+                {{ row.description || '无备注' }}
               </div>
             </template>
           </el-table-column>
@@ -126,7 +126,7 @@
       </el-card>
     </div>
 
-    <balance-edit :visible.sync="balanceDialogVisible" :data="balanceData"/>
+    <balance-edit :visible.sync="balanceDialogVisible" :data="balanceData" />
   </div>
 </template>
 
@@ -291,6 +291,8 @@ export default {
             this.balanceData = userRes.data.data;
 
             this.currentBalance = this.balanceData.amount || 0;
+            this.totalRecharge = this.balanceData.totalRecharge;
+            this.totalConsume = this.balanceData.totalConsume;
             this.isUpdate = true;
 
             setPageTab({
@@ -332,24 +334,13 @@ export default {
           const result = response.data.data;
 
           // 假设API返回结构：{ list: [], total: 0, currentBalance: 0, ... }
-          this.balanceLogs = result.list || [];
+          this.balanceLogs = result.records || [];
           this.balanceTotal = result.total || 0;
 
-          // 如果有统计数据直接从API获取
-          if (result.currentBalance !== undefined) {
-            this.currentBalance = result.currentBalance;
-          }
-          if (result.totalRecharge !== undefined) {
-            this.totalRecharge = result.totalRecharge;
-          }
-          if (result.totalConsume !== undefined) {
-            this.totalConsume = result.totalConsume;
-          }
-
           // 如果没有统计数据，则从列表计算
-          if (result.totalRecharge === undefined || result.totalConsume === undefined) {
-            this.calculateBalanceStats();
-          }
+          // if (result.totalRecharge === undefined || result.totalConsume === undefined) {
+          //   this.calculateBalanceStats();
+          // }
         } else {
           this.$message.error(response.data.message || '获取余额记录失败');
         }
@@ -366,11 +357,11 @@ export default {
       if (!this.balanceQuery.userId) return;
 
       try {
-        const response = await this.$http.get(`/asset/balance/stats/${this.balanceQuery.userId}`);
+        const response = await this.$http.get(`/asset/info/${this.balanceQuery.userId}`);
 
         if (response.data.code === 200) {
           const stats = response.data.data;
-          this.currentBalance = stats.currentBalance || 0;
+          this.amount = stats.amount || 0;
           this.totalRecharge = stats.totalRecharge || 0;
           this.totalConsume = stats.totalConsume || 0;
         }
@@ -403,6 +394,7 @@ export default {
     refreshBalanceLog() {
       this.balanceQuery.page = 1; // 重置到第一页
       this.getBalanceLogs();
+      this.getBalanceStats() // 如果支持的话
     },
 
     /* 显示余额调整对话框 */
@@ -578,49 +570,16 @@ export default {
     },
 
     /* 格式化日期 - 增强版 */
-    formatDate(date, type = 'full') {
+    formatDate(date, type) {
       if (!date) return '-';
 
-      let d;
-      try {
-        d = new Date(date);
-        if (isNaN(d.getTime())) return '-';
-      } catch {
-        return '-';
-      }
-
       if (type === 'date') {
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return new Date(date).toLocaleDateString();
       } else if (type === 'time') {
-        const hour = String(d.getHours()).padStart(2, '0');
-        const minute = String(d.getMinutes()).padStart(2, '0');
-        const second = String(d.getSeconds()).padStart(2, '0');
-        return `${hour}:${minute}:${second}`;
-      } else if (type === 'datetime') {
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        const hour = String(d.getHours()).padStart(2, '0');
-        const minute = String(d.getMinutes()).padStart(2, '0');
-        return `${year}-${month}-${day} ${hour}:${minute}`;
+        return new Date(date).toLocaleTimeString();
       }
-
-      // 完整格式
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      const hour = String(d.getHours()).padStart(2, '0');
-      const minute = String(d.getMinutes()).padStart(2, '0');
-      const second = String(d.getSeconds()).padStart(2, '0');
-
-      return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+      return new Date(date).toLocaleString();
     },
-
-    // ... 其他方法保持不变 ...
-
   },
 
   watch: {
