@@ -29,14 +29,14 @@
           <el-col :lg="4" :md="12">
             <el-form-item label="状态:">
               <el-select clearable v-model="where.status" placeholder="全部" class="ele-fluid">
-                <el-option label="待使用" value="0">
-                  <span style="color: #67c23a">待使用</span>
+                <el-option label="可用" value="0">
+                  <span style="color: #67c23a">可用</span>
                 </el-option>
-                <el-option label="已使用" value="1">
-                  <span style="color: #e6a23c">已使用</span>
+                <el-option label="激活" value="1">
+                  <span style="color: #e6a23c">激活</span>
                 </el-option>
-                <el-option label="已停用" value="2">
-                  <span style="color: #f56c6c">已停用</span>
+                <el-option label="禁用" value="2">
+                  <span style="color: #f56c6c">禁用</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -108,8 +108,11 @@
           {{ row.startDate }} 至 {{ row.endDate }}
         </template>
         <!-- 状态列 -->
-        <template slot="status" slot-scope="{}">
-          <el-tag>可用</el-tag>
+        <template slot="status" slot-scope="{row}">
+          <el-tag size="mini" :type="row.status === 0 ? 'success' : row.status === 1 ? 'warning' : 'danger'"
+            effect="dark">
+            {{ row.status === 0 ? '可用' : row.status === 1 ? '激活' : '禁用' }}
+          </el-tag>
         </template>
         <template slot="cdk" slot-scope="{ row }">
           <el-link type="success" @click="handleCopy(row.cdk)">{{
