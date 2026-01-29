@@ -1,5 +1,9 @@
 <h1 align="center">My custom Neovim configuration</h1>
 
+<p align="center">
+  <a href="README.zh.md">中文文档</a>
+</p>
+
 <p align="center"><img src="https://github.com/user-attachments/assets/5fe2b095-1d53-41e9-8ce8-12288bc2b5e1" alt="Preview" /></p>
 
 ---
