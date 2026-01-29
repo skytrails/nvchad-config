@@ -1,43 +1,79 @@
 ---@type NvPluginSpec
+local function mason_pkg_path(pkg)
+  local ok, settings = pcall(require, "mason.settings")
+  local root = (ok and settings.current.install_root_dir) or (vim.fn.stdpath "data" .. "/mason")
+  print("----", root)
+  return vim.fs.joinpath(root, "packages", pkg)
+end
+
 return {
   "mfussenegger/nvim-jdtls",
   ft = { "java" },
   config = function()
     local jdtls = require "jdtls"
-    local glsp = require "gale.lsp"
-    local root_dir = require("jdtls.setup").find_root { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
+    print(vim.fn.stdpath "data")
 
-    if not root_dir then
-      vim.notify("Unable to start jdtls, no project root found", vim.log.levels.WARN)
+    local jdtls_path = vim.fn.stdpath "data" .. "/mason/packages/jdtls"
+
+    local lombok_jar = jdtls_path .. "/lombok.jar"
+
+    local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
+    local root_dir = require("jdtls.setup").find_root(root_markers)
+
+    if root_dir == nil then
       return
     end
 
-    local jdtls_cmd = vim.fn.exepath "jdtls"
-    if jdtls_cmd == "" then
-      vim.notify("Install jdtls via :MasonInstall jdtls", vim.log.levels.WARN)
-      return
-    end
-
-    local workspace_dir = vim.fs.joinpath(vim.fn.stdpath "data", "jdtls-workspaces", vim.fs.basename(root_dir))
-    vim.fn.mkdir(workspace_dir, "p")
+    local workspace_dir = vim.fn.stdpath "data" .. "/jdtls-workspace/" .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 
     local config = {
-      cmd = { jdtls_cmd, "-data", workspace_dir },
-      root_dir = root_dir,
-      settings = {
-        java = {},
+      cmd = {
+        "java",
+        "-javaagent:" .. lombok_jar,
+        "-jar",
+        jdtls_path .. "/plugins/org.eclipse.equinox.launcher_1.7.100.v20251111-0406.jar",
+        "-configuration",
+        jdtls_path .. "/config_mac",
+        "-data",
+        workspace_dir,
       },
-      capabilities = glsp.capabilities,
-      on_attach = glsp.generate_on_attach(function(_, bufnr)
-        local function map(lhs, rhs, desc)
-          vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
-        end
 
-        map("<leader>oi", jdtls.organize_imports, "Java organize imports")
-        map("<leader>ev", jdtls.extract_variable, "Java extract variable")
-        map("<leader>ec", jdtls.extract_constant, "Java extract constant")
-        map("<leader>em", jdtls.extract_method, "Java extract method")
-      end),
+      root_dir = root_dir,
+
+      settings = {
+        java = {
+          signatureHelp = { enabled = true },
+          contentProvider = { preferred = "fernflower" },
+          completion = {
+            favoriteStaticMembers = {
+              "org.junit.jupiter.api.Assertions.*",
+              "java.util.Objects.requireNonNull",
+            },
+          },
+          sources = {
+            organizeImports = {
+              starThreshold = 9999,
+              staticStarThreshold = 9999,
+            },
+          },
+        },
+      },
+
+      init_options = {
+        bundles = {},
+        extendedClientCapabilities = require("jdtls").extendedClientCapabilities,
+        settings = {
+          java = {
+            import = {
+              gradle = {
+                buildServer = {
+                  enabled = true,
+                },
+              },
+            },
+          },
+        },
+      },
     }
 
     jdtls.start_or_attach(config)

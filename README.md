@@ -65,6 +65,31 @@ Most plugins lazy-load; the few `lazy = false` entries (e.g., `dropbar.nvim`, `m
 
 ---
 
+## LSP Keymaps
+
+| Mapping | Action |
+| ------- | ------ |
+| `gd` | Go to definition |
+| `gi` | Go to implementation |
+| `<leader>gd` | Jump to declaration |
+| `<leader>gt` | Go to type definition |
+| `<leader>gr` | List references |
+| `<leader>sh` | Signature help |
+| `<leader>wl` | Print workspace folders |
+| `<leader>wa` / `<leader>wr` | Add / remove workspace folder |
+| `<leader>ra` | Rename symbol (NvChad renamer) |
+
+Java buffers also wire extra helpers from `nvim-jdtls`:
+
+| Mapping | Action |
+| ------- | ------ |
+| `<leader>oi` | Organize imports |
+| `<leader>ev` | Extract variable |
+| `<leader>ec` | Extract constant |
+| `<leader>em` | Extract method |
+
+---
+
 ## Troubleshooting
 
 - **Treesitter errors**: Make sure `parser/` files exist under `~/.local/share/nvim/lazy/nvim-treesitter`. Run `:TSUpdate` whenever you add parsers to `ensure_installed`.

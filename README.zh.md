@@ -57,6 +57,31 @@
 
 ---
 
+## LSP 快捷键
+
+| 按键 | 功能 |
+| ---- | ---- |
+| `gd` | 跳转定义 |
+| `gi` | 跳转实现 |
+| `<leader>gd` | 跳转声明 |
+| `<leader>gt` | 查看类型定义 |
+| `<leader>gr` | 查看引用 |
+| `<leader>sh` | 函数签名提示 |
+| `<leader>wl` | 打印当前 workspace 目录 |
+| `<leader>wa` / `<leader>wr` | 添加 / 移除 workspace 目录 |
+| `<leader>ra` | 重命名符号（NvChad renamer） |
+
+Java buffer 还会额外注入 `nvim-jdtls` 的常用命令：
+
+| 按键 | 功能 |
+| ---- | ---- |
+| `<leader>oi` | 自动整理 import |
+| `<leader>ev` | 抽取变量 |
+| `<leader>ec` | 抽取常量 |
+| `<leader>em` | 抽取方法 |
+
+---
+
 ## 故障排查
 
 - **Treesitter 报错**：确认 `~/.local/share/nvim/lazy/nvim-treesitter/parser` 下存在 `.so`，缺失时跑 `:TSUpdate`。

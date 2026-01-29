@@ -1,5 +1,4 @@
 ---@type NvPluginSpec
-
 local function mason_pkg_path(pkg)
   local ok, settings = pcall(require, "mason.settings")
   local root = (ok and settings.current.install_root_dir) or (vim.fn.stdpath "data" .. "/mason")
@@ -45,7 +44,7 @@ return {
         root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
       }, ]]
       -- eslint = {},
-      fish_lsp = {},
+      -- fish_lsp = {},
       html = {},
       hyprls = {},
       gopls = {},
@@ -69,7 +68,7 @@ return {
           client.server_capabilities.hoverProvider = false
         end,
       },
-      qmlls = {},
+      -- qmlls = {},
       somesass_ls = {},
       -- tailwindcss = {},
       taplo = {},

@@ -10,7 +10,7 @@ return {
       "clangd",
       "css-variables-language-server",
       "css-lsp",
-      "fish-lsp",
+      -- "fish-lsp",
       "gopls",
       "html-lsp",
       "hyprls",
