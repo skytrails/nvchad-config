@@ -7,6 +7,11 @@ return {
     "sindrets/diffview.nvim",
     "nvim-telescope/telescope.nvim",
   },
+  opts = {
+    integrations = {
+      diffview = true,
+    },
+  },
   init = function()
     local map = vim.keymap.set
     map("n", "<leader>gg", "<cmd>Neogit<CR>", { desc = "Neogit Open" })
