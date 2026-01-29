@@ -4,7 +4,7 @@
 
 ## 项目简介
 
-这是基于 [NvChad v2.5](https://nvchad.com/news/v2.5_release) 的日常工作环境，主要针对 Arch Linux 调整。配置预设了 Lua、Bash、Python、Rust、Go 以及 JS/TS/Astro 的语法高亮与 LSP，提供 Neogit、Diffview、Gitsigns 等 Git 工具，支持浏览器 Markdown 预览，并通过 Base46 重绘成统一的圆角界面。
+这是基于 [NvChad v2.5](https://nvchad.com/news/v2.5_release) 的日常工作环境，主要针对 Arch Linux 调整。配置预设了 Lua、Bash、Python、Rust、Go 以及 JS/TS/Astro/Vue 的语法高亮与 LSP，提供 Neogit、Diffview、Gitsigns 等 Git 工具，支持浏览器 Markdown 预览，并通过 Base46 重绘成统一的圆角界面。
 
 ---
 

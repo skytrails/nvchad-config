@@ -10,7 +10,7 @@
 
 ## Overview
 
-This repo houses my day-to-day [NvChad v2.5](https://nvchad.com/news/v2.5_release) setup, tuned for Arch Linux. It ships batteries-included language support (Lua, Bash, Python, Rust, Go, JS/TS, Astro), a battle-tested Git toolbox (Neogit, Telescope pickers, Diffview, Vim-Fugitive, Gitsigns), Markdown preview with live updates, and consistent rounded UI chrome. The layout stays modular so you can toggle features by editing isolated specs under `lua/plugins/`.
+This repo houses my day-to-day [NvChad v2.5](https://nvchad.com/news/v2.5_release) setup, tuned for Arch Linux. It ships batteries-included language support (Lua, Bash, Python, Rust, Go, JS/TS, Astro, Vue), a battle-tested Git toolbox (Neogit, Telescope pickers, Diffview, Vim-Fugitive, Gitsigns), Markdown preview with live updates, and consistent rounded UI chrome. The layout stays modular so you can toggle features by editing isolated specs under `lua/plugins/`.
 
 ---
 
