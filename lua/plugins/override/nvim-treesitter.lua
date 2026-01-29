@@ -16,6 +16,8 @@ return {
       "gosum",
       "html",
       "http",
+      "java",
+      "vue",
       "javascript",
       "json",
       "lua",

@@ -25,6 +25,7 @@ return {
   { import = "plugins.spec.grug-far" },
   { import = "plugins.spec.harpoon" },
   { import = "plugins.spec.helpview" },
+  { import = "plugins.spec.jdtls" },
   { import = "plugins.spec.hop" },
   { import = "plugins.spec.lsp-endhints" },
   { import = "plugins.spec.lsp-signature" },

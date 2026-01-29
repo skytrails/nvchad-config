@@ -1,5 +1,11 @@
 ---@type NvPluginSpec
 
+local function mason_pkg_path(pkg)
+  local ok, settings = pcall(require, "mason.settings")
+  local root = (ok and settings.current.install_root_dir) or (vim.fn.stdpath "data" .. "/mason")
+  return vim.fs.joinpath(root, "packages", pkg)
+end
+
 return {
   "neovim/nvim-lspconfig",
   config = function()
@@ -7,6 +13,20 @@ return {
 
     local glsp = require "gale.lsp"
     local lsp = glsp.lsp
+    local volar_tsdk
+
+    do
+      local ok, mason_registry = pcall(require, "mason-registry")
+      if ok then
+        local ok_pkg, vue_root = pcall(mason_pkg_path "vue-language-server")
+        if ok_pkg then
+          local tsdk_path = vim.fs.joinpath(vue_root, "node_modules", "typescript", "lib")
+          if vim.fn.isdirectory(tsdk_path) == 1 then
+            volar_tsdk = tsdk_path
+          end
+        end
+      end
+    end
 
     local servers = {
       astro = {},
@@ -76,9 +96,23 @@ return {
           },
         },
       },
+      volar = {
+        filetypes = { "vue" },
+        init_options = {
+          vue = {
+            hybridMode = false,
+          },
+        },
+      },
       yamlls = {},
       zls = {},
     }
+
+    if volar_tsdk then
+      servers.volar.init_options.typescript = {
+        tsdk = volar_tsdk,
+      }
+    end
 
     for name, opts in pairs(servers) do
       opts.on_init = glsp.on_init
