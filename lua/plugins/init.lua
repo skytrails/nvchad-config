@@ -54,7 +54,7 @@ return {
   { import = "plugins.spec.todo-comments" },
   { import = "plugins.spec.treesitter-textobjects" },
   { import = "plugins.spec.trouble" },
-  { import = "plugins.spec.ts-autotag" },
+  -- { import = "plugins.spec.ts-autotag" },
   { import = "plugins.spec.ts-context-commentstring" },
   { import = "plugins.spec.undo-tree" },
   { import = "plugins.spec.vim-astro" },
