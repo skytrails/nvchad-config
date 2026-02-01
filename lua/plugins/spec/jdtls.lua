@@ -19,126 +19,144 @@ return {
   "mfussenegger/nvim-jdtls",
   ft = { "java" },
   config = function()
-    local jdtls = require "jdtls"
     local glsp = require "gale.lsp"
-    local root_dir = require("jdtls.setup").find_root { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
-    -- local root_dir = require("jdtls.setup").find_root { ".git" }
+    local function start_jdtls()
+      local ok_jdtls, jdtls = pcall(require, "jdtls")
+      if not ok_jdtls then
+        vim.notify("未找到 nvim-jdtls，无法启动 jdtls", vim.log.levels.ERROR)
+        return
+      end
 
-    if not root_dir then
-      vim.notify("无法找到 Java 项目的根目录，jdtls 未启动", vim.log.levels.WARN)
-      return
-    end
+      local root_dir = require("jdtls.setup").find_root { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
+      -- local root_dir = require("jdtls.setup").find_root { ".git" }
 
-    local java_cmd = vim.fn.exepath "java"
-    if java_cmd == "" then
-      vim.notify("未找到 java 可执行文件，无法启动 jdtls", vim.log.levels.ERROR)
-      return
-    end
+      if not root_dir then
+        vim.notify("无法找到 Java 项目的根目录，jdtls 未启动", vim.log.levels.WARN)
+        return
+      end
 
-    local ok, mason_registry = pcall(require, "mason-registry")
-    if not ok then
-      vim.notify("mason.nvim 尚未加载，无法解析 jdtls 路径", vim.log.levels.ERROR)
-      return
-    end
+      local java_cmd = vim.fn.exepath "java"
+      if java_cmd == "" then
+        vim.notify("未找到 java 可执行文件，无法启动 jdtls", vim.log.levels.ERROR)
+        return
+      end
 
-    local ok_pkg, jdtls_pkg = pcall(mason_registry.get_package, "jdtls")
-    if not ok_pkg then
-      vim.notify("尚未通过 Mason 安装 jdtls，请运行 :MasonInstall jdtls", vim.log.levels.ERROR)
-      return
-    end
+      local ok, mason_registry = pcall(require, "mason-registry")
+      if not ok then
+        vim.notify("mason.nvim 尚未加载，无法解析 jdtls 路径", vim.log.levels.ERROR)
+        return
+      end
 
-    -- local jdtls_path = jdtls_pkg:get_install_path()
-    local ok, settings = pcall(require, "mason.settings")
-    local root = (ok and settings.current.install_root_dir) or (vim.fn.stdpath "data" .. "/mason")
-    local jdtls_path = vim.fs.joinpath(root, "packages") .. "/jdtls"
-    local launcher = vim.fn.glob(vim.fs.joinpath(jdtls_path, "plugins", "org.eclipse.equinox.launcher_*.jar"), 0, 1)[1]
-    local config_dir = get_jdtls_config_dir(jdtls_path)
-    local lombok_path = vim.fs.joinpath(jdtls_path, "lombok.jar")
-    local workspace =
-      vim.fs.joinpath(vim.fn.stdpath "data", "jdtls-workspace/" .. vim.fn.fnamemodify(root_dir, ":p:h:t"))
-    vim.fn.mkdir(workspace, "p")
+      local ok_pkg, _ = pcall(mason_registry.get_package, "jdtls")
+      if not ok_pkg then
+        vim.notify("尚未通过 Mason 安装 jdtls，请运行 :MasonInstall jdtls", vim.log.levels.ERROR)
+        return
+      end
 
-    if not launcher or vim.fn.filereadable(launcher) == 0 then
-      vim.notify("未找到 jdtls 启动器 jar，无法启动", vim.log.levels.ERROR)
-      return
-    end
+      -- local jdtls_path = jdtls_pkg:get_install_path()
+      local ok_settings, settings = pcall(require, "mason.settings")
+      local root = (ok_settings and settings.current.install_root_dir) or (vim.fn.stdpath "data" .. "/mason")
+      local jdtls_path = vim.fs.joinpath(root, "packages") .. "/jdtls"
+      local launcher =
+        vim.fn.glob(vim.fs.joinpath(jdtls_path, "plugins", "org.eclipse.equinox.launcher_*.jar"), 0, 1)[1]
+      local config_dir = get_jdtls_config_dir(jdtls_path)
+      local lombok_path = vim.fs.joinpath(jdtls_path, "lombok.jar")
+      local workspace =
+        vim.fs.joinpath(vim.fn.stdpath "data", "jdtls-workspace/" .. vim.fn.fnamemodify(root_dir, ":p:h:t"))
+      vim.fn.mkdir(workspace, "p")
 
-    local cmd = {
-      -- java_cmd,
-      "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java",
-      "-Declipse.application=org.eclipse.jdt.ls.core.id1",
-      "-Dosgi.bundles.defaultStartLevel=4",
-      "-Declipse.product=org.eclipse.jdt.ls.core.product",
-      "-Dlog.protocol=true",
-      "-Dlog.level=ALL",
-      "-Xms1g",
-      "--add-modules=ALL-SYSTEM",
-      -- "--add-modules=java.compiler",
-      "--add-opens",
-      "java.base/java.util=ALL-UNNAMED",
-      "--add-opens",
-      "java.base/java.lang=ALL-UNNAMED",
-    }
+      if not launcher or vim.fn.filereadable(launcher) == 0 then
+        vim.notify("未找到 jdtls 启动器 jar，无法启动", vim.log.levels.ERROR)
+        return
+      end
 
-    if vim.fn.filereadable(lombok_path) == 1 then
-      table.insert(cmd, "-javaagent:" .. lombok_path)
-      -- table.insert(cmd, "-Xbootclasspath/a:" .. lombok_path)
-    end
+      local cmd = {
+        -- java_cmd,
+        "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java",
+        "-Declipse.application=org.eclipse.jdt.ls.core.id1",
+        "-Dosgi.bundles.defaultStartLevel=4",
+        "-Declipse.product=org.eclipse.jdt.ls.core.product",
+        "-Dlog.protocol=true",
+        "-Dlog.level=ALL",
+        "-Xms1g",
+        "--add-modules=ALL-SYSTEM",
+        "--add-opens",
+        "java.base/java.util=ALL-UNNAMED",
+        "--add-opens",
+        "java.base/java.lang=ALL-UNNAMED",
+      }
 
-    vim.list_extend(cmd, {
-      "-jar",
-      launcher,
-      "-configuration",
-      config_dir,
-      "-data",
-      workspace,
-    })
+      if vim.fn.filereadable(lombok_path) == 1 then
+        table.insert(cmd, "-javaagent:" .. lombok_path)
+        -- table.insert(cmd, "-Xbootclasspath/a:" .. lombok_path)
+      end
 
-    local config = {
-      cmd = cmd,
-      root_dir = root_dir,
-      capabilities = glsp.capabilities,
-      on_attach = glsp.generate_on_attach(function(_, bufnr)
-        local map = function(lhs, rhs, desc)
-          vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
-        end
+      vim.list_extend(cmd, {
+        "-jar",
+        launcher,
+        "-configuration",
+        config_dir,
+        "-data",
+        workspace,
+      })
 
-        map("<leader>oi", jdtls.organize_imports, "Java organize imports")
-        map("<leader>ev", jdtls.extract_variable, "Java extract variable")
-        map("<leader>ec", jdtls.extract_constant, "Java extract constant")
-        map("<leader>em", jdtls.extract_method, "Java extract method")
-      end),
-      settings = {
-        java = {
-          import = {
-            gradle = {
-              buildServer = {
-                enabled = true,
+      local config = {
+        cmd = cmd,
+        root_dir = root_dir,
+        capabilities = glsp.capabilities,
+        on_attach = glsp.generate_on_attach(function(_, bufnr)
+          local map = function(lhs, rhs, desc)
+            vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
+          end
+
+          map("<leader>oi", jdtls.organize_imports, "Java organize imports")
+          map("<leader>ev", jdtls.extract_variable, "Java extract variable")
+          map("<leader>ec", jdtls.extract_constant, "Java extract constant")
+          map("<leader>em", jdtls.extract_method, "Java extract method")
+        end),
+        settings = {
+          java = {
+            import = {
+              gradle = {
+                buildServer = {
+                  enabled = true,
+                },
+              },
+            },
+            signatureHelp = { enabled = true },
+            contentProvider = { preferred = "fernflower" },
+            completion = {
+              favoriteStaticMembers = {
+                "org.junit.jupiter.api.Assertions.*",
+                "java.util.Objects.requireNonNull",
+              },
+            },
+            sources = {
+              organizeImports = {
+                starThreshold = 9999,
+                staticStarThreshold = 9999,
               },
             },
           },
-          signatureHelp = { enabled = true },
-          contentProvider = { preferred = "fernflower" },
-          completion = {
-            favoriteStaticMembers = {
-              "org.junit.jupiter.api.Assertions.*",
-              "java.util.Objects.requireNonNull",
-            },
-          },
-          sources = {
-            organizeImports = {
-              starThreshold = 9999,
-              staticStarThreshold = 9999,
-            },
-          },
         },
-      },
-      init_options = {
-        bundles = {},
-        extendedClientCapabilities = jdtls.extendedClientCapabilities,
-      },
-    }
+        init_options = {
+          bundles = {},
+          extendedClientCapabilities = jdtls.extendedClientCapabilities,
+        },
+      }
 
-    jdtls.start_or_attach(config)
+      jdtls.start_or_attach(config)
+    end
+
+    local group = vim.api.nvim_create_augroup("GaleJdtls", { clear = true })
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "java",
+      group = group,
+      callback = start_jdtls,
+    })
+
+    if vim.bo.filetype == "java" then
+      start_jdtls()
+    end
   end,
 }
