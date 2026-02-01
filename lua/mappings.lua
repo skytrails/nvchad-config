@@ -152,21 +152,26 @@ map("n", "gn", function()
   tabufline.next()
 end, { desc = "Buffer go to next" })
 
-map("n", "gp", function()
+map("n", "gP", function()
   tabufline.prev()
 end, { desc = "Buffer go to prev" })
 
 vim.keymap.set("n", "<leader>bh", function()
-  require("nvchad.tabufline").closeBufsAtDirection "left"
-end, { desc = "Close buffers to the left" })
+  tabufline.closeBufs_at_direction "left"
+end, { desc = "关闭左侧缓冲区" })
 
 vim.keymap.set("n", "<leader>bl", function()
-  require("nvchad.tabufline").closeBufsAtDirection "right"
-end, { desc = "Close buffers to the right" })
+  tabufline.closeBufs_at_direction "right"
+end, { desc = "关闭右侧缓冲区" })
 
 vim.keymap.set("n", "<leader>bo", function()
-  require("nvchad.tabufline").closeOtherBufs()
-end, { desc = "Close other buffers" })
+  tabufline.closeBufs_at_direction "left"
+  tabufline.closeBufs_at_direction "right"
+end, { desc = "关闭其他缓冲区" })
+
+vim.keymap.set("n", "<leader>ba", function()
+  tabufline.closeAllBufs()
+end, { desc = "关闭所有缓冲区" })
 
 map("n", "<leader>bn", "<cmd>enew<CR>", { desc = "Buffer new" })
 -- map("n", "<leader>bh", "<cmd>split | enew<CR>", { desc = "Buffer new horizontal split" })
