@@ -5,14 +5,14 @@ local function get_jdtls_config_dir(root)
   local arch = uname.machine
 
   if sys == "Darwin" then
-    return vim.fs.joinpath(root, arch == "arm64" and "config_mac_arm_clean" or "config_mac")
+    return vim.fs.joinpath(root, arch == "arm64" and "config_mac_arm" or "config_mac")
   elseif sys == "Linux" then
     return vim.fs.joinpath(root, arch == "aarch64" and "config_linux_arm" or "config_linux")
   elseif sys == "Windows_NT" then
     return vim.fs.joinpath(root, "config_win")
   end
 
-  return vim.fs.joinpath(root, "config_linux")
+  return vim.fs.joinpath(root, "config_mac_arm")
 end
 
 return {
@@ -21,7 +21,8 @@ return {
   config = function()
     local jdtls = require "jdtls"
     local glsp = require "gale.lsp"
-    local root_dir = require("jdtls.setup").find_root { 0, ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
+    local root_dir = require("jdtls.setup").find_root { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
+    -- local root_dir = require("jdtls.setup").find_root { ".git" }
 
     if not root_dir then
       vim.notify("无法找到 Java 项目的根目录，jdtls 未启动", vim.log.levels.WARN)
@@ -50,12 +51,11 @@ return {
     local ok, settings = pcall(require, "mason.settings")
     local root = (ok and settings.current.install_root_dir) or (vim.fn.stdpath "data" .. "/mason")
     local jdtls_path = vim.fs.joinpath(root, "packages") .. "/jdtls"
-    print(jdtls_path)
     local launcher = vim.fn.glob(vim.fs.joinpath(jdtls_path, "plugins", "org.eclipse.equinox.launcher_*.jar"), 0, 1)[1]
-    local config_dir = get_jdtls_config_dir "/Users/flynn/.cache/jdtls/"
+    local config_dir = get_jdtls_config_dir(jdtls_path)
     local lombok_path = vim.fs.joinpath(jdtls_path, "lombok.jar")
     local workspace =
-      vim.fs.joinpath(vim.fn.stdpath "data", "jdtls-workspaces/" .. vim.fn.fnamemodify(root_dir, ":p:h:t"))
+      vim.fs.joinpath(vim.fn.stdpath "data", "jdtls-workspace/" .. vim.fn.fnamemodify(root_dir, ":p:h:t"))
     vim.fn.mkdir(workspace, "p")
 
     if not launcher or vim.fn.filereadable(launcher) == 0 then
@@ -63,19 +63,17 @@ return {
       return
     end
 
-    print(java_cmd)
     local cmd = {
-      -- "/opt/homebrew/opt/openjdk@21/bin/java",
-      "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java",
       -- java_cmd,
+      "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java",
       "-Declipse.application=org.eclipse.jdt.ls.core.id1",
       "-Dosgi.bundles.defaultStartLevel=4",
       "-Declipse.product=org.eclipse.jdt.ls.core.product",
       "-Dlog.protocol=true",
       "-Dlog.level=ALL",
       "-Xms1g",
-      -- "--add-modules=ALL-SYSTEM",
-      "--add-modules=java.compiler",
+      "--add-modules=ALL-SYSTEM",
+      -- "--add-modules=java.compiler",
       "--add-opens",
       "java.base/java.util=ALL-UNNAMED",
       "--add-opens",
@@ -112,6 +110,13 @@ return {
       end),
       settings = {
         java = {
+          import = {
+            gradle = {
+              buildServer = {
+                enabled = true,
+              },
+            },
+          },
           signatureHelp = { enabled = true },
           contentProvider = { preferred = "fernflower" },
           completion = {
@@ -131,17 +136,6 @@ return {
       init_options = {
         bundles = {},
         extendedClientCapabilities = jdtls.extendedClientCapabilities,
-        settings = {
-          java = {
-            import = {
-              gradle = {
-                buildServer = {
-                  enabled = true,
-                },
-              },
-            },
-          },
-        },
       },
     }
 
