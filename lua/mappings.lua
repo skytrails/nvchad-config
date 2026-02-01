@@ -148,9 +148,29 @@ map("n", "<S-Tab>", function()
   tabufline.prev()
 end, { desc = "Buffer go to prev" })
 
+map("n", "gn", function()
+  tabufline.next()
+end, { desc = "Buffer go to next" })
+
+map("n", "gp", function()
+  tabufline.prev()
+end, { desc = "Buffer go to prev" })
+
+vim.keymap.set("n", "<leader>bh", function()
+  require("nvchad.tabufline").closeBufsAtDirection "left"
+end, { desc = "Close buffers to the left" })
+
+vim.keymap.set("n", "<leader>bl", function()
+  require("nvchad.tabufline").closeBufsAtDirection "right"
+end, { desc = "Close buffers to the right" })
+
+vim.keymap.set("n", "<leader>bo", function()
+  require("nvchad.tabufline").closeOtherBufs()
+end, { desc = "Close other buffers" })
+
 map("n", "<leader>bn", "<cmd>enew<CR>", { desc = "Buffer new" })
-map("n", "<leader>bh", "<cmd>split | enew<CR>", { desc = "Buffer new horizontal split" })
-map("n", "<leader>bv", "<cmd>vsplit | enew<CR>", { desc = "Buffer new vertical split" })
+-- map("n", "<leader>bh", "<cmd>split | enew<CR>", { desc = "Buffer new horizontal split" })
+-- map("n", "<leader>bv", "<cmd>vsplit | enew<CR>", { desc = "Buffer new vertical split" })
 
 map("n", "<leader>x", function()
   tabufline.close_buffer()

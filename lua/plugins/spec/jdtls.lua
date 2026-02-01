@@ -5,7 +5,7 @@ local function get_jdtls_config_dir(root)
   local arch = uname.machine
 
   if sys == "Darwin" then
-    return vim.fs.joinpath(root, arch == "arm64" and "config_mac_arm" or "config_mac")
+    return vim.fs.joinpath(root, arch == "arm64" and "config_mac_arm_clean" or "config_mac")
   elseif sys == "Linux" then
     return vim.fs.joinpath(root, arch == "aarch64" and "config_linux_arm" or "config_linux")
   elseif sys == "Windows_NT" then
@@ -21,7 +21,7 @@ return {
   config = function()
     local jdtls = require "jdtls"
     local glsp = require "gale.lsp"
-    local root_dir = require("jdtls.setup").find_root { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
+    local root_dir = require("jdtls.setup").find_root { 0, ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
 
     if not root_dir then
       vim.notify("无法找到 Java 项目的根目录，jdtls 未启动", vim.log.levels.WARN)
@@ -49,12 +49,13 @@ return {
     -- local jdtls_path = jdtls_pkg:get_install_path()
     local ok, settings = pcall(require, "mason.settings")
     local root = (ok and settings.current.install_root_dir) or (vim.fn.stdpath "data" .. "/mason")
-    local jdtls_path = vim.fs.joinpath(root, "packages", pkg) .. "/jdtls"
+    local jdtls_path = vim.fs.joinpath(root, "packages") .. "/jdtls"
+    print(jdtls_path)
     local launcher = vim.fn.glob(vim.fs.joinpath(jdtls_path, "plugins", "org.eclipse.equinox.launcher_*.jar"), 0, 1)[1]
-    local config_dir = get_jdtls_config_dir(jdtls_path)
+    local config_dir = get_jdtls_config_dir "/Users/flynn/.cache/jdtls/"
     local lombok_path = vim.fs.joinpath(jdtls_path, "lombok.jar")
     local workspace =
-      vim.fs.joinpath(vim.fn.stdpath "data", "jdtls-workspace/" .. vim.fn.fnamemodify(root_dir, ":p:h:t"))
+      vim.fs.joinpath(vim.fn.stdpath "data", "jdtls-workspaces/" .. vim.fn.fnamemodify(root_dir, ":p:h:t"))
     vim.fn.mkdir(workspace, "p")
 
     if not launcher or vim.fn.filereadable(launcher) == 0 then
@@ -64,8 +65,9 @@ return {
 
     print(java_cmd)
     local cmd = {
-      -- "/opt/homebrew/opt/openjdk@17/bin/java",
-      java_cmd,
+      -- "/opt/homebrew/opt/openjdk@21/bin/java",
+      "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java",
+      -- java_cmd,
       "-Declipse.application=org.eclipse.jdt.ls.core.id1",
       "-Dosgi.bundles.defaultStartLevel=4",
       "-Declipse.product=org.eclipse.jdt.ls.core.product",
@@ -73,6 +75,7 @@ return {
       "-Dlog.level=ALL",
       "-Xms1g",
       -- "--add-modules=ALL-SYSTEM",
+      "--add-modules=java.compiler",
       "--add-opens",
       "java.base/java.util=ALL-UNNAMED",
       "--add-opens",
@@ -81,7 +84,7 @@ return {
 
     if vim.fn.filereadable(lombok_path) == 1 then
       table.insert(cmd, "-javaagent:" .. lombok_path)
-      table.insert(cmd, "-Xbootclasspath/a:" .. lombok_path)
+      -- table.insert(cmd, "-Xbootclasspath/a:" .. lombok_path)
     end
 
     vim.list_extend(cmd, {
