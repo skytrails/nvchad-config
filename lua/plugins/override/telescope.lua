@@ -50,7 +50,7 @@ return {
       })
     end, { desc = "Telescope search recent files" })
 
-    map("n", "<leader>fw", function()
+    map("n", "<leader>fs", function()
       pickers.grep("live_grep", nil, nil, {
         layout_config = {
           vertical = {
@@ -61,6 +61,24 @@ return {
         prompt_title = "Live Grep",
       })
     end, { desc = "Telescope live grep" })
+
+    map("n", "<leader>fw", function()
+      local word = vim.fn.expand "<cword>"
+      if word == "" then
+        vim.notify("当前光标下没有单词可搜索", vim.log.levels.WARN)
+        return
+      end
+
+      pickers.grep("grep_string", word, nil, {
+        layout_config = {
+          vertical = {
+            width = SIZES.WIDTH,
+            height = SIZES.HEIGHT,
+          },
+        },
+        prompt_title = "Search Word",
+      })
+    end, { desc = "Telescope search word under cursor" })
 
     map("n", "<leader>fb", function()
       pickers.buffers(true, {
