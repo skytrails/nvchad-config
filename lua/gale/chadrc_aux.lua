@@ -14,7 +14,7 @@ M.themes_customs = {
       Comment = { fg = X_COLOURS.SUBTLE_PURPLE },
       FloatBorder = { fg = X_COLOURS.SUBTLE_PURPLE },
       LspInlayHint = { fg = X_COLOURS.SUBTLE_PURPLE },
-      TelescopeSelection = { fg = X_COLOURS.D_WHITE },
+      TelescopeSelection = { fg = X_COLOURS.D_WHITE, bg = "red" },
       StText = { fg = X_COLOURS.ST_GREY },
       St_cwd = { fg = "red", bg = "one_bg1" },
       St_NormalMode = { fg = "blue", bg = "one_bg1" },
@@ -237,6 +237,14 @@ M.modules = {
     harpoon = harpoon_statusline_indicator,
     word_count = function()
       return " %#StText#󱀽" .. utils.count_words_in_line() .. utils.count_words_in_buffer()
+    end,
+
+    fileformat = function()
+      -- Show file encoding, e.g. utf-8 (misnamed for historical reasons)
+      local fenc = vim.bo[stbufnr()].fileencoding
+      fenc = (fenc ~= nil and fenc ~= "") and fenc or vim.o.encoding
+      local bomb = vim.bo[stbufnr()].bomb and " BOM" or ""
+      return " %#StText#" .. fenc .. bomb
     end,
   },
 

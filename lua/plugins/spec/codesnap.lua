@@ -8,11 +8,20 @@ return {
     map("x", "<leader>cs", "<cmd>CodeSnapSave<CR>", { desc = "Save selected code snapshot in ~/Pictures" })
   end,
   opts = {
-    save_path = "~/Pictures",
-    code_font_family = "JetBrainsMono Nerd Font",
-    has_breadcrumbs = true,
-    bg_theme = "grape",
-    watermark = "",
+    snapshot_config = {
+      theme = "candy",
+      code_config = {
+        font_family = "JetBrainsMono Nerd Font",
+        breadcrumbs = {
+          enable = true,
+          font_family = "JetBrainsMono Nerd Font",
+        },
+      },
+      watermark = {
+        content = "",
+        font_family = "JetBrainsMono Nerd Font",
+      },
+    },
   },
   build = "make",
 }

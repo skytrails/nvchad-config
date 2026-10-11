@@ -72,7 +72,7 @@ return {
 
       local cmd = {
         -- java_cmd,
-        "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java",
+        "/usr/bin/java",
         "-Declipse.application=org.eclipse.jdt.ls.core.id1",
         "-Dosgi.bundles.defaultStartLevel=4",
         "-Declipse.product=org.eclipse.jdt.ls.core.product",
