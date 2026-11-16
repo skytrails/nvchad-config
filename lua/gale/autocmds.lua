@@ -148,12 +148,6 @@ autocmd("ModeChanged", {
   end,
 })
 
-autocmd("BufWritePre", {
-  desc = "Remove trailing whitespaces on save.",
-  group = augroup("TrimWhitespaceOnSave", { clear = true }),
-  command = [[ %s/\s\+$//e ]],
-})
-
 autocmd("FileType", {
   desc = "Define windows to close with 'q'",
   pattern = {
